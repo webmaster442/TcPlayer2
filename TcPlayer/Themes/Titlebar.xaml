@@ -1,0 +1,58 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TcPlayer.Controls">
+
+    <Style
+        x:Key="TitleButton"
+        BasedOn="{StaticResource {x:Type Button}}"
+        TargetType="Button">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Background" Value="{StaticResource TitleBarButton}" />
+    </Style>
+
+    <Style TargetType="controls:Titlebar">
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Background" Value="{StaticResource TitleBar}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:Titlebar">
+                    <Border
+                        x:Name="PART_BORDER"
+                        Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Margin="5,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource TitleBarText}"
+                                Text="{TemplateBinding Title}" />
+                            <Button
+                                x:Name="PART_PIN"
+                                Grid.Column="1"
+                                Style="{StaticResource TitleButton}" />
+                            <Button
+                                x:Name="PART_MINIMIZE"
+                                Grid.Column="2"
+                                Style="{StaticResource TitleButton}" />
+                            <Button
+                                x:Name="PART_CLOSE"
+                                Grid.Column="3"
+                                Style="{StaticResource TitleButton}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
