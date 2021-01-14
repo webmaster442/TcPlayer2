@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:TcPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:TcPlayer"
     Width="800"
     Height="450"
     Background="{StaticResource BaseColor}"
@@ -20,5 +21,14 @@
             ControlledWindow="{Binding ElementName=Main}"
             Title="Tc Player 2"
             Grid.Row="0" />
+        <TabControl Background="Transparent" BorderThickness="0" Grid.Row="1" TabStripPlacement="Bottom">
+            <TabItem Header="Player" Background="Transparent">
+                <local:PlayView Grid.Row="1"/>
+            </TabItem>
+            <TabItem Header="Playlist">
+                
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </Window>
