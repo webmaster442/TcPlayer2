@@ -38,16 +38,40 @@
                                 Text="{TemplateBinding Title}" />
                             <Button
                                 x:Name="PART_PIN"
-                                Grid.Column="1"
-                                Style="{StaticResource TitleButton}" />
+                                Grid.Column="1">
+                                <Button.Style>
+                                    <Style
+                                        BasedOn="{StaticResource TitleButton}"
+                                        TargetType="Button">
+                                        <Style.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsPinned, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type controls:Titlebar}}}"
+                                                Value="True">
+                                                <Setter Property="Content" Value="{StaticResource IconUnpin}" />
+                                                <Setter Property="ToolTip" Value="Unpin from top" />
+                                            </DataTrigger>
+                                            <DataTrigger
+                                                Binding="{Binding IsPinned, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type controls:Titlebar}}}"
+                                                Value="False">
+                                                <Setter Property="Content" Value="{StaticResource IconPin}" />
+                                                <Setter Property="ToolTip" Value="Pin to stay on top" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                             <Button
                                 x:Name="PART_MINIMIZE"
                                 Grid.Column="2"
-                                Style="{StaticResource TitleButton}" />
+                                Content="{StaticResource IconMinimize}"
+                                Style="{StaticResource TitleButton}"
+                                ToolTip="Minimize" />
                             <Button
                                 x:Name="PART_CLOSE"
                                 Grid.Column="3"
-                                Style="{StaticResource TitleButton}" />
+                                Content="{StaticResource IconClose}"
+                                Style="{StaticResource TitleButton}"
+                                ToolTip="Close" />
                         </Grid>
                     </Border>
                 </ControlTemplate>

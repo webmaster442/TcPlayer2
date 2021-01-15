@@ -89,22 +89,25 @@
             Grid.ColumnSpan="2"
             Orientation="Horizontal">
             <Button
-                Content="Prev"
+                Content="{StaticResource IconPrevious}"
                 Style="{StaticResource MainButton}" />
             <Button
-                Content="Play"
+                Content="{StaticResource IconPlay}"
                 Style="{StaticResource MainButton}" />
             <Button
-                Content="Pause"
+                Content="{StaticResource IconPause}"
                 Style="{StaticResource MainButton}" />
             <Button
-                Content="Stop"
+                Content="{StaticResource IconStop}"
                 Style="{StaticResource MainButton}" />
             <Button
-                Content="Next"
+                Content="{StaticResource IconNext}"
                 Style="{StaticResource MainButton}" />
             <Button
-                Content="Open"
+                Content="{StaticResource IconOpen}"
+                Style="{StaticResource MainButton}" />
+            <Button
+                Content="{StaticResource IconChapters}"
                 Style="{StaticResource MainButton}" />
         </StackPanel>
     </Grid>

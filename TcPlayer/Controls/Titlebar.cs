@@ -23,7 +23,23 @@ namespace TcPlayer.Controls
         public static readonly DependencyProperty ControlledWindowProperty =
             DependencyProperty.Register("ControlledWindow", typeof(Window), typeof(Titlebar), new PropertyMetadata(null));
 
+        public bool IsPinned
+        {
+            get { return (bool)GetValue(IsPinnedProperty); }
+            set { SetValue(IsPinnedProperty, value); }
+        }
 
+        public static readonly DependencyProperty IsPinnedProperty =
+            DependencyProperty.Register("IsPinned", typeof(bool), typeof(Titlebar), new PropertyMetadata(false, PinnedChange));
+
+        private static void PinnedChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Titlebar titlebar &&
+                titlebar.ControlledWindow != null)
+            {
+                titlebar.ControlledWindow.Topmost = titlebar.IsPinned;
+            }
+        }
 
         public override void OnApplyTemplate()
         {
@@ -69,7 +85,7 @@ namespace TcPlayer.Controls
         {
             if (ControlledWindow != null)
             {
-                ControlledWindow.Topmost = !ControlledWindow.Topmost;
+                IsPinned = !IsPinned;
             }
         }
     }
