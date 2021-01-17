@@ -2,12 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush Color="#81808E" x:Key="BaseColor"/>
-    <SolidColorBrush Color="#000000" x:Key="Black"/>
-    <SolidColorBrush Color="#F0F2DC" x:Key="Text"/>
     <SolidColorBrush Color="#DBD7CE" x:Key="Buttons"/>
     <SolidColorBrush Color="#444442" x:Key="TitleBar"/>
     <SolidColorBrush Color="#726E6B" x:Key="TitleBarButton"/>
     <SolidColorBrush Color="#17140F" x:Key="TitleBarButtonForeground"/>
     <SolidColorBrush Color="#A5A6AB" x:Key="TitleBarText"/>
+    <SolidColorBrush Color="#FA9257" x:Key="Slider"/>
+    <SolidColorBrush Color="#BF18ED" x:Key="Color"/>
+    <SolidColorBrush Color="#66C3FA" x:Key="Color2"/>
 
 </ResourceDictionary>
