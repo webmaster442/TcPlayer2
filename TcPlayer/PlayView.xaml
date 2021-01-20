@@ -163,20 +163,28 @@
                 Header="{StaticResource IconPrevious}"
                 Style="{StaticResource MainButton}" />
             <MenuItem
+                Command="{Binding PlayCommand}"
                 Header="{StaticResource IconPlay}"
-                Style="{StaticResource MainButton}" />
+                Style="{StaticResource MainButton}"
+                ToolTip="Play" />
             <MenuItem
+                Command="{Binding PauseCommand}"
                 Header="{StaticResource IconPause}"
-                Style="{StaticResource MainButton}" />
+                Style="{StaticResource MainButton}"
+                ToolTip="Pause" />
             <MenuItem
+                Command="{Binding StopCommand}"
                 Header="{StaticResource IconStop}"
-                Style="{StaticResource MainButton}" />
+                Style="{StaticResource MainButton}"
+                ToolTip="Stop" />
             <MenuItem
                 Header="{StaticResource IconNext}"
                 Style="{StaticResource MainButton}" />
             <MenuItem
+                Command="{Binding LoadCommand}"
                 Header="{StaticResource IconOpen}"
-                Style="{StaticResource MainButton}" />
+                Style="{StaticResource MainButton}"
+                ToolTip="Open..." />
             <MenuItem
                 Header="{StaticResource IconChapters}"
                 Style="{StaticResource MainButton}" />

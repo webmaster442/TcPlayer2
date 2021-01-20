@@ -4,6 +4,8 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>Enable</Nullable>
+    <OutputPath>../bin/$(configuration)</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +14,10 @@
     <PackageReference Include="ManagedBass.Mix" Version="3.0.0" />
     <PackageReference Include="ManagedBass.Wasapi" Version="3.0.0" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TcPlayer.BassLibs\TcPlayer.BassLibs.csproj" />
   </ItemGroup>
 
   <ItemGroup>

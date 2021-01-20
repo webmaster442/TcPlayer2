@@ -7,7 +7,7 @@ using TcPlayer.Engine.Properties;
 
 namespace TcPlayer.Engine
 {
-    public sealed class Engine : NotifyObject, IEngine
+    public sealed class AudioEngine : NotifyObject, IEngine
     {
         private bool _isInitialized;
         private int _decodeChannel;
@@ -20,7 +20,7 @@ namespace TcPlayer.Engine
         private EngineState _currentState;
         private Metadata _metadata;
 
-        public Engine()
+        public AudioEngine()
         {
             Bass.Configure(Configuration.UpdateThreads, 0);
             Reset();
