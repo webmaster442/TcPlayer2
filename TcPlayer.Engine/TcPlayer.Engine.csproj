@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ManagedBass" Version="3.0.0" />
-    <PackageReference Include="ManagedBass.Midi" Version="3.0.0" />
-    <PackageReference Include="ManagedBass.Mix" Version="3.0.0" />
-    <PackageReference Include="ManagedBass.Wasapi" Version="3.0.0" />
+    <PackageReference Include="ManagedBass" Version="2.0.0" />
+    <PackageReference Include="ManagedBass.Midi" Version="2.0.0" />
+    <PackageReference Include="ManagedBass.Mix" Version="2.0.0" />
+    <PackageReference Include="ManagedBass.Wasapi" Version="2.0.0" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>
 

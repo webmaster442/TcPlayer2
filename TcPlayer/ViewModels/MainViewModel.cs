@@ -7,6 +7,7 @@ namespace TcPlayer.ViewModels
     internal class MainViewModel : ViewModelBase
     {
         private readonly IDialogProvider _dialogProvider;
+        private SoundDeviceInfo _selectedAudioDevice;
 
         public IEngine Engine { get; }
 
@@ -14,6 +15,18 @@ namespace TcPlayer.ViewModels
         public DelegateCommand PauseCommand { get; }
         public DelegateCommand StopCommand { get; }
         public DelegateCommand LoadCommand { get; }
+
+        public SoundDeviceInfo SelectedAudioDevice
+        {
+            get => _selectedAudioDevice;
+            set
+            {
+                if (SetProperty(ref _selectedAudioDevice, value))
+                {
+                    Engine.Initialize(_selectedAudioDevice);
+                }
+            }
+        }
 
         public MainViewModel(IEngine engine, IDialogProvider dialogProvider)
         {

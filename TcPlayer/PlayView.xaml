@@ -4,6 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:TcPlayer.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel,
+                                     IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -64,7 +67,7 @@
             FontSize="34"
             FontStyle="Normal"
             FontWeight="Bold"
-            Text="01:23:11"
+            Text="{Binding Engine.CurrentPosition}"
             TextAlignment="Right" />
 
         <TextBlock
@@ -86,7 +89,7 @@
             FontSize="34"
             FontStyle="Normal"
             FontWeight="Bold"
-            Text="01:23:11"
+            Text="{Binding Engine.Length}"
             TextAlignment="Right" />
 
         <StackPanel
@@ -97,19 +100,19 @@
             <TextBlock
                 FontSize="22"
                 Style="{StaticResource Meta}"
-                Text="Title" />
+                Text="{Binding Engine.Metadata.Title}" />
             <TextBlock
                 FontSize="22"
                 Style="{StaticResource Meta}"
-                Text="Artist" />
+                Text="{Binding Engine.Metadata.Artist}" />
             <TextBlock
                 FontSize="18"
                 Style="{StaticResource Meta}"
-                Text="Album" />
+                Text="{Binding Engine.Metadata.Album}" />
             <TextBlock
                 FontSize="18"
                 Style="{StaticResource Meta}"
-                Text="Year" />
+                Text="{Binding Engine.Metadata.Year}" />
             <TextBlock
                 FontSize="14"
                 Style="{StaticResource Meta}"
@@ -188,6 +191,18 @@
             <MenuItem
                 Header="{StaticResource IconChapters}"
                 Style="{StaticResource MainButton}" />
+
+            <TextBlock Text="Output:" />
+            <ComboBox
+                Width="200"
+                SelectedItem="{Binding SelectedAudioDevice}"
+                ItemsSource="{Binding Engine.AvailableOutputs}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
         </Menu>
     </Grid>

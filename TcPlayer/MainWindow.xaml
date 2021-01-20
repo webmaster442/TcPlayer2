@@ -4,14 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TcPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:TcPlayer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="Main"
     Width="888"
     Height="500"
-    ResizeMode="NoResize"
     Background="{StaticResource BaseColor}"
+    ResizeMode="NoResize"
     WindowStyle="None"
-    x:Name="Main"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -19,16 +19,20 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <controls:Titlebar
-            ControlledWindow="{Binding ElementName=Main}"
             Title="Tc Player 2"
-            Grid.Row="0" />
-        <TabControl Background="Transparent" BorderThickness="0" Grid.Row="1" TabStripPlacement="Bottom">
-            <TabItem Header="Player" Background="Transparent">
-                <local:PlayView Grid.Row="1"/>
+            Grid.Row="0"
+            ControlledWindow="{Binding ElementName=Main}" />
+        <TabControl
+            Grid.Row="1"
+            Background="Transparent"
+            BorderThickness="0"
+            TabStripPlacement="Bottom">
+            <TabItem
+                Background="Transparent"
+                Header="Player">
+                <local:PlayView Grid.Row="1" />
             </TabItem>
-            <TabItem Header="Playlist">
-                
-            </TabItem>
+            <TabItem Header="Playlist" />
 
         </TabControl>
     </Grid>

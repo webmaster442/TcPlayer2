@@ -22,6 +22,7 @@ namespace TcPlayer
             base.OnStartup(e);
             Current.MainWindow = new MainWindow();
             var engine = new AudioEngine();
+
             var model = new MainViewModel(engine, new Dialogs());
             Current.MainWindow.DataContext = model;
 
