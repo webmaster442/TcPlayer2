@@ -6,7 +6,7 @@ namespace TcPlayer.Engine.Ui
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void SetProperty<T>(ref T backfield, T value, [CallerMemberName] string propName = null)
         {
@@ -19,7 +19,7 @@ namespace TcPlayer.Engine.Ui
 
         public void OnPropertyChanged(string propertyName = "")
         {
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

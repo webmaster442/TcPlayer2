@@ -29,8 +29,11 @@ namespace TcPlayer.Engine.Ui
                 var t = iface.GetGenericArguments()[0];
                 var m = iface.GetMethod("HandleMessage");
 
-                if (_supported.ContainsKey(t)) _supported[t] = m;
-                else _supported.Add(t, m);
+                if (m != null)
+                {
+                    if (_supported.ContainsKey(t)) _supported[t] = m;
+                    else _supported.Add(t, m);
+                }
             }
 
         }

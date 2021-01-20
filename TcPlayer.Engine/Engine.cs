@@ -25,6 +25,7 @@ namespace TcPlayer.Engine
             Bass.Configure(Configuration.UpdateThreads, 0);
             Reset();
             CurrentState = EngineState.NoFile;
+            _metadata = MetadataFactory.CreateEmpty();
         }
 
         private void Reset()
@@ -34,7 +35,7 @@ namespace TcPlayer.Engine
             Metadata = MetadataFactory.CreateEmpty();
         }
 
-        private void Exception(string message = null)
+        private void Exception(string? message = null)
         {
             if (message != null)
             {
@@ -139,6 +140,7 @@ namespace TcPlayer.Engine
             {
                 Exception();
             }
+            Metadata = MetadataFactory.CreateFromFile(fileToPlay);
             long len = Bass.ChannelGetLength(_decodeChannel, PositionFlags.Bytes);
             Length = Bass.ChannelBytes2Seconds(_decodeChannel, len);
             long pos = BassMix.ChannelGetPosition(_decodeChannel, PositionFlags.Bytes);

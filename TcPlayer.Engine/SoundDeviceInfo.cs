@@ -6,5 +6,10 @@
         public string Name { get; init; }
         public int Channels { get; init; }
         public int SamplingFrequency { get; init; }
+
+        public SoundDeviceInfo()
+        {
+            Name = string.Empty;
+        }
     }
 }

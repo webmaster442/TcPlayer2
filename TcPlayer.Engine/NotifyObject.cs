@@ -8,7 +8,7 @@ namespace TcPlayer.Engine
 {
     public abstract class NotifyObject : DispatcherObject, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly DispatcherTimer _timer;
         private int _timerCalls;
@@ -26,7 +26,7 @@ namespace TcPlayer.Engine
             _timer.Interval = TimeSpan.FromMilliseconds(100);
         }
 
-        private void OnTimerTick(object sender, EventArgs e)
+        private void OnTimerTick(object? sender, EventArgs e)
         {
             _timerCalls++;
             if (_timerCalls > 9)
@@ -62,7 +62,7 @@ namespace TcPlayer.Engine
 
         public void OnPropertyChanged(string propertyName = "")
         {
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
