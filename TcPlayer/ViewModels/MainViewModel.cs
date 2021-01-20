@@ -1,6 +1,9 @@
-﻿using TcPlayer.Engine;
+﻿using System;
+using System.Linq;
+using TcPlayer.Engine;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
+using TcPlayer.Properties;
 
 namespace TcPlayer.ViewModels
 {
@@ -24,6 +27,8 @@ namespace TcPlayer.ViewModels
                 if (SetProperty(ref _selectedAudioDevice, value))
                 {
                     Engine.Initialize(_selectedAudioDevice);
+                    Settings.Default.AudioOutIndex = _selectedAudioDevice.Index;
+                    Settings.Default.Save();
                 }
             }
         }
@@ -37,6 +42,31 @@ namespace TcPlayer.ViewModels
             StopCommand = new DelegateCommand((o) => Engine.Stop());
             PauseCommand = new DelegateCommand((o) => Engine.Pause());
             LoadCommand = new DelegateCommand(Onload);
+
+            InitSavedAudioDevice();
+        }
+
+        private void InitSavedAudioDevice()
+        {
+            if (Engine.AvailableOutputs.Any())
+            {
+                if (Settings.Default.AudioOutIndex < 0)
+                {
+                    SelectedAudioDevice = Engine.AvailableOutputs.First();
+                }
+                else
+                {
+                    var candidate = Engine.AvailableOutputs.FirstOrDefault(i => i.Index == Settings.Default.AudioOutIndex);
+                    if (candidate == null)
+                    {
+                        SelectedAudioDevice = Engine.AvailableOutputs.First();
+                    }
+                    else
+                    {
+                        SelectedAudioDevice = candidate;
+                    }
+                }
+            }
         }
 
         private void Onload(object obj)
