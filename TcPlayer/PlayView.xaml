@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <Style
             x:Key="MainButton"
-            TargetType="Button">
+            TargetType="MenuItem">
             <Setter Property="Background" Value="{StaticResource Buttons}" />
             <Setter Property="Height" Value="48" />
             <Setter Property="Width" Value="48" />
@@ -22,14 +22,14 @@
             <Setter Property="FontFamily" Value="Segoe UI Semilight" />
             <Setter Property="Margin" Value="5,2" />
             <Setter Property="TextAlignment" Value="Right" />
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style
             x:Key="GeneralText"
             TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Segoe UI Semilight" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
     <Grid ShowGridLines="False">
@@ -122,10 +122,11 @@
             Style="{StaticResource GeneralText}"
             Text="Volume:" />
         <Slider
-            Style="{StaticResource PositionSlider}" Margin="0,3"
             Grid.Row="2"
             Grid.Column="2"
-            Grid.ColumnSpan="2" />
+            Grid.ColumnSpan="2"
+            Margin="0,3"
+            Style="{StaticResource PositionSlider}" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="4"
@@ -152,32 +153,34 @@
             HorizontalAlignment="Right"
             Style="{StaticResource GeneralText}"
             Text="Total time" />
-        <StackPanel
+
+        <Menu
             Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="5"
-            Orientation="Horizontal">
-            <Button
-                Content="{StaticResource IconPrevious}"
+            Background="Transparent">
+            <MenuItem
+                Header="{StaticResource IconPrevious}"
                 Style="{StaticResource MainButton}" />
-            <Button
-                Content="{StaticResource IconPlay}"
+            <MenuItem
+                Header="{StaticResource IconPlay}"
                 Style="{StaticResource MainButton}" />
-            <Button
-                Content="{StaticResource IconPause}"
+            <MenuItem
+                Header="{StaticResource IconPause}"
                 Style="{StaticResource MainButton}" />
-            <Button
-                Content="{StaticResource IconStop}"
+            <MenuItem
+                Header="{StaticResource IconStop}"
                 Style="{StaticResource MainButton}" />
-            <Button
-                Content="{StaticResource IconNext}"
+            <MenuItem
+                Header="{StaticResource IconNext}"
                 Style="{StaticResource MainButton}" />
-            <Button
-                Content="{StaticResource IconOpen}"
+            <MenuItem
+                Header="{StaticResource IconOpen}"
                 Style="{StaticResource MainButton}" />
-            <Button
-                Content="{StaticResource IconChapters}"
+            <MenuItem
+                Header="{StaticResource IconChapters}"
                 Style="{StaticResource MainButton}" />
-        </StackPanel>
+
+        </Menu>
     </Grid>
 </UserControl>
