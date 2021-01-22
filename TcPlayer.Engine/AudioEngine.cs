@@ -4,6 +4,7 @@ using ManagedBass.Wasapi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using TcPlayer.BassLibs;
 using TcPlayer.Engine.Internals;
 using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;

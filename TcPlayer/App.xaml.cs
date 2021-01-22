@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using TcPlayer.BassLibs;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Ui;
 using TcPlayer.ViewModels;
@@ -13,6 +14,12 @@ namespace TcPlayer
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (!BassDllVerify.VerifyDllFiles())
+            {
+                MessageBox.Show("Engine dll files corrupted. Please reinstall.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(-1);
+            }
+
             base.OnStartup(e);
             IMessenger messenger = new Messenger();
 
