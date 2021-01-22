@@ -18,6 +18,8 @@ namespace TcPlayer.ViewModels
         public DelegateCommand PauseCommand { get; }
         public DelegateCommand StopCommand { get; }
         public DelegateCommand LoadCommand { get; }
+        public DelegateCommand<double> SeekSliderPositionCommand { get; }
+        public DelegateCommand<double> SetVolumeCommand { get; }
 
         public SoundDeviceInfo SelectedAudioDevice
         {
@@ -42,8 +44,20 @@ namespace TcPlayer.ViewModels
             StopCommand = new DelegateCommand((o) => Engine.Stop());
             PauseCommand = new DelegateCommand((o) => Engine.Pause());
             LoadCommand = new DelegateCommand(Onload);
+            SeekSliderPositionCommand = new DelegateCommand<double>(OnSeek);
+            SetVolumeCommand = new DelegateCommand<double>(OnSetVolume);
 
             InitSavedAudioDevice();
+        }
+
+        private void OnSetVolume(double obj)
+        {
+            Engine.Volume = (float)obj;
+        }
+
+        private void OnSeek(double obj)
+        {
+            Engine.SeeekTo(obj);
         }
 
         private void InitSavedAudioDevice()

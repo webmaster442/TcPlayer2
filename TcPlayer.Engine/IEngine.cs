@@ -11,9 +11,10 @@ namespace TcPlayer.Engine
         void Pause();
         void Play();
         void Stop();
-        void SeeekTo(float position);
+        void SeeekTo(double position);
         bool IsSeeking { get; set; }
         double Length { get; }
+        float Volume { get; set; }
         double CurrentPosition { get; }
         EngineState CurrentState { get; }
         Metadata Metadata { get; }

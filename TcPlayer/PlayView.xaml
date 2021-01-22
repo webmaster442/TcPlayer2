@@ -2,10 +2,11 @@
     x:Class="TcPlayer.PlayView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TcPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:infrastructure="clr-namespace:TcPlayer.Infrastructure"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:TcPlayer.ViewModels"
-    xmlns:infrastructure="clr-namespace:TcPlayer.Infrastructure"
     d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
@@ -125,26 +126,30 @@
             Margin="5,3"
             Style="{StaticResource GeneralText}"
             Text="Volume:" />
-        <Slider
+        <controls:SongSlider
             Grid.Row="2"
             Grid.Column="2"
             Grid.ColumnSpan="2"
             Margin="0,3"
-            Style="{StaticResource PositionSlider}" />
+            Maximum="1"
+            IsDragged="{Binding Engine.IsVolumeSeeking}"
+            DragCompleteCommand="{Binding SetVolumeCommand}"
+            Value="{Binding Engine.Volume, Mode=OneWay}" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="4"
             Margin="5,3"
             Style="{StaticResource GeneralText}"
-            Text="100%" />
-        <Slider
+            Text="{Binding Engine.Volume, Mode=OneWay, StringFormat=P0}" />
+        <controls:SongSlider
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="5"
             Margin="5"
-            Value="{Binding Engine.CurrentPosition, Mode=OneWay}"
+            DragCompleteCommand="{Binding SeekSliderPositionCommand}"
+            IsDragged="{Binding Engine.IsSeeking, Mode=TwoWay}"
             Maximum="{Binding Engine.Length}"
-            Style="{StaticResource PositionSlider}" />
+            Value="{Binding Engine.CurrentPosition}"/>
         <TextBlock
             Grid.Row="4"
             Grid.Column="0"
@@ -198,8 +203,8 @@
             <TextBlock Text="Output:" />
             <ComboBox
                 Width="200"
-                SelectedItem="{Binding SelectedAudioDevice}"
-                ItemsSource="{Binding Engine.AvailableOutputs}">
+                ItemsSource="{Binding Engine.AvailableOutputs}"
+                SelectedItem="{Binding SelectedAudioDevice}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />

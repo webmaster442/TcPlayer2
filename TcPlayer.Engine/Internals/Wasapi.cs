@@ -8,7 +8,7 @@ namespace TcPlayer.Engine.Internals
     internal class Wasapi
     {
         public const WasapiInitFlags InitFlags = WasapiInitFlags.AutoFormat | WasapiInitFlags.Buffer;
-        public const float BufferSize = 0.4f;
+        public const float BufferSize = 0.1f;
         public const BassFlags FileLoadFlags = BassFlags.Decode | BassFlags.Float;
         public const BassFlags MixerFlags = BassFlags.Float | BassFlags.Decode | BassFlags.MixerPositionEx;
 

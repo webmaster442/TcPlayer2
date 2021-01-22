@@ -34,5 +34,17 @@ namespace TcPlayer.Properties {
                 this["AudioOutIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float AudioVolume {
+            get {
+                return ((float)(this["AudioVolume"]));
+            }
+            set {
+                this["AudioVolume"] = value;
+            }
+        }
     }
 }
