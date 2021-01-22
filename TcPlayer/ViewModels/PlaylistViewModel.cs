@@ -4,17 +4,24 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Ui;
 
 namespace TcPlayer.ViewModels
 {
     internal class PlaylistViewModel : ViewModelBase
     {
-        private ObservableCollection<string> Files { get; }
+        public ObservableCollection<FileMetaData> Items { get; }
+
+        public DelegateCommand AddFilesCommand { get; }
+        public DelegateCommand ClearListCommand { get; }
+        public DelegateCommand DeleteCommand { get; }
+
 
         public PlaylistViewModel()
         {
-            Files = new ObservableCollection<string>();
+            Items = new ObservableCollection<FileMetaData>();
         }
+        
     }
 }

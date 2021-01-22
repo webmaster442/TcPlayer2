@@ -7,15 +7,15 @@
     xmlns:local="clr-namespace:TcPlayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="Main"
+    Title="Tc Player 2"
     Width="888"
     Height="500"
     Background="{StaticResource BaseColor}"
     ResizeMode="NoResize"
     WindowStyle="None"
-    Title="Tc Player 2"
     mc:Ignorable="d">
     <Window.TaskbarItemInfo>
-        <TaskbarItemInfo x:Name="TaskBar"/>
+        <TaskbarItemInfo x:Name="TaskBar" />
     </Window.TaskbarItemInfo>
     <Grid>
         <Grid.RowDefinitions>
@@ -37,7 +37,10 @@
                 <local:PlayView Grid.Row="1" />
             </TabItem>
             <TabItem Header="Playlist" />
-
         </TabControl>
+        <controls:UIBlocker
+            x:Name="Blocker"
+            Grid.RowSpan="2"
+            Visibility="Collapsed" />
     </Grid>
 </Window>

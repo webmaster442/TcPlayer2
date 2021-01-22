@@ -1,7 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Ui;
-using TcPlayer.Infrastructure;
 using TcPlayer.ViewModels;
 
 namespace TcPlayer
@@ -16,13 +16,23 @@ namespace TcPlayer
             base.OnStartup(e);
             IMessenger messenger = new Messenger();
 
-            Current.MainWindow = new MainWindow(messenger);
+            var window = new MainWindow(messenger);
+
+            Current.MainWindow = window;
             var engine = new AudioEngine(messenger);
 
-            var model = new MainViewModel(engine, new Dialogs());
+            var model = new MainViewModel(engine, window);
             Current.MainWindow.DataContext = model;
 
             Current.MainWindow.Show();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            if (Current.MainWindow is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }

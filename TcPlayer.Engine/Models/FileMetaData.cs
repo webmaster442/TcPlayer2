@@ -1,12 +1,15 @@
-﻿namespace TcPlayer.Engine.Models
+﻿using System;
+
+namespace TcPlayer.Engine.Models
 {
-    public record FileInfo
+    public record FileMetaData
     {
         public string FilePath { get; init; }
         public string Artist { get; init; }
         public string Title { get; init; }
+        public TimeSpan Length { get; init; }
 
-        public FileInfo()
+        public FileMetaData()
         {
             FilePath = string.Empty;
             Artist = string.Empty;
