@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TcPlayer.Engine.Internals;
+using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Properties;
 
 namespace TcPlayer.Engine
@@ -24,10 +25,13 @@ namespace TcPlayer.Engine
         private float _volume;
         private bool _isvolumeSeeking;
         private bool _isSeeking;
-        private readonly WasapiProcedure _process;
 
-        public AudioEngine()
+        private readonly WasapiProcedure _process;
+        private readonly IMessenger _messenger;
+
+        public AudioEngine(IMessenger messenger)
         {
+            _messenger = messenger;
             Bass.Configure(Configuration.UpdateThreads, 0);
             Reset();
             CurrentState = EngineState.NoFile;
@@ -74,13 +78,29 @@ namespace TcPlayer.Engine
         public double CurrentPosition
         {
             get => _currentPosition;
-            set => SetProperty(ref _currentPosition, value);
+            set
+            {
+                SetProperty(ref _currentPosition, value);
+                _messenger.SendMessage(new PositionInfo
+                {
+                    State = CurrentState,
+                    Percent = _currentPosition / _length
+                });
+            }
         }
 
         public EngineState CurrentState
         {
             get => _currentState;
-            private set => SetProperty(ref _currentState, value);
+            private set
+            {
+                SetProperty(ref _currentState, value);
+                _messenger.SendMessage(new PositionInfo
+                {
+                    State = CurrentState,
+                    Percent = _currentPosition / _length
+                });
+            }
         }
 
         public Metadata Metadata

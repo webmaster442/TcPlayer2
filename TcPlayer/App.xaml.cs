@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Navigation;
+﻿using System.Windows;
 using TcPlayer.Engine;
+using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
 using TcPlayer.ViewModels;
 
@@ -20,8 +14,10 @@ namespace TcPlayer
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            Current.MainWindow = new MainWindow();
-            var engine = new AudioEngine();
+            IMessenger messenger = new Messenger();
+
+            Current.MainWindow = new MainWindow(messenger);
+            var engine = new AudioEngine(messenger);
 
             var model = new MainViewModel(engine, new Dialogs());
             Current.MainWindow.DataContext = model;

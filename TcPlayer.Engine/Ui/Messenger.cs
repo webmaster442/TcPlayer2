@@ -8,7 +8,7 @@ namespace TcPlayer.Engine.Ui
     {
         private readonly List<Handler> _handlers;
 
-        private Messenger()
+        public Messenger()
         {
             _handlers = new List<Handler>();
         }

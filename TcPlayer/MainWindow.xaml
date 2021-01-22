@@ -12,14 +12,18 @@
     Background="{StaticResource BaseColor}"
     ResizeMode="NoResize"
     WindowStyle="None"
+    Title="Tc Player 2"
     mc:Ignorable="d">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="TaskBar"/>
+    </Window.TaskbarItemInfo>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <controls:Titlebar
-            Title="Tc Player 2"
+            Title="{Binding ElementName=Main, Path=Title}"
             Grid.Row="0"
             ControlledWindow="{Binding ElementName=Main}" />
         <TabControl
