@@ -2,6 +2,7 @@
 using System.Windows;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Messages;
+using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Ui;
 
 namespace TcPlayer

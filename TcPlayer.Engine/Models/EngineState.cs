@@ -1,4 +1,4 @@
-﻿namespace TcPlayer.Engine
+﻿namespace TcPlayer.Engine.Models
 {
     /// <summary>
     /// State transition:

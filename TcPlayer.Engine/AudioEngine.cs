@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TcPlayer.Engine.Internals;
 using TcPlayer.Engine.Messages;
+using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Properties;
 
 namespace TcPlayer.Engine

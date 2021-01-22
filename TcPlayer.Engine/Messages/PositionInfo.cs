@@ -1,4 +1,6 @@
-﻿namespace TcPlayer.Engine.Messages
+﻿using TcPlayer.Engine.Models;
+
+namespace TcPlayer.Engine.Messages
 {
     public record PositionInfo
     {

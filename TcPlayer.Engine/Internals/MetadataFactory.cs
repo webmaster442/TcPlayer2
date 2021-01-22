@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TagLib;
+using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Engine.Internals
 {

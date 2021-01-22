@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TcPlayer.Engine
+namespace TcPlayer.Engine.Models
 {
     public record Metadata
     {
