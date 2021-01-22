@@ -6,21 +6,15 @@ namespace TcPlayer.Engine
 {
     public record Metadata
     {
-        public string Artist { get; init; }
-        public string Title { get; init; }
-        public string Album { get; init; }
-        public string Year { get; init; }
         public byte[] Cover { get; init; }
         public IEnumerable<ChapterInfo> Chapters { get; init; }
+        public IReadOnlyList<string> MetaIfos { get; init; }
 
         internal Metadata()
         {
-            Album = string.Empty;
-            Artist = string.Empty;
             Chapters = Enumerable.Empty<ChapterInfo>();
             Cover = Array.Empty<byte>();
-            Title = string.Empty;
-            Year = string.Empty;
+            MetaIfos = new List<string>();
         }
     }
 }

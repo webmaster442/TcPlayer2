@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TagLib;
 
@@ -16,14 +17,20 @@ namespace TcPlayer.Engine.Internals
         {
             using (TagLib.File tags = TagLib.File.Create(filePath))
             {
+
+                var artist = tags.Tag.Performers?.Length > 0 ? tags.Tag.Performers[0] : string.Empty;
                 return new Metadata
                 {
-                    Year = tags.Tag.Year.ToString(),
-                    Artist = tags.Tag.Performers?.Length > 0 ? tags.Tag.Performers[0] : string.Empty,
-                    Album = tags.Tag.Album,
-                    Title = tags.Tag.Title,
                     Chapters = CreateChapters(filePath, tags.Properties.Duration),
                     Cover = ExtractCover(tags.Tag.Pictures),
+                    MetaIfos = new List<string>
+                    {
+                        $"{artist} - {tags.Tag.Title}",
+                        tags.Tag.Album,
+                        tags.Tag.Year.ToString(),
+                        Path.GetFileName(filePath),
+                        $"{tags.Properties.AudioBitrate}, {tags.Properties.AudioSampleRate} Hz",
+                    }
                 };
             }
         }

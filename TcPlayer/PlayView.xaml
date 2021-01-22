@@ -94,32 +94,22 @@
             Text="{Binding Engine.Length, Converter={infrastructure:TimeConverter}}"
             TextAlignment="Right" />
 
-        <StackPanel
+        <ItemsControl
+            ItemsSource="{Binding Engine.Metadata.MetaIfos}"
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="4"
             Margin="5">
-            <TextBlock
-                FontSize="22"
-                Style="{StaticResource Meta}"
-                Text="{Binding Engine.Metadata.Title}" />
-            <TextBlock
-                FontSize="22"
-                Style="{StaticResource Meta}"
-                Text="{Binding Engine.Metadata.Artist}" />
-            <TextBlock
-                FontSize="18"
-                Style="{StaticResource Meta}"
-                Text="{Binding Engine.Metadata.Album}" />
-            <TextBlock
-                FontSize="18"
-                Style="{StaticResource Meta}"
-                Text="{Binding Engine.Metadata.Year}" />
-            <TextBlock
-                FontSize="14"
-                Style="{StaticResource Meta}"
-                Text="FileName" />
-        </StackPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                        FontSize="18"
+                        Style="{StaticResource Meta}"
+                        Text="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <TextBlock
             Grid.Row="2"
             Grid.Column="1"
@@ -131,9 +121,9 @@
             Grid.Column="2"
             Grid.ColumnSpan="2"
             Margin="0,3"
-            Maximum="1"
-            IsDragged="{Binding Engine.IsVolumeSeeking}"
             DragCompleteCommand="{Binding SetVolumeCommand}"
+            IsDragged="{Binding Engine.IsVolumeSeeking}"
+            Maximum="1"
             Value="{Binding Engine.Volume, Mode=OneWay}" />
         <TextBlock
             Grid.Row="2"
@@ -149,7 +139,7 @@
             DragCompleteCommand="{Binding SeekSliderPositionCommand}"
             IsDragged="{Binding Engine.IsSeeking, Mode=TwoWay}"
             Maximum="{Binding Engine.Length}"
-            Value="{Binding Engine.CurrentPosition}"/>
+            Value="{Binding Engine.CurrentPosition}" />
         <TextBlock
             Grid.Row="4"
             Grid.Column="0"

@@ -13,9 +13,9 @@ namespace TcPlayer.Infrastructure
             {
                 var time = TimeSpan.FromSeconds(seconds);
                 if (time.Hours > 0)
-                    return $"{time.Hours}:{time.Minutes}:{time.Seconds}";
+                    return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}";
                 else
-                    return $"{time.Minutes}:{time.Seconds}";
+                    return $"{time.Minutes:00}:{time.Seconds:00}";
             }
             return Binding.DoNothing;
         }
