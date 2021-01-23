@@ -35,7 +35,7 @@ namespace TcPlayer.BassLibs
                     while ((line = streamreader.ReadLine()) != null)
                     {
                         string[] parts = line?.Split(' ') ?? new string[1] { string.Empty };
-                        var fullpath = Path.Combine(currentdir + @"engine\", parts[1].Replace("*", ""));
+                        var fullpath = Path.Combine(currentdir + parts[1].Replace("*", ""));
                         storedHashes.Add(fullpath, parts[0]);
                     }
                 }
