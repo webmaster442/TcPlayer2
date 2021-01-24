@@ -53,10 +53,10 @@ namespace TcPlayer.Engine
         private static string CreateFilterString(IEnumerable<string> items, string allName)
         {
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat("{0}|", allName, string.Join(";*", items));
+            builder.AppendFormat("{0}|{1}", allName, string.Join(";*", items));
             foreach (var item in items)
             {
-                builder.AppendFormat("|*{0};*{0}", item);
+                builder.AppendFormat("|*{0}|*{0};", item);
             }
             return builder.ToString();
         }

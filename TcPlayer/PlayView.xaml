@@ -188,7 +188,21 @@
                 ToolTip="Open..." />
             <MenuItem
                 Header="{StaticResource IconChapters}"
-                Style="{StaticResource MainButton}" />
+                Style="{StaticResource MainButton}"
+                UsesItemContainerTemplate="True"
+                ItemsSource="{Binding Engine.Metadata.Chapters}">
+                <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Command" Value="{Binding Path=DataContext.SeekSliderPositionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+                        <Setter Property="CommandParameter" Value="{Binding TimeStamp}"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
 
             <TextBlock Text="Output:" />
             <ComboBox

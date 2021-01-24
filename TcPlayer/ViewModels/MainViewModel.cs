@@ -85,7 +85,7 @@ namespace TcPlayer.ViewModels
 
         private void Onload(object obj)
         {
-            if (_dialogProvider.TrySelectFileDialog(Constants.AudioFormats, out string selected))
+            if (_dialogProvider.TrySelectFileDialog(Formats.AudioFormatFilterString, out string selected))
             {
                 Engine.Load(selected);
                 Engine.Play();

@@ -30,7 +30,7 @@ namespace TcPlayer.Engine.Internals
                         tags.Tag.Album,
                         tags.Tag.Year.ToString(),
                         Path.GetFileName(filePath),
-                        $"{tags.Properties.AudioBitrate}, {tags.Properties.AudioSampleRate} Hz",
+                        $"{tags.Properties.AudioBitrate} kbit, {tags.Properties.AudioSampleRate} Hz",
                     }
                 };
             }
