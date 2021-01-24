@@ -95,11 +95,11 @@
             TextAlignment="Right" />
 
         <ItemsControl
-            ItemsSource="{Binding Engine.Metadata.MetaIfos}"
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="4"
-            Margin="5">
+            Margin="5"
+            ItemsSource="{Binding Engine.Metadata.MetaIfos}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock
@@ -155,67 +155,70 @@
             Style="{StaticResource GeneralText}"
             Text="Total time" />
 
-        <Menu
+        <StackPanel
             Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="5"
-            Background="Transparent">
-            <MenuItem
-                Header="{StaticResource IconPrevious}"
-                Style="{StaticResource MainButton}" />
-            <MenuItem
-                Command="{Binding PlayCommand}"
-                Header="{StaticResource IconPlay}"
-                Style="{StaticResource MainButton}"
-                ToolTip="Play" />
-            <MenuItem
-                Command="{Binding PauseCommand}"
-                Header="{StaticResource IconPause}"
-                Style="{StaticResource MainButton}"
-                ToolTip="Pause" />
-            <MenuItem
-                Command="{Binding StopCommand}"
-                Header="{StaticResource IconStop}"
-                Style="{StaticResource MainButton}"
-                ToolTip="Stop" />
-            <MenuItem
-                Header="{StaticResource IconNext}"
-                Style="{StaticResource MainButton}" />
-            <MenuItem
-                Command="{Binding LoadCommand}"
-                Header="{StaticResource IconOpen}"
-                Style="{StaticResource MainButton}"
-                ToolTip="Open..." />
-            <MenuItem
-                Header="{StaticResource IconChapters}"
-                Style="{StaticResource MainButton}"
-                UsesItemContainerTemplate="True"
-                ItemsSource="{Binding Engine.Metadata.Chapters}">
-                <MenuItem.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
-                    </DataTemplate>
-                </MenuItem.ItemTemplate>
-                <MenuItem.ItemContainerStyle>
-                    <Style TargetType="MenuItem">
-                        <Setter Property="Command" Value="{Binding Path=DataContext.SeekSliderPositionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
-                        <Setter Property="CommandParameter" Value="{Binding TimeStamp}"/>
-                    </Style>
-                </MenuItem.ItemContainerStyle>
-            </MenuItem>
+            Orientation="Horizontal">
 
-            <TextBlock Text="Output:" />
+
+            <Menu Background="Transparent">
+                <MenuItem
+                    Header="{StaticResource IconPrevious}"
+                    Style="{StaticResource MainButton}" />
+                <MenuItem
+                    Command="{Binding PlayCommand}"
+                    Header="{StaticResource IconPlay}"
+                    Style="{StaticResource MainButton}"
+                    ToolTip="Play" />
+                <MenuItem
+                    Command="{Binding PauseCommand}"
+                    Header="{StaticResource IconPause}"
+                    Style="{StaticResource MainButton}"
+                    ToolTip="Pause" />
+                <MenuItem
+                    Command="{Binding StopCommand}"
+                    Header="{StaticResource IconStop}"
+                    Style="{StaticResource MainButton}"
+                    ToolTip="Stop" />
+                <MenuItem
+                    Header="{StaticResource IconNext}"
+                    Style="{StaticResource MainButton}" />
+                <MenuItem
+                    Command="{Binding LoadCommand}"
+                    Header="{StaticResource IconOpen}"
+                    Style="{StaticResource MainButton}"
+                    ToolTip="Open..." />
+                <MenuItem
+                    Header="{StaticResource IconChapters}"
+                    ItemsSource="{Binding Engine.Metadata.Chapters}"
+                    Style="{StaticResource MainButton}"
+                    UsesItemContainerTemplate="True">
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Command" Value="{Binding Path=DataContext.SeekSliderPositionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                            <Setter Property="CommandParameter" Value="{Binding TimeStamp}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+            </Menu>
+            <TextBlock Text="Output:" VerticalAlignment="Center" Margin="10,0" />
             <ComboBox
-                Width="200"
-                ItemsSource="{Binding Engine.AvailableOutputs}"
-                SelectedItem="{Binding SelectedAudioDevice}">
+                    Width="200"
+                    ItemsSource="{Binding Engine.AvailableOutputs}"
+                VerticalAlignment="Center"
+                    SelectedItem="{Binding SelectedAudioDevice}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-
-        </Menu>
+        </StackPanel>
     </Grid>
 </UserControl>

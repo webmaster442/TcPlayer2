@@ -46,6 +46,30 @@ namespace TcPlayer.Engine.Internals
 
         private static IEnumerable<ChapterInfo> CreateChapters(string filePath, TimeSpan duration)
         {
+            string[] mp4 = new string[] { ".mp4", ".m4a", ".m4b" };
+
+            if (mp4.Contains(Path.GetExtension(filePath).ToLower()))
+            {
+                using (var extractor = new Mp4Chapters.ChapterExtractor(System.IO.File.OpenRead(filePath)))
+                {
+                    var chapters = extractor.ExtractChapters().ToArray();
+                    if (chapters.Any())
+                    {
+                        return chapters;
+                    }
+                    else
+                    {
+                        return CreateTimeBasedChapters(duration);
+                    }
+                }
+            }
+
+            return CreateTimeBasedChapters(duration);
+
+        }
+
+        private static IEnumerable<ChapterInfo> CreateTimeBasedChapters(TimeSpan duration)
+        {
             int chapters = duration.TotalMinutes < 5 ? 10 : 20;
 
             for (int i = 0; i < chapters; i++)
@@ -56,7 +80,6 @@ namespace TcPlayer.Engine.Internals
                     TimeStamp = (duration.TotalSeconds / chapters) * (i + 1),
                 };
             }
-
         }
     }
 }
