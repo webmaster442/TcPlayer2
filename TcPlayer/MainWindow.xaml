@@ -12,6 +12,7 @@
     Height="500"
     Background="{StaticResource BaseColor}"
     ResizeMode="NoResize"
+    Closing="Main_Closing"
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.TaskbarItemInfo>

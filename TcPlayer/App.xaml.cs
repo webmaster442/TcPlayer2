@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ManagedBass;
+using System;
 using System.Windows;
-using TcPlayer.BassLibs;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Ui;
 using TcPlayer.ViewModels;
@@ -10,14 +10,21 @@ namespace TcPlayer
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public sealed partial class App : Application, IDisposable
     {
+        private IEngine _engine;
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (!BassDllVerify.VerifyDllFiles())
+            if (!BassLibs.BassLibs.VerifyDllFiles())
             {
                 MessageBox.Show("Engine dll files corrupted. Please reinstall.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(-1);
+            }
+
+            foreach (var pluginFile in BassLibs.BassLibs.Plugins)
+            {
+                Bass.PluginLoad(pluginFile);
             }
 
             base.OnStartup(e);
@@ -26,9 +33,9 @@ namespace TcPlayer
             var window = new MainWindow(messenger);
 
             Current.MainWindow = window;
-            var engine = new AudioEngine(messenger);
+             _engine = new AudioEngine(messenger);
 
-            var model = new MainViewModel(engine, window);
+            var model = new MainViewModel(_engine, window);
             Current.MainWindow.DataContext = model;
 
             Current.MainWindow.Show();
@@ -36,9 +43,15 @@ namespace TcPlayer
 
         protected override void OnExit(ExitEventArgs e)
         {
-            if (Current.MainWindow is IDisposable disposable)
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (_engine != null)
             {
-                disposable.Dispose();
+                _engine.Dispose();
+                _engine = null;
             }
         }
     }

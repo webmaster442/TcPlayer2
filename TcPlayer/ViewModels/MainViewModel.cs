@@ -7,7 +7,7 @@ using TcPlayer.Properties;
 
 namespace TcPlayer.ViewModels
 {
-    internal class MainViewModel : ViewModelBase
+    internal sealed class MainViewModel : ViewModelBase
     {
         private readonly IDialogProvider _dialogProvider;
         private SoundDeviceInfo _selectedAudioDevice;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using ManagedBass;
+using Microsoft.Win32;
 using System;
 using System.Threading;
 using System.Windows;
@@ -86,6 +87,12 @@ namespace TcPlayer
                 datacontext.Dispose();
                 DataContext = null;
             }
+        }
+
+        private void Main_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Bass.PluginFree(0);
+            Dispose();
         }
     }
 }
