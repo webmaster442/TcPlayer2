@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TcPlayer.Engine;
 
 namespace TcPlayer.Controls
 {
@@ -33,7 +35,6 @@ namespace TcPlayer.Controls
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(double), typeof(SongSlider), new PropertyMetadata(0.0, ValueChanged));
 
-
         public bool IsDragged
         {
             get { return (bool)GetValue(IsDraggedProperty); }
@@ -53,6 +54,19 @@ namespace TcPlayer.Controls
         public static readonly DependencyProperty DragCompleteCommandProperty =
             DependencyProperty.Register("DragCompleteCommand", typeof(ICommand), typeof(SongSlider), new PropertyMetadata(null));
 
+
+
+        public ICommand SongEndedCommand
+        {
+            get { return (ICommand)GetValue(SongEndedCommandProperty); }
+            set { SetValue(SongEndedCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty SongEndedCommandProperty =
+            DependencyProperty.Register("SongEndedCommand", typeof(ICommand), typeof(SongSlider), new PropertyMetadata(null));
+
+
+
         private static void ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SongSlider songSlider)
@@ -60,6 +74,10 @@ namespace TcPlayer.Controls
                 songSlider.externalChange = true;
                 songSlider.SliderPart.Value = songSlider.Value;
                 songSlider.externalChange = false;
+                if (Math.Abs(songSlider.Value - songSlider.Maximum) < AudioEngine.UpdatePeriodSeconds)
+                {
+                    songSlider.SongEndedCommand?.Execute(null);
+                }
             }
         }
 

@@ -75,6 +75,7 @@
             </MenuItem>
         </Menu>
         <DataGrid
+            SelectedItem="{Binding Selected}"
             Grid.Row="1"
             AlternationCount="2"
             AutoGenerateColumns="False"

@@ -19,6 +19,8 @@ namespace TcPlayer.Engine
             set => _timer.IsEnabled = value;
         }
 
+        public const double UpdatePeriodSeconds = 0.1d;
+
         public NotifyObject()
         {
             _timer = new DispatcherTimer(DispatcherPriority.Normal);

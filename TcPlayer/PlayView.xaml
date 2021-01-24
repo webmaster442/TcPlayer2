@@ -139,6 +139,7 @@
             DragCompleteCommand="{Binding SeekSliderPositionCommand}"
             IsDragged="{Binding Engine.IsSeeking, Mode=TwoWay}"
             Maximum="{Binding Engine.Length}"
+            SongEndedCommand="{Binding NextCommand}"
             Value="{Binding Engine.CurrentPosition}" />
         <TextBlock
             Grid.Row="4"
@@ -160,10 +161,9 @@
             Grid.Column="0"
             Grid.ColumnSpan="5"
             Orientation="Horizontal">
-
-
             <Menu Background="Transparent">
                 <MenuItem
+                    Command="{Binding PreviousCommand}"
                     Header="{StaticResource IconPrevious}"
                     Style="{StaticResource MainButton}" />
                 <MenuItem
@@ -182,6 +182,7 @@
                     Style="{StaticResource MainButton}"
                     ToolTip="Stop" />
                 <MenuItem
+                    Command="{Binding NextCommand}"
                     Header="{StaticResource IconNext}"
                     Style="{StaticResource MainButton}" />
                 <MenuItem
@@ -207,12 +208,15 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </Menu>
-            <TextBlock Text="Output:" VerticalAlignment="Center" Margin="10,0" />
-            <ComboBox
-                    Width="200"
-                    ItemsSource="{Binding Engine.AvailableOutputs}"
+            <TextBlock
+                Margin="10,0"
                 VerticalAlignment="Center"
-                    SelectedItem="{Binding SelectedAudioDevice}">
+                Text="Output:" />
+            <ComboBox
+                Width="200"
+                VerticalAlignment="Center"
+                ItemsSource="{Binding Engine.AvailableOutputs}"
+                SelectedItem="{Binding SelectedAudioDevice}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />

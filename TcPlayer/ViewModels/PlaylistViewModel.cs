@@ -15,12 +15,53 @@ namespace TcPlayer.ViewModels
         private readonly IDialogProvider _dialogProvider;
         private readonly Random _random;
 
+        private FileMetaData _selected;
+
+
         public BindingList<FileMetaData> Items { get; }
         public DelegateCommand AddFilesCommand { get; }
 
         public DelegateCommand<PlaylistSorting> SortListCommand { get; }
         public DelegateCommand SaveListCommand { get; }
         public DelegateCommand<bool> LoadListCommand { get; }
+
+
+        public bool TryStepNext()
+        {
+            int index = Items.IndexOf(Selected);
+            if (index == -1) index = -1;
+            if (index + 1 > Items.Count - 1)
+            {
+                return false;
+            }
+            else
+            {
+                Selected = Items[index + 1];
+                return true;
+            }
+        }
+
+        public bool TryStepBack()
+        {
+            int index = Items.IndexOf(Selected);
+            if (index == -1) index = 0;
+            if (index -1 < 0)
+            {
+                return false;
+            }
+            else
+            {
+                Selected = Items[index - 1];
+                return true;
+            }
+        }
+
+
+        public FileMetaData Selected
+        {
+            get => _selected;
+            set => SetProperty(ref _selected, value);
+        }
 
         public PlaylistViewModel(IDialogProvider dialogProvider)
         {
