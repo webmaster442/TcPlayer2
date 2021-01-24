@@ -7,7 +7,7 @@ namespace TcPlayer.Engine.Models
         public string FilePath { get; init; }
         public string Artist { get; init; }
         public string Title { get; init; }
-        public TimeSpan Length { get; init; }
+        public double Length { get; init; }
 
         public FileMetaData()
         {

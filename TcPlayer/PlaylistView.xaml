@@ -1,0 +1,84 @@
+﻿<UserControl
+    x:Class="TcPlayer.PlaylistView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:infrastructure="clr-namespace:TcPlayer.Infrastructure"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="{StaticResource BaseColor}" />
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="{StaticResource TitleBarText}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Menu
+            Background="{StaticResource Buttons}"
+            FontSize="16">
+            <MenuItem Header="File">
+                <MenuItem Header="Load List..." />
+                <MenuItem Header="Save List..." />
+            </MenuItem>
+            <MenuItem Header="Add">
+                <MenuItem
+                    Command="{Binding AddFilesCommand}"
+                    Header="Add Files.." />
+                <MenuItem Header="Add Folder..." />
+                <Separator />
+                <MenuItem Header="Append playlist..." />
+            </MenuItem>
+            <MenuItem Header="Sort">
+                <MenuItem Header="By Artist" />
+                <MenuItem Header="By Title" />
+                <MenuItem Header="By Path" />
+                <MenuItem Header="By Length" />
+                <Separator />
+                <MenuItem Header="Reverse" />
+                <MenuItem Header="Randomize" />
+            </MenuItem>
+        </Menu>
+        <DataGrid
+            Grid.Row="1"
+            AlternationCount="2"
+            AutoGenerateColumns="False"
+            Background="{StaticResource BaseColor}"
+            CanUserAddRows="False"
+            CanUserReorderColumns="True"
+            CanUserSortColumns="False"
+            ItemsSource="{Binding Items}"
+            SelectionMode="Extended"
+            SelectionUnit="FullRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="Auto"
+                    Binding="{Binding Artist}"
+                    FontSize="14"
+                    Header="Artist"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Title}"
+                    FontSize="14"
+                    Header="Title"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Length, Converter={infrastructure:TimeConverter}}"
+                    FontSize="14"
+                    Header="Length"
+                    IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

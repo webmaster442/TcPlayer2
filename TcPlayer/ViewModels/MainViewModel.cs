@@ -14,6 +14,8 @@ namespace TcPlayer.ViewModels
 
         public IEngine Engine { get; }
 
+        public PlaylistViewModel Playlist { get; }
+
         public DelegateCommand PlayCommand { get; }
         public DelegateCommand PauseCommand { get; }
         public DelegateCommand StopCommand { get; }
@@ -47,6 +49,7 @@ namespace TcPlayer.ViewModels
             SeekSliderPositionCommand = new DelegateCommand<double>(OnSeek);
             SetVolumeCommand = new DelegateCommand<double>(OnSetVolume);
 
+            Playlist = new PlaylistViewModel(dialogProvider);
             InitSavedAudioDevice();
         }
 

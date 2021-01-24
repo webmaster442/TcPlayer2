@@ -45,14 +45,19 @@ namespace TcPlayer
             TaskbarItemInfo.ProgressValue = message.Percent;
         }
 
-        public bool TrySelectFileDialog(string filters, out string selectedFile)
+        private static OpenFileDialog CreateSelectDialog(string filters, bool multiselect = false)
         {
-            var openFileDialog = new OpenFileDialog
+            return new OpenFileDialog
             {
                 Filter = filters,
-                Multiselect = false,
+                Multiselect = multiselect,
                 CheckFileExists = true
             };
+        }
+
+        public bool TrySelectFileDialog(string filters, out string selectedFile)
+        {
+            OpenFileDialog openFileDialog = CreateSelectDialog(filters);
             if (openFileDialog.ShowDialog() == true)
             {
                 selectedFile = openFileDialog.FileName;
@@ -61,6 +66,21 @@ namespace TcPlayer
             else
             {
                 selectedFile = string.Empty;
+                return false;
+            }
+        }
+
+        public bool TrySelectFilesDialog(string filters, out string[] selectedFiles)
+        {
+            OpenFileDialog openFileDialog = CreateSelectDialog(filters, true);
+            if (openFileDialog.ShowDialog() == true)
+            {
+                selectedFiles = openFileDialog.FileNames;
+                return true;
+            }
+            else
+            {
+                selectedFiles = Array.Empty<string>();
                 return false;
             }
         }

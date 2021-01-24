@@ -20,11 +20,9 @@ namespace TcPlayer.Engine
             {
                 try
                 {
-                    using (var client = new System.Net.WebClient())
-                    {
-                        var response = client.DownloadString(new Uri(file));
-                        return new StringReader(response);
-                    }
+                    using var client = new System.Net.WebClient();
+                    var response = client.DownloadString(new Uri(file));
+                    return new StringReader(response);
                 }
                 catch (WebException)
                 {
@@ -53,8 +51,9 @@ namespace TcPlayer.Engine
                     bag.Add(new FileMetaData
                     {
                         FilePath = item,
-                        Title = $"{artist} - {f.Tag.Title}",
-                        Length = f.Properties.Duration,
+                        Artist = artist,
+                        Title =f.Tag.Title,
+                        Length = f.Properties.Duration.TotalSeconds,
                     });
                 });
 
