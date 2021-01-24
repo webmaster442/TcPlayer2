@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Ui;
@@ -21,15 +19,56 @@ namespace TcPlayer.ViewModels
         public DelegateCommand AddFilesCommand { get; }
 
         public DelegateCommand<PlaylistSorting> SortListCommand { get; }
+        public DelegateCommand SaveListCommand { get; }
+        public DelegateCommand<bool> LoadListCommand { get; }
 
         public PlaylistViewModel(IDialogProvider dialogProvider)
         {
             _random = new Random();
             _dialogProvider = dialogProvider;
             Items = new BindingList<FileMetaData>();
+            LoadListCommand = new DelegateCommand<bool>(OnLoad);
+            SaveListCommand = new DelegateCommand(OnSave);
             AddFilesCommand = new DelegateCommand(OnAddFiles);
             SortListCommand = new DelegateCommand<PlaylistSorting>(OnSort);
 
+        }
+
+        private async void OnLoad(bool clearsList)
+        {
+            if (_dialogProvider.TrySelectFileDialog(Formats.PlaylistFilterString, out string selected))
+            {
+                var source = _dialogProvider.ShowUiBlocker();
+                IEnumerable<FileMetaData> items = null;
+                switch (Path.GetExtension(selected).ToLower())
+                {
+                    case ".m3u":
+                        items = await FileInfoFactory.CreateFromM3UFile(selected, source.Token);
+                        break;
+                    case ".pls":
+                        items = await FileInfoFactory.CreateFromPlsFile(selected, source.Token);
+                        break;
+                    case ".asx":
+                        items = await FileInfoFactory.CreateFromAsxFile(selected, source.Token);
+                        break;
+                    case ".wpl":
+                        items = await FileInfoFactory.CreateFromWplFile(selected, source.Token);
+                        break;
+                    case ".tpls":
+                        items = PlaylistFormat.Load(selected);
+                        break;
+                }
+                UpdateList(items, clearsList);
+                _dialogProvider.HideUiBlocker();
+            }
+        }
+
+        private void OnSave(object obj)
+        {
+            if (_dialogProvider.TrySaveFileDialog(Formats.NativePlaylistFilterString, out string selected))
+            {
+                PlaylistFormat.Save(selected, Items.ToArray());
+            }
         }
 
         private async void OnAddFiles(object obj)
@@ -71,8 +110,10 @@ namespace TcPlayer.ViewModels
         }
 
 
-        private void UpdateList(IEnumerable<FileMetaData> items, bool clear)
+        private void UpdateList(IEnumerable<FileMetaData>? items, bool clear)
         {
+            if (items == null) return;
+
             if (clear)
                 Items.Clear();
             Items.RaiseListChangedEvents = false;

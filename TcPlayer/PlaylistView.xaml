@@ -28,16 +28,23 @@
             Background="{StaticResource Buttons}"
             FontSize="16">
             <MenuItem Header="File">
-                <MenuItem Header="Load List..." />
-                <MenuItem Header="Save List..." />
+                <MenuItem
+                    Command="{Binding LoadListCommand}"
+                    CommandParameter="true"
+                    Header="Load List..." />
+                <MenuItem
+                    Command="{Binding SaveListCommand}"
+                    Header="Save List..." />
             </MenuItem>
             <MenuItem Header="Add">
                 <MenuItem
                     Command="{Binding AddFilesCommand}"
                     Header="Add Files.." />
-                <MenuItem Header="Add Folder..." />
                 <Separator />
-                <MenuItem Header="Append playlist..." />
+                <MenuItem
+                    Command="{Binding LoadListCommand}"
+                    CommandParameter="false"
+                    Header="Append playlist..." />
             </MenuItem>
             <MenuItem Header="Sort">
                 <MenuItem

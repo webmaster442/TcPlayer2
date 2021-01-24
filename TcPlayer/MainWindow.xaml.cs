@@ -85,6 +85,25 @@ namespace TcPlayer
             }
         }
 
+        public bool TrySaveFileDialog(string filter, out string selectedFile)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                Filter = filter
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                selectedFile = saveFileDialog.FileName;
+                return true;
+            }
+            else
+            {
+                selectedFile = string.Empty;
+                return false;
+            }
+        }
+
         public void HideUiBlocker()
         {
             Blocker.Hide();

@@ -25,7 +25,20 @@ namespace TcPlayer.Engine.Ui
 
         public void Execute(object? parameter)
         {
-            _execute((T)parameter);
+            if (typeof(T) != parameter?.GetType())
+            {
+                if (parameter is IConvertible && typeof(T).GetInterface(nameof(IConvertible)) != null)
+                {
+                    var converted = (T)Convert.ChangeType(parameter, typeof(T));
+                    _execute(converted);
+                }
+                else
+                {
+                    throw new InvalidCastException(nameof(parameter));
+                }
+            }
+            else
+                _execute((T)parameter);
         }
 
 

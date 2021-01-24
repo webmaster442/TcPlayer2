@@ -5,6 +5,8 @@ namespace TcPlayer.Engine
 {
     public static class Formats
     {
+        public const string NativePlaylistFilterString = "TcPlayler Playlist|*.tpls";
+
         public static string PlaylistFilterString
         {
             get => CreateFilterString(PlaylsitExtensions, "All playlist formats");
@@ -23,6 +25,7 @@ namespace TcPlayer.Engine
                 yield return ".m3u";
                 yield return ".wpl";
                 yield return ".asx";
+                yield return ".tpls";
             }
         }
 
