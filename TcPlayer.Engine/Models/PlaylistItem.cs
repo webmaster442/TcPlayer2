@@ -1,15 +1,18 @@
-﻿using System;
+﻿using System.Xml.Serialization;
 
 namespace TcPlayer.Engine.Models
 {
-    public record FileMetaData
+    public record PlaylistItem
     {
         public string FilePath { get; init; }
+        [XmlAttribute]
         public string Artist { get; init; }
+        [XmlAttribute]
         public string Title { get; init; }
+        [XmlAttribute]
         public double Length { get; init; }
 
-        public FileMetaData()
+        public PlaylistItem()
         {
             FilePath = string.Empty;
             Artist = string.Empty;

@@ -12,7 +12,7 @@ using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Engine
 {
-    public static class FileInfoFactory
+    public static class PlaylistItemFactory
     {
         private static TextReader? LoadFile(string file)
         {
@@ -35,11 +35,11 @@ namespace TcPlayer.Engine
             }
         }
 
-        public static Task<IEnumerable<FileMetaData>> CreateFileInfos(IEnumerable<string> items, CancellationToken cancellationToken)
+        public static Task<IEnumerable<PlaylistItem>> CreateFileInfos(IEnumerable<string> items, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
-                var bag = new ConcurrentBag<FileMetaData>();
+                var bag = new ConcurrentBag<PlaylistItem>();
 
                 ParallelOptions po = new ParallelOptions();
                 po.CancellationToken = cancellationToken;
@@ -48,7 +48,7 @@ namespace TcPlayer.Engine
                 {
                     TagLib.File f = TagLib.File.Create(item);
                     var artist = f.Tag.Performers?.Length > 0 ? f.Tag.Performers[0] : string.Empty;
-                    bag.Add(new FileMetaData
+                    bag.Add(new PlaylistItem
                     {
                         FilePath = item,
                         Artist = artist,
@@ -57,11 +57,11 @@ namespace TcPlayer.Engine
                     });
                 });
 
-                return bag as IEnumerable<FileMetaData>;
+                return bag as IEnumerable<PlaylistItem>;
             });
         }
 
-        public async static Task<IEnumerable<FileMetaData>> CreateFromM3UFile(string file, CancellationToken cancellationToken)
+        public async static Task<IEnumerable<PlaylistItem>> CreateFromM3UFile(string file, CancellationToken cancellationToken)
         {
             List<string> ret = new List<string>();
             string filedir = Path.GetDirectoryName(file) ?? "";
@@ -95,7 +95,7 @@ namespace TcPlayer.Engine
             return items;
         }
 
-        public async static Task<IEnumerable<FileMetaData>> CreateFromPlsFile(string file, CancellationToken cancellationToken)
+        public async static Task<IEnumerable<PlaylistItem>> CreateFromPlsFile(string file, CancellationToken cancellationToken)
         {
             List<string> ret = new List<string>();
             string filedir = Path.GetDirectoryName(file) ?? "";
@@ -132,7 +132,7 @@ namespace TcPlayer.Engine
             return items;
         }
 
-        public async static Task<IEnumerable<FileMetaData>> CreateFromAsxFile(string file, CancellationToken cancellationToken)
+        public async static Task<IEnumerable<PlaylistItem>> CreateFromAsxFile(string file, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using var content = LoadFile(file);
@@ -150,10 +150,10 @@ namespace TcPlayer.Engine
                 var items = await CreateFileInfos(ret, cancellationToken);
                 return items;
             }
-            return Enumerable.Empty<FileMetaData>();
+            return Enumerable.Empty<PlaylistItem>();
         }
 
-        public async static Task<IEnumerable<FileMetaData>> CreateFromWplFile(string file, CancellationToken cancellationToken)
+        public async static Task<IEnumerable<PlaylistItem>> CreateFromWplFile(string file, CancellationToken cancellationToken)
         {
             using var content = LoadFile(file);
             if (content != null)
@@ -169,7 +169,7 @@ namespace TcPlayer.Engine
                 var items = await CreateFileInfos(ret, cancellationToken);
                 return items;
             }
-            return Enumerable.Empty<FileMetaData>();
+            return Enumerable.Empty<PlaylistItem>();
         }
     }
 }

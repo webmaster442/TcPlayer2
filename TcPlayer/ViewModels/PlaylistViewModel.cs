@@ -15,10 +15,10 @@ namespace TcPlayer.ViewModels
         private readonly IDialogProvider _dialogProvider;
         private readonly Random _random;
 
-        private FileMetaData _selected;
+        private PlaylistItem _selected;
 
 
-        public BindingList<FileMetaData> Items { get; }
+        public BindingList<PlaylistItem> Items { get; }
         public DelegateCommand AddFilesCommand { get; }
 
         public DelegateCommand<PlaylistSorting> SortListCommand { get; }
@@ -57,7 +57,7 @@ namespace TcPlayer.ViewModels
         }
 
 
-        public FileMetaData Selected
+        public PlaylistItem Selected
         {
             get => _selected;
             set => SetProperty(ref _selected, value);
@@ -67,7 +67,7 @@ namespace TcPlayer.ViewModels
         {
             _random = new Random();
             _dialogProvider = dialogProvider;
-            Items = new BindingList<FileMetaData>();
+            Items = new BindingList<PlaylistItem>();
             LoadListCommand = new DelegateCommand<bool>(OnLoad);
             SaveListCommand = new DelegateCommand(OnSave);
             AddFilesCommand = new DelegateCommand(OnAddFiles);
@@ -80,20 +80,20 @@ namespace TcPlayer.ViewModels
             if (_dialogProvider.TrySelectFileDialog(Formats.PlaylistFilterString, out string selected))
             {
                 var source = _dialogProvider.ShowUiBlocker();
-                IEnumerable<FileMetaData> items = null;
+                IEnumerable<PlaylistItem> items = null;
                 switch (Path.GetExtension(selected).ToLower())
                 {
                     case ".m3u":
-                        items = await FileInfoFactory.CreateFromM3UFile(selected, source.Token);
+                        items = await PlaylistItemFactory.CreateFromM3UFile(selected, source.Token);
                         break;
                     case ".pls":
-                        items = await FileInfoFactory.CreateFromPlsFile(selected, source.Token);
+                        items = await PlaylistItemFactory.CreateFromPlsFile(selected, source.Token);
                         break;
                     case ".asx":
-                        items = await FileInfoFactory.CreateFromAsxFile(selected, source.Token);
+                        items = await PlaylistItemFactory.CreateFromAsxFile(selected, source.Token);
                         break;
                     case ".wpl":
-                        items = await FileInfoFactory.CreateFromWplFile(selected, source.Token);
+                        items = await PlaylistItemFactory.CreateFromWplFile(selected, source.Token);
                         break;
                     case ".tpls":
                         items = PlaylistFormat.Load(selected);
@@ -117,7 +117,7 @@ namespace TcPlayer.ViewModels
             if (_dialogProvider.TrySelectFilesDialog(Formats.AudioFormatFilterString, out string[] files))
             {
                 var source = _dialogProvider.ShowUiBlocker();
-                var items = await FileInfoFactory.CreateFileInfos(files, source.Token);
+                var items = await PlaylistItemFactory.CreateFileInfos(files, source.Token);
                 UpdateList(items, false);
                 _dialogProvider.HideUiBlocker();
             }
@@ -125,7 +125,7 @@ namespace TcPlayer.ViewModels
 
         private void OnSort(PlaylistSorting obj)
         {
-            List<FileMetaData> ordered = null;
+            List<PlaylistItem> ordered = null;
             switch (obj)
             {
                 case PlaylistSorting.Artist:
@@ -151,7 +151,7 @@ namespace TcPlayer.ViewModels
         }
 
 
-        private void UpdateList(IEnumerable<FileMetaData>? items, bool clear)
+        private void UpdateList(IEnumerable<PlaylistItem>? items, bool clear)
         {
             if (items == null) return;
 

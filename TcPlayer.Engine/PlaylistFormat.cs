@@ -8,23 +8,23 @@ namespace TcPlayer.Engine
 {
     public class PlaylistFormat
     {
-        public static IEnumerable<FileMetaData> Load(string file)
+        public static IEnumerable<PlaylistItem> Load(string file)
         {
             using (var stream = File.OpenRead(file))
             {
-                XmlSerializer xs = new XmlSerializer(typeof(FileMetaData[]));
+                XmlSerializer xs = new XmlSerializer(typeof(PlaylistItem[]));
                 var data = xs.Deserialize(stream);
                 if (data != null)
-                    return (FileMetaData[])data;
-                return Enumerable.Empty<FileMetaData>();
+                    return (PlaylistItem[])data;
+                return Enumerable.Empty<PlaylistItem>();
             }
         }
 
-        public static void Save(string file, FileMetaData[] items)
+        public static void Save(string file, PlaylistItem[] items)
         {
             using (var stream = File.Create(file))
             {
-                XmlSerializer xs = new XmlSerializer(typeof(FileMetaData[]));
+                XmlSerializer xs = new XmlSerializer(typeof(PlaylistItem[]));
                 xs.Serialize(stream, items);
             }
         }
