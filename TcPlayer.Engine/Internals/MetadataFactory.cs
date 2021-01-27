@@ -24,11 +24,13 @@ namespace TcPlayer.Engine.Internals
                 {
                     Chapters = CreateChapters(filePath, tags.Properties.Duration),
                     Cover = ExtractCover(tags.Tag.Pictures),
-                    MetaIfos = new List<string>
+                    Artist = artist,
+                    Title = tags.Tag.Title,
+                    Year = tags.Tag.Year.ToString(),
+                    Album = tags.Tag.Album,
+                    AlbumArtist = tags.Tag.FirstAlbumArtist,
+                    AdditionalMeta = new List<string>
                     {
-                        $"{artist} - {tags.Tag.Title}",
-                        tags.Tag.Album,
-                        tags.Tag.Year.ToString(),
                         Path.GetFileName(filePath),
                         $"{tags.Properties.AudioBitrate} kbit, {tags.Properties.AudioSampleRate} Hz",
                     }

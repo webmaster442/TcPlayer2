@@ -156,12 +156,25 @@
             Style="{StaticResource GeneralText}"
             Text="Total time" />
 
-        <StackPanel
+        <Grid
             Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="5"
-            Orientation="Horizontal">
-            <Menu Background="Transparent">
+            ShowGridLines="False">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Menu
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Background="Transparent">
                 <MenuItem
                     Command="{Binding PreviousCommand}"
                     Header="{StaticResource IconPrevious}"
@@ -208,11 +221,17 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </Menu>
+
             <TextBlock
-                Margin="10,0"
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="5,0"
                 VerticalAlignment="Center"
                 Text="Output:" />
             <ComboBox
+                HorizontalAlignment="Left"
+                Grid.Row="0"
+                Grid.Column="3"
                 Width="200"
                 VerticalAlignment="Center"
                 ItemsSource="{Binding Engine.AvailableOutputs}"
@@ -223,6 +242,6 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

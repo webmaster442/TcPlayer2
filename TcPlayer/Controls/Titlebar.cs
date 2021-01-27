@@ -11,6 +11,15 @@ namespace TcPlayer.Controls
             set { SetValue(TitleProperty, value); }
         }
 
+        public object Content
+        {
+            get { return (object)GetValue(ContentProperty); }
+            set { SetValue(ContentProperty, value); }
+        }
+
+        public static readonly DependencyProperty ContentProperty =
+            DependencyProperty.Register("Content", typeof(object), typeof(Titlebar), new PropertyMetadata(null));
+
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(Titlebar), new PropertyMetadata(string.Empty));
 

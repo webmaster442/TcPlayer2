@@ -23,7 +23,9 @@
                         Background="{TemplateBinding Background}">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
@@ -36,9 +38,14 @@
                                 FontWeight="Bold"
                                 Foreground="{StaticResource TitleBarText}"
                                 Text="{TemplateBinding Title}" />
+                            <ContentPresenter
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                Content="{TemplateBinding Content}"
+                                Grid.Column="2" />
                             <Button
                                 x:Name="PART_PIN"
-                                Grid.Column="1">
+                                Grid.Column="3">
                                 <Button.Style>
                                     <Style
                                         BasedOn="{StaticResource TitleButton}"
@@ -62,13 +69,13 @@
                             </Button>
                             <Button
                                 x:Name="PART_MINIMIZE"
-                                Grid.Column="2"
+                                Grid.Column="4"
                                 Content="{StaticResource IconMinimize}"
                                 Style="{StaticResource TitleButton}"
                                 ToolTip="Minimize" />
                             <Button
                                 x:Name="PART_CLOSE"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Content="{StaticResource IconClose}"
                                 Style="{StaticResource TitleButton}"
                                 ToolTip="Close" />

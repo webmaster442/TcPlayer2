@@ -26,7 +26,11 @@
         <controls:Titlebar
             Title="{Binding ElementName=Main, Path=Title}"
             Grid.Row="0"
-            ControlledWindow="{Binding ElementName=Main}" />
+            ControlledWindow="{Binding ElementName=Main}">
+            <controls:Titlebar.Content>
+                <controls:InternetMenu SongMetadata="{Binding Engine.Metadata}"/>
+            </controls:Titlebar.Content>
+        </controls:Titlebar>
         <TabControl
             Grid.Row="1"
             Background="Transparent"
