@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using TcPlayer.Engine;
+using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
 using TcPlayer.Properties;
 
 namespace TcPlayer.ViewModels
 {
-    internal sealed class MainViewModel : ViewModelBase
+    internal sealed class MainViewModel : ViewModelBase, IMessageClient<LoadFileMessage>
     {
         private readonly IDialogProvider _dialogProvider;
         private SoundDeviceInfo _selectedAudioDevice;
@@ -39,10 +40,13 @@ namespace TcPlayer.ViewModels
             }
         }
 
-        public MainViewModel(IEngine engine, IDialogProvider dialogProvider)
+        public Guid MessageReciverID => Guid.NewGuid();
+
+        public MainViewModel(IEngine engine, IDialogProvider dialogProvider, IMessenger messenger)
         {
             Engine = engine;
             _dialogProvider = dialogProvider;
+            messenger.SubScribe(this);
 
             PlayCommand = new DelegateCommand((o) => Engine.Play());
             StopCommand = new DelegateCommand((o) => Engine.Stop());
@@ -52,7 +56,7 @@ namespace TcPlayer.ViewModels
             SetVolumeCommand = new DelegateCommand<double>(OnSetVolume);
             PreviousCommand = new DelegateCommand(OnPrevious);
             NextCommand = new DelegateCommand(OnNext);
-            Playlist = new PlaylistViewModel(dialogProvider);
+            Playlist = new PlaylistViewModel(dialogProvider, messenger);
             InitSavedAudioDevice();
         }
 
@@ -109,6 +113,13 @@ namespace TcPlayer.ViewModels
                     }
                 }
             }
+        }
+
+        public void HandleMessage(LoadFileMessage message)
+        {
+            _dialogProvider.SetMainTab(MainTab.Play);
+            Engine.Load(message.File);
+            Engine.Play();
         }
 
         private void Onload(object obj)

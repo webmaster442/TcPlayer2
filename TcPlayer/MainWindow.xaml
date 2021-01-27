@@ -16,7 +16,27 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.TaskbarItemInfo>
-        <TaskbarItemInfo x:Name="TaskBar" />
+        <TaskbarItemInfo
+            x:Name="TaskBar"
+            ThumbnailClipMargin="5,30,578,180">
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfo
+                    Command="{Binding PreviousCommand}"
+                    Description="Previous" />
+                <ThumbButtonInfo
+                    Command="{Binding PlayCommand}"
+                    Description="Play" />
+                <ThumbButtonInfo
+                    Command="{Binding PauseCommand}"
+                    Description="Pause" />
+                <ThumbButtonInfo
+                    Command="{Binding StopCommand}"
+                    Description="Stop" />
+                <ThumbButtonInfo
+                    Command="{Binding NextCommand}"
+                    Description="Next" />
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
     </Window.TaskbarItemInfo>
     <Grid>
         <Grid.RowDefinitions>
@@ -32,6 +52,7 @@
             </controls:Titlebar.Content>
         </controls:Titlebar>
         <TabControl
+            x:Name="MainTabs"
             Grid.Row="1"
             Background="Transparent"
             BorderThickness="0"

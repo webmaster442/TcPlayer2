@@ -14,7 +14,7 @@ namespace TcPlayer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : Window, IMessageClient<PositionInfo>, IDialogProvider, IDisposable
+    public sealed partial class MainWindow : Window, IMessageClient<PositionInfoMessage>, IDialogProvider, IDisposable
     {
         private readonly IMessenger _messenger;
 
@@ -27,7 +27,7 @@ namespace TcPlayer
 
         public Guid MessageReciverID => Guid.NewGuid();
 
-        public void HandleMessage(PositionInfo message)
+        public void HandleMessage(PositionInfoMessage message)
         {
             switch (message.State)
             {
@@ -132,6 +132,14 @@ namespace TcPlayer
         {
             Bass.PluginFree(0);
             Dispose();
+        }
+
+        public void SetMainTab(MainTab tab)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                MainTabs.SelectedIndex = (int)tab;
+            });
         }
     }
 }

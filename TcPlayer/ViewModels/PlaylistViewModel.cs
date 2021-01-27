@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using TcPlayer.Engine;
+using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
@@ -13,6 +14,7 @@ namespace TcPlayer.ViewModels
     internal class PlaylistViewModel : ViewModelBase
     {
         private readonly IDialogProvider _dialogProvider;
+        private readonly IMessenger _messenger;
         private readonly Random _random;
 
         private PlaylistItem _selected;
@@ -24,6 +26,7 @@ namespace TcPlayer.ViewModels
         public DelegateCommand<PlaylistSorting> SortListCommand { get; }
         public DelegateCommand SaveListCommand { get; }
         public DelegateCommand<bool> LoadListCommand { get; }
+        public DelegateCommand<PlaylistItem> SelectedClick { get; }
 
 
         public bool TryStepNext()
@@ -63,16 +66,27 @@ namespace TcPlayer.ViewModels
             set => SetProperty(ref _selected, value);
         }
 
-        public PlaylistViewModel(IDialogProvider dialogProvider)
+        public PlaylistViewModel(IDialogProvider dialogProvider, IMessenger messenger)
         {
             _random = new Random();
             _dialogProvider = dialogProvider;
+            _messenger = messenger;
             Items = new BindingList<PlaylistItem>();
             LoadListCommand = new DelegateCommand<bool>(OnLoad);
             SaveListCommand = new DelegateCommand(OnSave);
             AddFilesCommand = new DelegateCommand(OnAddFiles);
             SortListCommand = new DelegateCommand<PlaylistSorting>(OnSort);
+            SelectedClick = new DelegateCommand<PlaylistItem?>(OnSelected);
 
+        }
+
+        private void OnSelected(PlaylistItem obj)
+        {
+            if (obj == null) return;
+            _messenger.SendMessage(new LoadFileMessage
+            {
+                File = obj.FilePath
+            });
         }
 
         private async void OnLoad(bool clearsList)

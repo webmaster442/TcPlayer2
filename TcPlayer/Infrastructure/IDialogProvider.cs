@@ -8,6 +8,8 @@ namespace TcPlayer.Infrastructure
         bool TrySelectFilesDialog(string filters, out string[] selectedFiles);
         bool TrySaveFileDialog(string filter, out string selectedFile);
 
+        void SetMainTab(MainTab tab);
+
         CancellationTokenSource ShowUiBlocker();
         void HideUiBlocker();
     }

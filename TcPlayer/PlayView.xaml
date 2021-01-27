@@ -178,7 +178,8 @@
                 <MenuItem
                     Command="{Binding PreviousCommand}"
                     Header="{StaticResource IconPrevious}"
-                    Style="{StaticResource MainButton}" />
+                    Style="{StaticResource MainButton}"
+                    ToolTip="Previous"/>
                 <MenuItem
                     Command="{Binding PlayCommand}"
                     Header="{StaticResource IconPlay}"
@@ -197,7 +198,8 @@
                 <MenuItem
                     Command="{Binding NextCommand}"
                     Header="{StaticResource IconNext}"
-                    Style="{StaticResource MainButton}" />
+                    Style="{StaticResource MainButton}"
+                    ToolTip="Next"/>
                 <MenuItem
                     Command="{Binding LoadCommand}"
                     Header="{StaticResource IconOpen}"

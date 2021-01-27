@@ -83,7 +83,7 @@ namespace TcPlayer.Engine
             set
             {
                 SetProperty(ref _currentPosition, value);
-                _messenger.SendMessage(new PositionInfo
+                _messenger.SendMessage(new PositionInfoMessage
                 {
                     State = CurrentState,
                     Percent = _currentPosition / _length
@@ -97,7 +97,7 @@ namespace TcPlayer.Engine
             private set
             {
                 SetProperty(ref _currentState, value);
-                _messenger.SendMessage(new PositionInfo
+                _messenger.SendMessage(new PositionInfoMessage
                 {
                     State = CurrentState,
                     Percent = _currentPosition / _length

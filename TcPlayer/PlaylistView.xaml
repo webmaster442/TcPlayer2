@@ -75,7 +75,6 @@
             </MenuItem>
         </Menu>
         <DataGrid
-            SelectedItem="{Binding Selected}"
             Grid.Row="1"
             AlternationCount="2"
             AutoGenerateColumns="False"
@@ -84,8 +83,15 @@
             CanUserReorderColumns="True"
             CanUserSortColumns="False"
             ItemsSource="{Binding Items}"
+            SelectedItem="{Binding Selected}"
             SelectionMode="Extended"
             SelectionUnit="FullRow">
+            <DataGrid.InputBindings>
+                <MouseBinding
+                    Command="{Binding SelectedClick}"
+                    CommandParameter="{Binding Selected}"
+                    Gesture="LeftDoubleClick" />
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="Auto"

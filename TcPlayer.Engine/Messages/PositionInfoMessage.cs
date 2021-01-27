@@ -2,7 +2,7 @@
 
 namespace TcPlayer.Engine.Messages
 {
-    public record PositionInfo
+    public record PositionInfoMessage
     {
         public double Percent { get; init; }
         public EngineState State { get; init; }

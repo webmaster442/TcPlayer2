@@ -35,7 +35,7 @@ namespace TcPlayer
             Current.MainWindow = window;
              _engine = new AudioEngine(messenger);
 
-            var model = new MainViewModel(_engine, window);
+            var model = new MainViewModel(_engine, window, messenger);
             Current.MainWindow.DataContext = model;
 
             Current.MainWindow.Show();
