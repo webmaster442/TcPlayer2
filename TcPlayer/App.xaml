@@ -8,6 +8,7 @@
                 <ResourceDictionary Source="Themes/Icons.xaml"/>
                 <ResourceDictionary Source="Themes/Titlebar.xaml"/>
                 <ResourceDictionary Source="Themes/PositionSlider.xaml"/>
+                <ResourceDictionary Source="Themes/Tabs.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

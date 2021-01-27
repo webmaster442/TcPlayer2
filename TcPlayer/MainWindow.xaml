@@ -11,8 +11,8 @@
     Width="888"
     Height="500"
     Background="{StaticResource BaseColor}"
-    ResizeMode="NoResize"
     Closing="Main_Closing"
+    ResizeMode="NoResize"
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.TaskbarItemInfo>
@@ -28,7 +28,7 @@
             Grid.Row="0"
             ControlledWindow="{Binding ElementName=Main}">
             <controls:Titlebar.Content>
-                <controls:InternetMenu SongMetadata="{Binding Engine.Metadata}"/>
+                <controls:InternetMenu SongMetadata="{Binding Engine.Metadata}" />
             </controls:Titlebar.Content>
         </controls:Titlebar>
         <TabControl
@@ -38,11 +38,14 @@
             TabStripPlacement="Bottom">
             <TabItem
                 Background="Transparent"
-                Header="Player">
+                Header="Player"
+                Style="{StaticResource MainTab}">
                 <local:PlayView Grid.Row="1" />
             </TabItem>
-            <TabItem Header="Playlist">
-                <local:PlaylistView DataContext="{Binding Playlist}"/>
+            <TabItem
+                Header="Playlist"
+                Style="{StaticResource MainTab}">
+                <local:PlaylistView DataContext="{Binding Playlist}" />
             </TabItem>
         </TabControl>
         <controls:UIBlocker
