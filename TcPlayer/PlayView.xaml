@@ -141,7 +141,7 @@
             Maximum="{Binding Engine.Length}"
             SongEndedCommand="{Binding NextCommand}"
             Value="{Binding Engine.CurrentPosition}" />
-        <TextBlock
+        <!--<TextBlock
             Grid.Row="4"
             Grid.Column="0"
             Margin="10,3"
@@ -154,7 +154,7 @@
             Margin="10,3"
             HorizontalAlignment="Right"
             Style="{StaticResource GeneralText}"
-            Text="Total time" />
+            Text="Total time" />-->
 
         <Grid
             Grid.Row="5"
@@ -179,7 +179,7 @@
                     Command="{Binding PreviousCommand}"
                     Header="{StaticResource IconPrevious}"
                     Style="{StaticResource MainButton}"
-                    ToolTip="Previous"/>
+                    ToolTip="Previous" />
                 <MenuItem
                     Command="{Binding PlayCommand}"
                     Header="{StaticResource IconPlay}"
@@ -199,7 +199,7 @@
                     Command="{Binding NextCommand}"
                     Header="{StaticResource IconNext}"
                     Style="{StaticResource MainButton}"
-                    ToolTip="Next"/>
+                    ToolTip="Next" />
                 <MenuItem
                     Command="{Binding LoadCommand}"
                     Header="{StaticResource IconOpen}"
@@ -231,10 +231,10 @@
                 VerticalAlignment="Center"
                 Text="Output:" />
             <ComboBox
-                HorizontalAlignment="Left"
                 Grid.Row="0"
                 Grid.Column="3"
                 Width="200"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 ItemsSource="{Binding Engine.AvailableOutputs}"
                 SelectedItem="{Binding SelectedAudioDevice}">
