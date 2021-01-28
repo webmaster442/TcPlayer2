@@ -53,14 +53,14 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Image
+        <controls:CoverImageControl
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="0"
             Width="300"
             Height="300"
             Margin="5"
-            Source="{Binding Engine.Metadata.Cover, Converter={infrastructure:ImageConverter}}" />
+            SongMetaData="{Binding Engine.Metadata}" />
         <TextBlock
             Grid.Row="0"
             Grid.Column="2"
