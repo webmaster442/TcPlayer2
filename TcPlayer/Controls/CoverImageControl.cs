@@ -13,7 +13,7 @@ using TcPlayer.Infrastructure;
 
 namespace TcPlayer.Controls
 {
-    public class CoverImageControl : Image
+    internal class CoverImageControl : Image
     {
         public Metadata SongMetaData
         {

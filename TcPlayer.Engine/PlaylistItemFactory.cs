@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManagedBass.Cd;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using TcPlayer.Engine.Internals;
 using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Engine
@@ -33,6 +35,11 @@ namespace TcPlayer.Engine
             {
                 return System.IO.File.OpenText(file);
             }
+        }
+
+        public static Task<IEnumerable<PlaylistItem>> LoadCd(int driveIndex, CancellationToken cancellationToken)
+        {
+            return AudioCd.LoadCd(driveIndex, cancellationToken);
         }
 
         public static Task<IEnumerable<PlaylistItem>> CreateFileInfos(IEnumerable<string> items, CancellationToken cancellationToken)

@@ -186,7 +186,7 @@ namespace TcPlayer.Engine
             {
                 Exception(Resources.ErrorNotInitialized);
             }
-            _decodeChannel = Bass.CreateStream(fileToPlay, 0, 0, Wasapi.FileLoadFlags);
+            _decodeChannel = MediaLoader.Load(fileToPlay, Wasapi.FileLoadFlags);
             if (_decodeChannel == 0)
             {
                 Exception();

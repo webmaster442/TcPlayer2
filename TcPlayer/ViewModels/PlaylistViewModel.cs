@@ -28,6 +28,8 @@ namespace TcPlayer.ViewModels
         public DelegateCommand<bool> LoadListCommand { get; }
         public DelegateCommand<PlaylistItem> SelectedClick { get; }
 
+        public DelegateCommand<int> LoadDiscCommand { get; }
+
 
         public bool TryStepNext()
         {
@@ -77,7 +79,7 @@ namespace TcPlayer.ViewModels
             AddFilesCommand = new DelegateCommand(OnAddFiles);
             SortListCommand = new DelegateCommand<PlaylistSorting>(OnSort);
             SelectedClick = new DelegateCommand<PlaylistItem?>(OnSelected);
-
+            LoadDiscCommand = new DelegateCommand<int>(OnLoadDisc);
         }
 
         private void OnSelected(PlaylistItem obj)
@@ -116,6 +118,14 @@ namespace TcPlayer.ViewModels
                 UpdateList(items, clearsList);
                 _dialogProvider.HideUiBlocker();
             }
+        }
+
+        private async void OnLoadDisc(int obj)
+        {
+            var source = _dialogProvider.ShowUiBlocker();
+            IEnumerable<PlaylistItem> items = await PlaylistItemFactory.LoadCd(obj, source.Token);
+            UpdateList(items, true);
+            _dialogProvider.HideUiBlocker();
         }
 
         private void OnSave(object obj)

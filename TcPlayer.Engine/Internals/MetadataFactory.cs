@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManagedBass.Cd;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,9 @@ namespace TcPlayer.Engine.Internals
 
         public static Metadata CreateFromFile(string filePath)
         {
+            if (MediaLoader.IsCdUrl(filePath))
+                return CreateForCd(filePath);
+
             using (TagLib.File tags = TagLib.File.Create(filePath))
             {
 
@@ -36,6 +40,27 @@ namespace TcPlayer.Engine.Internals
                     }
                 };
             }
+        }
+
+        private static Metadata CreateForCd(string filePath)
+        {
+            var (drive, track) = MediaLoader.ParseCdUrl(filePath);
+
+            return new Metadata
+            {
+                Chapters = CreateChapters(filePath, TimeSpan.FromSeconds(BassCd.GetTrackLength(drive, track))),
+                Cover = Array.Empty<byte>(),
+                Artist = AudioCd.GetPerformer(track),
+                Title = AudioCd.GetTitle(track),
+                Album = AudioCd.GetAlbum(),
+                AlbumArtist = string.Empty,
+                Year = string.Empty,
+                AdditionalMeta = new List<string>
+                {
+                    $"Track #{track}",
+                    "1411 kbit, 44100 Hz"
+                }
+            };
         }
 
         private static byte[] ExtractCover(IPicture[] pictures)
