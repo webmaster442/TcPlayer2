@@ -74,7 +74,8 @@ namespace TcPlayer.Controls
                 songSlider.externalChange = true;
                 songSlider.SliderPart.Value = songSlider.Value;
                 songSlider.externalChange = false;
-                if (Math.Abs(songSlider.Value - songSlider.Maximum) < AudioEngine.UpdatePeriodSeconds)
+                if (Math.Abs(songSlider.Value - songSlider.Maximum) < AudioEngine.UpdatePeriodSeconds
+                    && songSlider.Maximum > 0.0)
                 {
                     songSlider.SongEndedCommand?.Execute(null);
                 }

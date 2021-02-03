@@ -46,7 +46,10 @@ namespace TcPlayer.Engine
         {
             Length = 0.0;
             CurrentPosition = 0.0;
+            IsSeeking = false;
+            CurrentState = EngineState.NoFile;
             Metadata = MetadataFactory.CreateEmpty();
+            TimerEnabled = false;
         }
 
         private void Exception(string? message = null)
@@ -64,10 +67,6 @@ namespace TcPlayer.Engine
             {
                 long pos = BassMix.ChannelGetPosition(_decodeChannel, PositionFlags.Bytes);
                 CurrentPosition = Bass.ChannelBytes2Seconds(_decodeChannel, pos);
-            }
-            if (!IsVolumeSeeking)
-            {
-                Volume = BassWasapi.GetVolume(WasapiVolumeTypes.Session);
             }
         }
 
@@ -130,8 +129,15 @@ namespace TcPlayer.Engine
             get => _volume;
             set
             {
-                SetProperty(ref _volume, value);
-                BassWasapi.SetVolume(WasapiVolumeTypes.Session, value);
+                double rounded = Math.Round(value, 2);
+                if (Math.Abs(Math.Round(_volume - rounded, 2)) != 0.0)
+                {
+                    if (rounded > 1.0) rounded = 1.0;
+
+                    SetProperty(ref _volume, Convert.ToSingle(rounded));
+                    if (_isInitialized)
+                        BassWasapi.SetVolume(WasapiVolumeTypes.Session | WasapiVolumeTypes.WindowsHybridCurve, value);
+                }
             }
         }
 
@@ -234,17 +240,7 @@ namespace TcPlayer.Engine
         {
             Reset();
             CurrentState = EngineState.ReadyToPlay;
-            TimerEnabled = false;
             Bass.ChannelStop(_mixerChanel);
-
-        }
-
-        public void SetVolume(float level)
-        {
-            if (!BassWasapi.SetVolume(WasapiVolumeTypes.Session, level))
-            {
-                Exception();
-            }
         }
     }
 }

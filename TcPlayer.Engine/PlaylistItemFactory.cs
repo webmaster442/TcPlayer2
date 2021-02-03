@@ -1,5 +1,4 @@
-﻿using ManagedBass.Cd;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;

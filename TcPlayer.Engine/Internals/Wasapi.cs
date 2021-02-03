@@ -1,6 +1,5 @@
 ﻿using ManagedBass;
 using ManagedBass.Wasapi;
-using System;
 using System.Collections.Generic;
 
 namespace TcPlayer.Engine.Internals

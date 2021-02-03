@@ -53,13 +53,15 @@ namespace TcPlayer.Engine
             //empty in base class
         }
 
-        public void SetProperty<T>(ref T backfield, T value, [CallerMemberName]string propName = null)
+        public bool SetProperty<T>(ref T backfield, T value, [CallerMemberName]string propName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(backfield, value))
             {
                 backfield = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+                return true;
             }
+            return false;
         }
 
         public void OnPropertyChanged(string propertyName = "")

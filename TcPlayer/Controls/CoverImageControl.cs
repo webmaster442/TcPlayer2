@@ -15,6 +15,12 @@ namespace TcPlayer.Controls
 {
     internal class CoverImageControl : Image
     {
+        public CoverImageControl()
+        {
+            StretchDirection = StretchDirection.DownOnly;
+            Stretch = Stretch.Uniform;
+        }
+
         public Metadata SongMetaData
         {
             get { return (Metadata)GetValue(SongMetaDataProperty); }
@@ -129,15 +135,10 @@ namespace TcPlayer.Controls
         {
             if (source == null) return null;
 
-            Rect bounds = VisualTreeHelper.GetDescendantBounds(source);
-
-            if (bounds == Rect.Empty)
-            {
-                var size = new Size(source.Width, source.Height);
-                bounds = new Rect(size);
-                source.Measure(size);
-                source.Arrange(bounds);
-            }
+            var size = new Size(source.Width, source.Height);
+            var  bounds = new Rect(size);
+            source.Measure(size);
+            source.Arrange(bounds);
 
 
             var rtb = new RenderTargetBitmap((int)(bounds.Width * dpiX / 96.0),

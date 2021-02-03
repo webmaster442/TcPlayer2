@@ -14,6 +14,7 @@ namespace TcPlayer.Engine
         void Stop();
         void SeeekTo(double position);
         bool IsSeeking { get; set; }
+        bool IsVolumeSeeking { get; set; }
         double Length { get; }
         float Volume { get; set; }
         double CurrentPosition { get; }

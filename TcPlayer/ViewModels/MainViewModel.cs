@@ -84,7 +84,7 @@ namespace TcPlayer.ViewModels
 
         private void OnSetVolume(double obj)
         {
-            Engine.Volume = (float)obj;
+            Engine.Volume = Convert.ToSingle(obj);
         }
 
         private void OnSeek(double obj)
