@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace TcPlayer
 {
     /// <summary>
-    /// Interaction logic for ITunesLoader.xaml
+    /// Interaction logic for ITunesImportDialog.xaml
     /// </summary>
-    public partial class ITunesLoader : Window
+    public partial class ITunesImportDialog : Window
     {
-        public ITunesLoader()
+        public ITunesImportDialog()
         {
             InitializeComponent();
         }
