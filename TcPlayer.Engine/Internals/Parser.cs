@@ -52,10 +52,10 @@ namespace TcPlayer.Engine.Internals
             }
         }
 
-        public static string MillisecondsToFormattedMinutesAndSeconds(long milliseconds)
+        public static double MillisecondsToSeconds(long milliseconds)
         {
             var ts = TimeSpan.FromMilliseconds(milliseconds);
-            return ts.ToString("m\\:ss");
+            return ts.TotalSeconds;
         }
 
         public static string UrlDecode(string url)
@@ -120,7 +120,7 @@ namespace TcPlayer.Engine.Internals
                 Genre = trackElement.ParseStringValue("Genre"),
                 Kind = trackElement.ParseStringValue("Kind"),
                 Size = trackElement.ParseLongValue("Size"),
-                PlayingTime = MillisecondsToFormattedMinutesAndSeconds(trackElement.ParseLongValue("Total Time")),
+                PlayingTime = MillisecondsToSeconds(trackElement.ParseLongValue("Total Time")),
                 TrackNumber = trackElement.ParseNullableIntValue("Track Number"),
                 Year = trackElement.ParseNullableIntValue("Year"),
                 DateModified = trackElement.ParseNullableDateValue("Date Modified"),

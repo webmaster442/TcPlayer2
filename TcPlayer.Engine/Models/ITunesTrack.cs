@@ -41,9 +41,9 @@ namespace TcPlayer.Engine.Models
         /// </summary>
         public long Size { get; init; }
         /// <summary>
-        /// Track length
+        /// Track length in secs
         /// </summary>
-        public string PlayingTime { get; init; }
+        public double PlayingTime { get; init; }
         /// <summary>
         /// Track number
         /// </summary>
@@ -95,7 +95,6 @@ namespace TcPlayer.Engine.Models
             Album = string.Empty;
             Genre = string.Empty;
             Kind = string.Empty;
-            PlayingTime = string.Empty;
         }
     }
 }

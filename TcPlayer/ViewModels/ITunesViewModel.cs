@@ -44,12 +44,15 @@ namespace TcPlayer.ViewModels
 
         internal IEnumerable<ITunesTrack> GetItems()
         {
+            if (string.IsNullOrEmpty(SelectedItem))
+                return Enumerable.Empty<ITunesTrack>();
+
             if (_filter == ItunesTab.Playlists)
                 return _iTunes.ReadPlaylist(SelectedItem);
 
             ITunesFilterKind filter = GetFilter(_filter);
 
-            return _iTunes.Filter(filter, FilterText);
+            return _iTunes.Filter(filter, SelectedItem);
         }
 
         private ITunesFilterKind GetFilter(ItunesTab filter)

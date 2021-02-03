@@ -91,10 +91,10 @@ namespace TcPlayer.ViewModels
 
         private void OnImportItunes(object obj)
         {
-            if (_dialogProvider.TryImportITunes(out IEnumerable<ITunesTrack> items))
+            if (_dialogProvider.TryImportITunes(out IEnumerable<ITunesTrack> itunesItems))
             {
-
-                //UpdateList(items, false);
+                var items = PlaylistItemFactory.CreateFromITunesTracks(itunesItems);
+                UpdateList(items, false);
             }
         }
 
@@ -203,7 +203,8 @@ namespace TcPlayer.ViewModels
                 Items.Add(item);
             }
             Items.RaiseListChangedEvents = true;
-            Items.ResetItem(0);
+            if (Items.Count > 0)
+                Items.ResetItem(0);
         }
     }
 }

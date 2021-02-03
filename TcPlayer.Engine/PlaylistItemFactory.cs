@@ -177,5 +177,16 @@ namespace TcPlayer.Engine
             }
             return Enumerable.Empty<PlaylistItem>();
         }
+
+        public static IEnumerable<PlaylistItem> CreateFromITunesTracks(IEnumerable<ITunesTrack> tunesTracks)
+        {
+            return tunesTracks.AsParallel().Select(x => new PlaylistItem
+            {
+                Artist = x.Artist,
+                FilePath = x.FilePath,
+                Length = x.PlayingTime,
+                Title = x.Name
+            });
+        }
     }
 }
