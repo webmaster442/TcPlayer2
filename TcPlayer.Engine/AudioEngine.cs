@@ -39,7 +39,6 @@ namespace TcPlayer.Engine
             CurrentState = EngineState.NoFile;
             _metadata = MetadataFactory.CreateEmpty();
             _process = new WasapiProcedure(Process);
-            Volume = 1;
         }
 
         private void Reset()
@@ -67,6 +66,15 @@ namespace TcPlayer.Engine
             {
                 long pos = BassMix.ChannelGetPosition(_decodeChannel, PositionFlags.Bytes);
                 CurrentPosition = Bass.ChannelBytes2Seconds(_decodeChannel, pos);
+            }
+        }
+
+        protected override void UpdateTimerLong()
+        {
+            float vol = BassWasapi.GetVolume(WasapiVolumeTypes.Session | WasapiVolumeTypes.WindowsHybridCurve);
+            if (vol != _volume)
+            {
+                Volume = vol;
             }
         }
 
@@ -112,9 +120,9 @@ namespace TcPlayer.Engine
 
         public IEnumerable<SoundDeviceInfo> AvailableOutputs => Wasapi.GetDevices();
 
-        public bool IsSeeking 
+        public bool IsSeeking
         {
-            get => _isSeeking; 
+            get => _isSeeking;
             set => SetProperty(ref _isSeeking, value);
         }
 
@@ -129,15 +137,10 @@ namespace TcPlayer.Engine
             get => _volume;
             set
             {
-                double rounded = Math.Round(value, 2);
-                if (Math.Abs(Math.Round(_volume - rounded, 2)) != 0.0)
-                {
-                    if (rounded > 1.0) rounded = 1.0;
-
-                    SetProperty(ref _volume, Convert.ToSingle(rounded));
-                    if (_isInitialized)
-                        BassWasapi.SetVolume(WasapiVolumeTypes.Session | WasapiVolumeTypes.WindowsHybridCurve, value);
-                }
+                float target = value > 1.0f ? 1.0f : value;
+                SetProperty(ref _volume, target);
+                if (_isInitialized)
+                    BassWasapi.SetVolume(WasapiVolumeTypes.Session | WasapiVolumeTypes.WindowsHybridCurve, target);
             }
         }
 
@@ -174,6 +177,8 @@ namespace TcPlayer.Engine
                 _currentChannels = output.Channels;
                 _currentRate = output.SamplingFrequency;
                 _isInitialized = true;
+                _volume = BassWasapi.GetVolume(WasapiVolumeTypes.WindowsHybridCurve | WasapiVolumeTypes.Session);
+                OnPropertyChanged(nameof(Volume));
             }
             else
             {
