@@ -1,27 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using TcPlayer.Engine.Models;
+using TcPlayer.Infrastructure;
+using TcPlayer.ViewModels;
 
 namespace TcPlayer
 {
-    /// <summary>
-    /// Interaction logic for ITunesImportDialog.xaml
-    /// </summary>
     public partial class ITunesImportDialog : Window
     {
         public ITunesImportDialog()
         {
             InitializeComponent();
+            SourceInitialized += ITunesImportDialog_SourceInitialized;
+            DataContext = new ITunesViewModel();
+            
+        }
+
+        private void ITunesImportDialog_SourceInitialized(object sender, EventArgs e)
+        {
+            IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+            var currentStyle = Native.GetWindowLong(hwnd, Native.GWL_STYLE);
+            Native.SetWindowLong(hwnd, Native.GWL_STYLE, (currentStyle & ~Native.WS_MAXIMIZEBOX & ~Native.WS_MINIMIZEBOX));
+        }
+
+        private void ImportClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+        }
+
+        private void CancelClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
+
+        internal IEnumerable<ITunesTrack> GetItems()
+        {
+            if (DataContext is ITunesViewModel vm)
+            {
+                return vm.GetItems();
+            }
+            return Enumerable.Empty<ITunesTrack>();
         }
     }
 }

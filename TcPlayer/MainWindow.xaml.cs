@@ -1,6 +1,8 @@
 ﻿using ManagedBass;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using TcPlayer.Engine;
@@ -140,6 +142,21 @@ namespace TcPlayer
             {
                 MainTabs.SelectedIndex = (int)tab;
             });
+        }
+
+        public bool TryImportITunes(out IEnumerable<ITunesTrack> items)
+        {
+            ITunesImportDialog dialog = new ITunesImportDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                items = dialog.GetItems();
+                return true;
+            }
+            else
+            {
+                items = Enumerable.Empty<ITunesTrack>();
+                return false;
+            }
         }
     }
 }

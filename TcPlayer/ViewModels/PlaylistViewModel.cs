@@ -27,6 +27,7 @@ namespace TcPlayer.ViewModels
         public DelegateCommand SaveListCommand { get; }
         public DelegateCommand<bool> LoadListCommand { get; }
         public DelegateCommand<PlaylistItem> SelectedClick { get; }
+        public DelegateCommand ImportITunesCommand { get; }
 
         public DelegateCommand<int> LoadDiscCommand { get; }
 
@@ -80,6 +81,21 @@ namespace TcPlayer.ViewModels
             SortListCommand = new DelegateCommand<PlaylistSorting>(OnSort);
             SelectedClick = new DelegateCommand<PlaylistItem>(OnSelected);
             LoadDiscCommand = new DelegateCommand<int>(OnLoadDisc);
+            ImportITunesCommand = new DelegateCommand(OnImportItunes, CanImportItunes);
+        }
+
+        private bool CanImportItunes(object obj)
+        {
+            return ITunesXmlDb.UserHasItunesDb;
+        }
+
+        private void OnImportItunes(object obj)
+        {
+            if (_dialogProvider.TryImportITunes(out IEnumerable<ITunesTrack> items))
+            {
+
+                //UpdateList(items, false);
+            }
         }
 
         private void OnSelected(PlaylistItem obj)

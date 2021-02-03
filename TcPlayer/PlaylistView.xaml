@@ -47,6 +47,10 @@
                     Command="{Binding LoadListCommand}"
                     CommandParameter="false"
                     Header="Append playlist..." />
+                <Separator />
+                <MenuItem
+                    Command="{Binding ImportITunesCommand}"
+                    Header="Import from iTunes" />
             </MenuItem>
             <MenuItem Header="Sort">
                 <MenuItem

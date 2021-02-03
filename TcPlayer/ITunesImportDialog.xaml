@@ -6,9 +6,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Import from iTunes"
     Width="740"
+    ShowInTaskbar="False"
     Height="493"
+    WindowStyle="SingleBorderWindow"
     ResizeMode="CanResizeWithGrip"
-    mc:Ignorable="d">
+    mc:Ignorable="d" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -16,7 +18,9 @@
         </Grid.RowDefinitions>
         <ListBox
             Grid.Row="0"
-            ScrollViewer.VerticalScrollBarVisibility="Visible" />
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            SelectedItem="{Binding SelectedItem}"
+            ItemsSource="{Binding Items}"/>
         <Border
             Grid.Row="1"
             Height="80"
@@ -40,6 +44,7 @@
                         Height="24"
                         Margin="3,0"
                         Content="Artists"
+                        
                         Style="{StaticResource {x:Type ToggleButton}}" />
                     <RadioButton
                         Width="86"
@@ -68,6 +73,7 @@
                 </StackPanel>
                 <TextBox
                     Grid.Row="1"
+                    Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
                     Height="24"
                     Margin="3,0" />
                 <Button
@@ -76,6 +82,7 @@
                     Width="86"
                     Height="24"
                     Margin="3"
+                    Click="ImportClick"
                     Background="{StaticResource Buttons}"
                     Content="Import" />
                 <Button
@@ -85,7 +92,8 @@
                     Height="24"
                     Margin="3"
                     Background="{StaticResource Buttons}"
-                    Content="Cancel" />
+                    Content="Cancel"
+                    Click="CancelClick"/>
             </Grid>
         </Border>
     </Grid>

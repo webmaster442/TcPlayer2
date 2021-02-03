@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
+using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Infrastructure
 {
@@ -12,5 +14,6 @@ namespace TcPlayer.Infrastructure
 
         CancellationTokenSource ShowUiBlocker();
         void HideUiBlocker();
+        bool TryImportITunes(out IEnumerable<ITunesTrack> items);
     }
 }
