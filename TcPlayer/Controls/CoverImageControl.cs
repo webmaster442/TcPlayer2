@@ -116,7 +116,7 @@ namespace TcPlayer.Controls
                     if (responseObject != null && responseObject.resultCount > 0)
                     {
 
-                        string? artwork = responseObject.results?[0].artworkUrl100;
+                        string artwork = responseObject.results?[0].artworkUrl100;
                         artwork = artwork?.Replace("100x100", "600x600");
 
                         return await client.DownloadDataTaskAsync(artwork);

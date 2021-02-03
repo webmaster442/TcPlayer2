@@ -78,7 +78,7 @@ namespace TcPlayer.ViewModels
             SaveListCommand = new DelegateCommand(OnSave);
             AddFilesCommand = new DelegateCommand(OnAddFiles);
             SortListCommand = new DelegateCommand<PlaylistSorting>(OnSort);
-            SelectedClick = new DelegateCommand<PlaylistItem?>(OnSelected);
+            SelectedClick = new DelegateCommand<PlaylistItem>(OnSelected);
             LoadDiscCommand = new DelegateCommand<int>(OnLoadDisc);
         }
 
@@ -175,7 +175,7 @@ namespace TcPlayer.ViewModels
         }
 
 
-        private void UpdateList(IEnumerable<PlaylistItem>? items, bool clear)
+        private void UpdateList(IEnumerable<PlaylistItem> items, bool clear)
         {
             if (items == null) return;
 
