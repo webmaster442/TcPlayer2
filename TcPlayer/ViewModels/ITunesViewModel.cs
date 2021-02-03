@@ -11,14 +11,19 @@ namespace TcPlayer.ViewModels
     public class ITunesViewModel : ViewModelBase
     {
         private readonly ITunesXmlDb _iTunes;
-        private ITunesFilterKind _filter;
+        private ItunesTab _filter;
         private string _filterText;
         private string _selectedItem;
+        private ObservableCollection<string> _items;
 
-        public ObservableCollection<string> Items { get; private set; }
-
-        public ITunesFilterKind Filter 
+        public ObservableCollection<string> Items 
         { 
+            get => _items;
+            private set => SetProperty(ref _items, value);
+        }
+
+        public ItunesTab Filter
+        {
             get => _filter;
             set
             {
@@ -39,7 +44,29 @@ namespace TcPlayer.ViewModels
 
         internal IEnumerable<ITunesTrack> GetItems()
         {
-            throw new NotImplementedException();
+            if (_filter == ItunesTab.Playlists)
+                return _iTunes.ReadPlaylist(SelectedItem);
+
+            ITunesFilterKind filter = GetFilter(_filter);
+
+            return _iTunes.Filter(filter, FilterText);
+        }
+
+        private ITunesFilterKind GetFilter(ItunesTab filter)
+        {
+            switch (filter)
+            {
+                case ItunesTab.Albums:
+                    return ITunesFilterKind.Album;
+                case ItunesTab.Artists:
+                    return ITunesFilterKind.Artist;
+                case ItunesTab.Genres:
+                    return ITunesFilterKind.Genre;
+                case ItunesTab.Years:
+                    return ITunesFilterKind.Year;
+                default:
+                    throw new ArgumentException(nameof(filter));
+            }
         }
 
         public string SelectedItem
@@ -59,7 +86,7 @@ namespace TcPlayer.ViewModels
             {
                 _iTunes = new ITunesXmlDb(ITunesXmlDb.UserItunesDbPath, options);
                 FilterText = string.Empty;
-                Filter = ITunesFilterKind.Artist;
+                Filter = ItunesTab.Artists;
                 DoFiltering();
             }
 
@@ -70,17 +97,20 @@ namespace TcPlayer.ViewModels
             IEnumerable<string> items = Enumerable.Empty<string>();
             switch (Filter)
             {
-                case ITunesFilterKind.Album:
+                case ItunesTab.Albums:
                     items = _iTunes.Albums;
                     break;
-                case ITunesFilterKind.Artist:
+                case ItunesTab.Artists:
                     items = _iTunes.Artists;
                     break;
-                case ITunesFilterKind.Genre:
+                case ItunesTab.Genres:
                     items = _iTunes.Genres;
                     break;
-                case ITunesFilterKind.Year:
+                case ItunesTab.Years:
                     items = _iTunes.Years;
+                    break;
+                case ItunesTab.Playlists:
+                    items = _iTunes.Playlists;
                     break;
             }
 

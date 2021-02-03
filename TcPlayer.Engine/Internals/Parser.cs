@@ -27,7 +27,7 @@ namespace TcPlayer.Engine.Internals
         public static long ParseLongValue(this XElement track, string keyValue)
         {
             var stringValue = ParseStringValue(track, keyValue);
-            if (stringValue == null)
+            if (string.IsNullOrEmpty(stringValue))
                 return -1;
             else
                 return long.Parse(stringValue);

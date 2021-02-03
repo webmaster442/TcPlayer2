@@ -54,7 +54,7 @@ namespace TcPlayer.Engine
         {
             get
             {
-                if (_tracks == null)
+                if (_tracks.Count == 0)
                 {
                     var trackElements = LoadTrackElements();
 
@@ -77,19 +77,19 @@ namespace TcPlayer.Engine
         /// <inheritdoc/>
         public IEnumerable<string> Albums
         {
-            get { return Tracks.Select(t => t.Album).OrderBy(t => t).Distinct(); }
+            get { return Tracks.Select(t => t.Album.Trim()).OrderBy(t => t).Distinct(); }
         }
 
         /// <inheritdoc/>
         public IEnumerable<string> Artists
         {
-            get { return Tracks.Select(t => t.Artist).OrderBy(t => t).Distinct(); }
+            get { return Tracks.Select(t => t.Artist.Trim()).OrderBy(t => t).Distinct(); }
         }
 
         /// <inheritdoc/>
         public IEnumerable<string> Genres
         {
-            get { return Tracks.Select(t => t.Genre).OrderBy(t => t).Distinct(); }
+            get { return Tracks.Select(t => t.Genre.Trim()).OrderBy(t => t).Distinct(); }
         }
 
         /// <inheritdoc/>
@@ -127,11 +127,11 @@ namespace TcPlayer.Engine
             switch (kind)
             {
                 case ITunesFilterKind.Album:
-                    return Tracks.Where(t => t.Album == param);
+                    return Tracks.Where(t => t.Album.Trim() == param);
                 case ITunesFilterKind.Artist:
-                    return Tracks.Where(t => t.Artist == param);
+                    return Tracks.Where(t => t.Artist.Trim() == param);
                 case ITunesFilterKind.Genre:
-                    return Tracks.Where(t => t.Genre == param);
+                    return Tracks.Where(t => t.Genre.Trim() == param);
                 case ITunesFilterKind.Year:
                     return Tracks.Where(t => t.Year == int.Parse(param));
                 case ITunesFilterKind.None:
