@@ -123,6 +123,7 @@
             Margin="0,3"
             DragCompleteCommand="{Binding SetVolumeCommand}"
             IsDragged="{Binding Engine.IsVolumeSeeking}"
+            IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
             Maximum="1"
             Value="{Binding Engine.Volume, Mode=OneWay}" />
         <TextBlock
@@ -138,6 +139,7 @@
             Margin="5"
             DragCompleteCommand="{Binding SeekSliderPositionCommand}"
             IsDragged="{Binding Engine.IsSeeking, Mode=TwoWay}"
+            IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
             Maximum="{Binding Engine.Length}"
             SongEndedCommand="{Binding NextCommand}"
             Value="{Binding Engine.CurrentPosition}" />
@@ -178,26 +180,31 @@
                 <MenuItem
                     Command="{Binding PreviousCommand}"
                     Header="{StaticResource IconPrevious}"
+                    IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
                     Style="{StaticResource MainButton}"
                     ToolTip="Previous" />
                 <MenuItem
                     Command="{Binding PlayCommand}"
                     Header="{StaticResource IconPlay}"
+                    IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
                     Style="{StaticResource MainButton}"
                     ToolTip="Play" />
                 <MenuItem
                     Command="{Binding PauseCommand}"
                     Header="{StaticResource IconPause}"
+                    IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
                     Style="{StaticResource MainButton}"
                     ToolTip="Pause" />
                 <MenuItem
                     Command="{Binding StopCommand}"
                     Header="{StaticResource IconStop}"
+                    IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
                     Style="{StaticResource MainButton}"
                     ToolTip="Stop" />
                 <MenuItem
                     Command="{Binding NextCommand}"
                     Header="{StaticResource IconNext}"
+                    IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
                     Style="{StaticResource MainButton}"
                     ToolTip="Next" />
                 <MenuItem
@@ -207,6 +214,7 @@
                     ToolTip="Open..." />
                 <MenuItem
                     Header="{StaticResource IconChapters}"
+                    IsEnabled="{Binding Engine.CurrentState, Converter={infrastructure:StateToEnabledConverter}}"
                     ItemsSource="{Binding Engine.Metadata.Chapters}"
                     Style="{StaticResource MainButton}"
                     UsesItemContainerTemplate="True">

@@ -76,7 +76,7 @@ namespace TcPlayer.Controls
             {
                 icon.Width = 300;
                 icon.Height = 300;
-                Source = ToBitmapSource(icon);
+                Source = BitmapHelper.ToBitmapSource(icon);
             }
         }
 
@@ -90,6 +90,8 @@ namespace TcPlayer.Controls
                 image.DecodePixelWidth = 300;
                 image.CacheOption = BitmapCacheOption.OnLoad;
                 image.EndInit();
+                if (image.CanFreeze)
+                    image.Freeze();
                 Source = image;
             }
         }
@@ -130,27 +132,5 @@ namespace TcPlayer.Controls
                 return Array.Empty<byte>();
             }
         }
-
-        public static BitmapSource ToBitmapSource(FrameworkElement source, double dpiX = 96, double dpiY = 96)
-        {
-            if (source == null) return null;
-
-            var size = new Size(source.Width, source.Height);
-            var  bounds = new Rect(size);
-            source.Measure(size);
-            source.Arrange(bounds);
-
-
-            var rtb = new RenderTargetBitmap((int)(bounds.Width * dpiX / 96.0),
-                                             (int)(bounds.Height * dpiY / 96.0),
-                                             dpiX,
-                                             dpiY,
-                                             PixelFormats.Pbgra32);
-
-            rtb.Render(source);
-
-            return rtb;
-        }
-
     }
 }

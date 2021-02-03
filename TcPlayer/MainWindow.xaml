@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TcPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:infrastructure="clr-namespace:TcPlayer.Infrastructure"
     xmlns:local="clr-namespace:TcPlayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="Main"
@@ -22,17 +23,22 @@
             <TaskbarItemInfo.ThumbButtonInfos>
                 <ThumbButtonInfo
                     Command="{Binding PreviousCommand}"
-                    Description="Previous" />
+                    Description="Previous"
+                    ImageSource="{Binding Source={StaticResource IconPrevious}, Converter={infrastructure:IconConverter}}" />
                 <ThumbButtonInfo
                     Command="{Binding PlayCommand}"
+                    ImageSource="{Binding Source={StaticResource IconPlay}, Converter={infrastructure:IconConverter}}"
                     Description="Play" />
                 <ThumbButtonInfo
+                    ImageSource="{Binding Source={StaticResource IconPause}, Converter={infrastructure:IconConverter}}"
                     Command="{Binding PauseCommand}"
                     Description="Pause" />
                 <ThumbButtonInfo
+                    ImageSource="{Binding Source={StaticResource IconStop}, Converter={infrastructure:IconConverter}}"
                     Command="{Binding StopCommand}"
                     Description="Stop" />
                 <ThumbButtonInfo
+                    ImageSource="{Binding Source={StaticResource IconNext}, Converter={infrastructure:IconConverter}}"
                     Command="{Binding NextCommand}"
                     Description="Next" />
             </TaskbarItemInfo.ThumbButtonInfos>

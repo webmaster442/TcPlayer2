@@ -5,7 +5,8 @@
     <Canvas
         x:Key="IconPlay"
         Width="24"
-        Height="24">
+        Height="24"
+        x:Shared="false">
         <Path
             Data="M8,5.14V19.14L19,12.14L8,5.14Z"
             Fill="Black" />
@@ -14,7 +15,8 @@
     <Canvas
         x:Key="IconPause"
         Width="24"
-        Height="24">
+        Height="24"
+        x:Shared="false">
         <Path
             Data="M14,19H18V5H14M6,19H10V5H6V19Z"
             Fill="Black" />
@@ -23,7 +25,8 @@
     <Canvas
         x:Key="IconStop"
         Width="24"
-        Height="24">
+        Height="24"
+        x:Shared="false">
         <Path
             Data="M18,18H6V6H18V18Z"
             Fill="Black" />
@@ -32,7 +35,8 @@
     <Canvas
         x:Key="IconPrevious"
         Width="24"
-        Height="24">
+        Height="24"
+        x:Shared="false">
         <Path
             Data="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z"
             Fill="Black" />
@@ -41,7 +45,8 @@
     <Canvas
         x:Key="IconNext"
         Width="24"
-        Height="24">
+        Height="24"
+        x:Shared="false">
         <Path
             Data="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"
             Fill="Black" />
