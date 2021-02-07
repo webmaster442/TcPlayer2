@@ -8,7 +8,7 @@ namespace TcPlayer.Engine.Internals
     {
         private static readonly Regex _cdRegex = new Regex(@"cd:\/\/\d{1,2}\/\d{1,2}");
 
-        public static int Load(string file, BassFlags flags)
+        public static int LoadLocalFile(string file, BassFlags flags)
         {
             if (IsCdUrl(file))
             {
@@ -20,6 +20,12 @@ namespace TcPlayer.Engine.Internals
         public static bool IsCdUrl(string str)
         {
             return _cdRegex.IsMatch(str);
+        }
+
+        public static bool IsStream(string file)
+        {
+            return file.StartsWith("http://", System.StringComparison.OrdinalIgnoreCase)
+                || file.StartsWith("https://", System.StringComparison.OrdinalIgnoreCase);
         }
 
         public static (int drive, int track) ParseCdUrl(string cdUrl)

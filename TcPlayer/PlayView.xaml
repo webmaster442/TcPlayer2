@@ -103,6 +103,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock
+                        MaxWidth="560"
+                        TextWrapping="WrapWithOverflow"
                         FontSize="18"
                         Style="{StaticResource Meta}"
                         Text="{Binding}" />

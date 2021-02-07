@@ -11,6 +11,10 @@ namespace TcPlayer.Infrastructure
         {
             if (value is double seconds)
             {
+                if (double.IsNaN(seconds)
+                    || double.IsInfinity(seconds))
+                    return seconds.ToString();
+
                 var time = TimeSpan.FromSeconds(seconds);
                 if (time.Hours > 0)
                     return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}";

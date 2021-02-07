@@ -40,29 +40,33 @@ namespace TcPlayer.Controls
 
         private async void Refresh()
         {
+            byte[] downloaded = null;
             if (SongMetaData != null)
             {
                 if (SongMetaData.Cover.Length > 0)
                 {
                     LoadFromArray(SongMetaData.Cover);
                 }
+                else if (!string.IsNullOrEmpty(SongMetaData.Title)
+                    && SongMetaData.MediaKind == MediaKind.Stream)
+                {
+                    downloaded = await GetCover(SongMetaData.Title);
+                }
                 else if (!string.IsNullOrEmpty(SongMetaData.Artist)
                         && !string.IsNullOrEmpty(SongMetaData.Title))
                 {
-                    byte[] downloaded = await GetCover($"{SongMetaData.Artist} - {SongMetaData.Title}");
-                    if (downloaded != null && downloaded.Length > 0)
-                    {
-                        LoadFromArray(downloaded);
-                    }
-                    else
-                    {
-                        LoadDefault();
-                    }
+                    downloaded = await GetCover($"{SongMetaData.Artist} - {SongMetaData.Title}");
+                }
+
+                if (downloaded != null && downloaded.Length > 0)
+                {
+                    LoadFromArray(downloaded);
                 }
                 else
                 {
                     LoadDefault();
                 }
+
             }
             else
             {
@@ -72,7 +76,19 @@ namespace TcPlayer.Controls
 
         private void LoadDefault()
         {
-            if (FindResource("IconMusic") is Viewbox icon)
+            string resource = "IconMusic";
+            switch (SongMetaData.MediaKind)
+            {
+                case MediaKind.Cd:
+                    resource = "IconCd";
+                    break;
+                case MediaKind.Stream:
+                    resource = "IconNetwork";
+                    break;
+
+            }
+
+            if (FindResource(resource) is Viewbox icon)
             {
                 icon.Width = 300;
                 icon.Height = 300;

@@ -86,7 +86,11 @@ namespace TcPlayer.Controls
         {
             if (d is SongSlider songSlider)
             {
-                songSlider.SliderPart.Maximum = songSlider.Maximum;
+                if (double.IsNaN(songSlider.Maximum)
+                    || double.IsInfinity(songSlider.Maximum))
+                    songSlider.SliderPart.Maximum = 0;
+                else
+                    songSlider.SliderPart.Maximum = songSlider.Maximum;
             }
         }
 

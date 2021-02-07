@@ -52,15 +52,29 @@ namespace TcPlayer.Engine
 
                 Parallel.ForEach(items, po, item =>
                 {
-                    TagLib.File f = TagLib.File.Create(item);
-                    var artist = f.Tag.Performers?.Length > 0 ? f.Tag.Performers[0] : string.Empty;
-                    bag.Add(new PlaylistItem
+                    if (MediaLoader.IsStream(item))
                     {
-                        FilePath = item,
-                        Artist = artist,
-                        Title =f.Tag.Title,
-                        Length = f.Properties.Duration.TotalSeconds,
-                    });
+                        bag.Add(new PlaylistItem
+                        {
+                            FilePath = item,
+                            Artist = string.Empty,
+                            Title = item,
+                            Length = double.NaN,
+                        });
+                    }
+                    else
+                    {
+
+                        TagLib.File f = TagLib.File.Create(item);
+                        var artist = f.Tag.Performers?.Length > 0 ? f.Tag.Performers[0] : string.Empty;
+                        bag.Add(new PlaylistItem
+                        {
+                            FilePath = item,
+                            Artist = artist,
+                            Title = f.Tag.Title,
+                            Length = f.Properties.Duration.TotalSeconds,
+                        });
+                    }
                 });
 
                 return bag as IEnumerable<PlaylistItem>;

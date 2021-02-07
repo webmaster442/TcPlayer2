@@ -10,6 +10,8 @@ namespace TcPlayer.Engine.Models
         public IEnumerable<ChapterInfo> Chapters { get; init; }
         public IReadOnlyList<string> AdditionalMeta { get; init; }
 
+        public MediaKind MediaKind { get; init; }
+
         public Metadata()
         {
             Chapters = Enumerable.Empty<ChapterInfo>();
@@ -20,6 +22,7 @@ namespace TcPlayer.Engine.Models
             Year = string.Empty;
             Album = string.Empty;
             AlbumArtist = string.Empty;
+            MediaKind = MediaKind.File;
         }
 
         public string Artist { get; init; }
@@ -35,6 +38,8 @@ namespace TcPlayer.Engine.Models
             {
                 if (string.IsNullOrEmpty(Artist) && string.IsNullOrEmpty(Title))
                     yield return string.Empty;
+                else if (string.IsNullOrEmpty(Artist))
+                    yield return Title;
                 else
                     yield return $"{Artist} - {Title}";
 

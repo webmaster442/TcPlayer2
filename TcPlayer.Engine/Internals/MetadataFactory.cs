@@ -1,8 +1,10 @@
 ﻿using ManagedBass.Cd;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TagLib;
 using TcPlayer.Engine.Models;
 
@@ -29,6 +31,7 @@ namespace TcPlayer.Engine.Internals
                     Chapters = CreateChapters(filePath, tags.Properties.Duration),
                     Cover = ExtractCover(tags.Tag.Pictures),
                     Artist = artist,
+                    MediaKind = MediaKind.File,
                     Title = tags.Tag.Title,
                     Year = tags.Tag.Year.ToString(),
                     Album = tags.Tag.Album,
@@ -50,6 +53,7 @@ namespace TcPlayer.Engine.Internals
             {
                 Chapters = CreateChapters(filePath, TimeSpan.FromSeconds(BassCd.GetTrackLength(drive, track))),
                 Cover = Array.Empty<byte>(),
+                MediaKind = MediaKind.Cd,
                 Artist = AudioCd.GetPerformer(track),
                 Title = AudioCd.GetTitle(track),
                 Album = AudioCd.GetAlbum(),

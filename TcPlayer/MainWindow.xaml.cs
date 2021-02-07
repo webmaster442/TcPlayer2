@@ -36,15 +36,22 @@ namespace TcPlayer
                 case EngineState.ReadyToPlay:
                 case EngineState.NoFile:
                     TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
+                    TaskbarItemInfo.ProgressValue = 0;
                     break;
                 case EngineState.Playing:
-                    TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
+
+                    if (message.IsIndeterminate)
+                        TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
+                    else
+                        TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
                     break;
                 case EngineState.Paused:
                     TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Paused;
                     break;
             }
-            TaskbarItemInfo.ProgressValue = message.Percent;
+
+            if (!message.IsIndeterminate)
+                TaskbarItemInfo.ProgressValue = message.Percent;
         }
 
         private static OpenFileDialog CreateSelectDialog(string filters, bool multiselect = false)

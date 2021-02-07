@@ -3,8 +3,7 @@ using ManagedBass.Mix;
 using ManagedBass.Wasapi;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using TcPlayer.BassLibs;
+using System.Runtime.InteropServices;
 using TcPlayer.Engine.Internals;
 using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;
@@ -28,8 +27,11 @@ namespace TcPlayer.Engine
         private bool _isvolumeSeeking;
         private bool _isSeeking;
 
-        private readonly WasapiProcedure _process;
+        private readonly WasapiProcedure _waspiCallback;
+        private readonly DownloadProcedure _downloadCallback;
         private readonly IMessenger _messenger;
+        private string? _lastStreamInfo;
+        private string _currentFile;
 
         public AudioEngine(IMessenger messenger)
         {
@@ -38,11 +40,14 @@ namespace TcPlayer.Engine
             Reset();
             CurrentState = EngineState.NoFile;
             _metadata = MetadataFactory.CreateEmpty();
-            _process = new WasapiProcedure(Process);
+            _waspiCallback = new WasapiProcedure(OnWasapiCallback);
+            _downloadCallback = new DownloadProcedure(OnDownload);
+            _currentFile = string.Empty;
         }
 
         private void Reset()
         {
+            _currentFile = string.Empty;
             Length = 0.0;
             CurrentPosition = 0.0;
             IsSeeking = false;
@@ -90,11 +95,7 @@ namespace TcPlayer.Engine
             set
             {
                 SetProperty(ref _currentPosition, value);
-                _messenger.SendMessage(new PositionInfoMessage
-                {
-                    State = CurrentState,
-                    Percent = _currentPosition / _length
-                });
+                SendTaskBarInfoMessage();
             }
         }
 
@@ -104,12 +105,17 @@ namespace TcPlayer.Engine
             private set
             {
                 SetProperty(ref _currentState, value);
-                _messenger.SendMessage(new PositionInfoMessage
-                {
-                    State = CurrentState,
-                    Percent = _currentPosition / _length
-                });
+                SendTaskBarInfoMessage();
             }
+        }
+
+        private void SendTaskBarInfoMessage()
+        {
+            _messenger.SendMessage(new PositionInfoMessage
+            {
+                State = CurrentState,
+                Percent = double.IsInfinity(_length) || double.IsNaN(_length) ? double.PositiveInfinity : (_currentPosition / _length)
+            });
         }
 
         public Metadata Metadata
@@ -171,7 +177,7 @@ namespace TcPlayer.Engine
                 Dispose();
             }
             if (Bass.Init(0, output.SamplingFrequency, DeviceInitFlags.Default) &&
-                BassWasapi.Init(output.Index, output.SamplingFrequency, output.Channels, Wasapi.InitFlags, Wasapi.BufferSize, 0, _process)
+                BassWasapi.Init(output.Index, output.SamplingFrequency, output.Channels, Wasapi.InitFlags, Wasapi.BufferSize, 0, _waspiCallback)
                 && BassWasapi.Start())
             {
                 _currentChannels = output.Channels;
@@ -186,18 +192,45 @@ namespace TcPlayer.Engine
             }
         }
 
-        private int Process(System.IntPtr Buffer, int Length, System.IntPtr User)
+        private int OnWasapiCallback(System.IntPtr Buffer, int Length, System.IntPtr User)
         {
             return Bass.ChannelGetData(_mixerChanel, Buffer, Length);
         }
 
+        private void OnDownload(System.IntPtr Buffer, int Length, System.IntPtr User)
+        {
+            var ptr = Bass.ChannelGetTags(_decodeChannel, TagType.META);
+            if (ptr != IntPtr.Zero)
+            {
+                var streamInfo = Marshal.PtrToStringAnsi(ptr);
+                if (_lastStreamInfo != streamInfo)
+                {
+                    Metadata = NetworkMetadataFactory.CreateFromStream(_currentFile, streamInfo);
+                    _lastStreamInfo = streamInfo;
+                }
+            }
+        }
+
         public void Load(string fileToPlay)
         {
+            Reset();
             if (!_isInitialized)
             {
                 Exception(Resources.ErrorNotInitialized);
             }
-            _decodeChannel = MediaLoader.Load(fileToPlay, Wasapi.FileLoadFlags);
+
+            if (MediaLoader.IsStream(fileToPlay))
+            {
+                _lastStreamInfo = string.Empty;
+                _decodeChannel = Bass.CreateStream(fileToPlay, 0, Wasapi.FileLoadFlags, _downloadCallback);
+                Metadata = NetworkMetadataFactory.CreateFromStream(_currentFile, string.Empty);
+            }
+            else
+            {
+                _decodeChannel = MediaLoader.LoadLocalFile(fileToPlay, Wasapi.FileLoadFlags);
+                Metadata = MetadataFactory.CreateFromFile(fileToPlay);
+            }
+
             if (_decodeChannel == 0)
             {
                 Exception();
@@ -211,14 +244,17 @@ namespace TcPlayer.Engine
             {
                 Exception();
             }
-            Metadata = MetadataFactory.CreateFromFile(fileToPlay);
             long len = Bass.ChannelGetLength(_decodeChannel, PositionFlags.Bytes);
-            Length = Bass.ChannelBytes2Seconds(_decodeChannel, len);
+            if (len < 0)
+                Length = double.PositiveInfinity;
+            else
+                Length = Bass.ChannelBytes2Seconds(_decodeChannel, len);
 
             long pos = BassMix.ChannelGetPosition(_decodeChannel, PositionFlags.Bytes);
             CurrentPosition = Bass.ChannelBytes2Seconds(_decodeChannel, pos);
             CurrentState = EngineState.ReadyToPlay;
             TimerEnabled = false;
+            _currentFile = fileToPlay;
         }
 
         public void Pause()
