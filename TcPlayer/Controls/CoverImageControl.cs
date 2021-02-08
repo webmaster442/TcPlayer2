@@ -46,6 +46,7 @@ namespace TcPlayer.Controls
                 if (SongMetaData.Cover.Length > 0)
                 {
                     LoadFromArray(SongMetaData.Cover);
+                    return;
                 }
                 else if (!string.IsNullOrEmpty(SongMetaData.Title)
                     && SongMetaData.MediaKind == MediaKind.Stream)
@@ -61,6 +62,7 @@ namespace TcPlayer.Controls
                 if (downloaded != null && downloaded.Length > 0)
                 {
                     LoadFromArray(downloaded);
+                    
                 }
                 else
                 {
