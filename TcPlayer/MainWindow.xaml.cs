@@ -153,7 +153,7 @@ namespace TcPlayer
 
         public bool TryImportITunes(out IEnumerable<ITunesTrack> items)
         {
-            ITunesImportDialog dialog = new ITunesImportDialog();
+            var dialog = new ITunesImportDialog();
             if (dialog.ShowDialog() == true)
             {
                 items = dialog.GetItems();
@@ -162,6 +162,21 @@ namespace TcPlayer
             else
             {
                 items = Enumerable.Empty<ITunesTrack>();
+                return false;
+            }
+        }
+
+        public bool TryImportUrl(out string url)
+        {
+            var dialog = new ImportUrlDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                url = dialog.Url;
+                return true;
+            }
+            else
+            {
+                url = string.Empty;
                 return false;
             }
         }

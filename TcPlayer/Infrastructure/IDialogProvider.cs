@@ -15,5 +15,6 @@ namespace TcPlayer.Infrastructure
         CancellationTokenSource ShowUiBlocker();
         void HideUiBlocker();
         bool TryImportITunes(out IEnumerable<ITunesTrack> items);
+        bool TryImportUrl(out string url);
     }
 }

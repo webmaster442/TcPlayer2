@@ -49,6 +49,10 @@
                     Header="Append playlist..." />
                 <Separator />
                 <MenuItem
+                    Command="{Binding ImportUrlCommand}"
+                    Header="Add url..." />
+                <Separator />
+                <MenuItem
                     Command="{Binding ImportITunesCommand}"
                     Header="Import from iTunes" />
             </MenuItem>

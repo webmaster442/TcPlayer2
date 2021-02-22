@@ -30,6 +30,7 @@ namespace TcPlayer.ViewModels
         public DelegateCommand ImportITunesCommand { get; }
 
         public DelegateCommand<int> LoadDiscCommand { get; }
+        public DelegateCommand ImportUrlCommand { get; }
 
 
         public bool TryStepNext()
@@ -82,6 +83,18 @@ namespace TcPlayer.ViewModels
             SelectedClick = new DelegateCommand<PlaylistItem>(OnSelected);
             LoadDiscCommand = new DelegateCommand<int>(OnLoadDisc);
             ImportITunesCommand = new DelegateCommand(OnImportItunes, CanImportItunes);
+            ImportUrlCommand = new DelegateCommand(OnImportUrl);
+        }
+
+        private async void OnImportUrl(object obj)
+        {
+            if (_dialogProvider.TryImportUrl(out string url))
+            {
+                var source = _dialogProvider.ShowUiBlocker();
+                var items = await PlaylistItemFactory.CreateFromUrl(url, source.Token);
+                UpdateList(items, false);
+                _dialogProvider.HideUiBlocker();
+            }
         }
 
         private bool CanImportItunes(object obj)
@@ -112,25 +125,8 @@ namespace TcPlayer.ViewModels
             if (_dialogProvider.TrySelectFileDialog(Formats.PlaylistFilterString, out string selected))
             {
                 var source = _dialogProvider.ShowUiBlocker();
-                IEnumerable<PlaylistItem> items = null;
-                switch (Path.GetExtension(selected).ToLower())
-                {
-                    case ".m3u":
-                        items = await PlaylistItemFactory.CreateFromM3UFile(selected, source.Token);
-                        break;
-                    case ".pls":
-                        items = await PlaylistItemFactory.CreateFromPlsFile(selected, source.Token);
-                        break;
-                    case ".asx":
-                        items = await PlaylistItemFactory.CreateFromAsxFile(selected, source.Token);
-                        break;
-                    case ".wpl":
-                        items = await PlaylistItemFactory.CreateFromWplFile(selected, source.Token);
-                        break;
-                    case ".tpls":
-                        items = PlaylistFormat.Load(selected);
-                        break;
-                }
+                IEnumerable<PlaylistItem> items = await PlaylistItemFactory.LoadPlaylist(selected, source.Token);
+
                 UpdateList(items, clearsList);
                 _dialogProvider.HideUiBlocker();
             }

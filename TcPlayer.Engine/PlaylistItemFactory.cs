@@ -36,9 +36,47 @@ namespace TcPlayer.Engine
             }
         }
 
+        public static async Task<IEnumerable<PlaylistItem>> LoadPlaylist(string file, CancellationToken cancellationToken)
+        {
+            IEnumerable<PlaylistItem> items; 
+            switch (Path.GetExtension(file).ToLower())
+            {
+                case ".m3u":
+                    items = await CreateFromM3UFile(file, cancellationToken);
+                    break;
+                case ".pls":
+                    items = await CreateFromPlsFile(file, cancellationToken);
+                    break;
+                case ".asx":
+                    items = await CreateFromAsxFile(file, cancellationToken);
+                    break;
+                case ".wpl":
+                    items = await CreateFromWplFile(file, cancellationToken);
+                    break;
+                case ".tpls":
+                    items = PlaylistFormat.Load(file);
+                    break;
+                default:
+                    items = Enumerable.Empty<PlaylistItem>();
+                    break;
+            }
+            return items;
+        }
+
         public static Task<IEnumerable<PlaylistItem>> LoadCd(int driveIndex, CancellationToken cancellationToken)
         {
             return AudioCd.LoadCd(driveIndex, cancellationToken);
+        }
+
+        public async static Task<IEnumerable<PlaylistItem>> CreateFromUrl(string url, CancellationToken cancellationToken)
+        {
+            var extension = Path.GetExtension(url);
+            string[] playlists = new[] { ".m3u", ".pls", ".asx", ".wpl", ".tpls" };
+            if (playlists.Contains(extension))
+            {
+                return await LoadPlaylist(url, cancellationToken);
+            }
+            return await CreateFileInfos(Enumerable.Repeat(url, 1), cancellationToken);
         }
 
         public static Task<IEnumerable<PlaylistItem>> CreateFileInfos(IEnumerable<string> items, CancellationToken cancellationToken)
@@ -81,7 +119,7 @@ namespace TcPlayer.Engine
             });
         }
 
-        public async static Task<IEnumerable<PlaylistItem>> CreateFromM3UFile(string file, CancellationToken cancellationToken)
+        private async static Task<IEnumerable<PlaylistItem>> CreateFromM3UFile(string file, CancellationToken cancellationToken)
         {
             List<string> ret = new List<string>();
             string filedir = Path.GetDirectoryName(file) ?? "";
@@ -115,7 +153,7 @@ namespace TcPlayer.Engine
             return items;
         }
 
-        public async static Task<IEnumerable<PlaylistItem>> CreateFromPlsFile(string file, CancellationToken cancellationToken)
+        private async static Task<IEnumerable<PlaylistItem>> CreateFromPlsFile(string file, CancellationToken cancellationToken)
         {
             List<string> ret = new List<string>();
             string filedir = Path.GetDirectoryName(file) ?? "";
@@ -152,7 +190,7 @@ namespace TcPlayer.Engine
             return items;
         }
 
-        public async static Task<IEnumerable<PlaylistItem>> CreateFromAsxFile(string file, CancellationToken cancellationToken)
+        private async static Task<IEnumerable<PlaylistItem>> CreateFromAsxFile(string file, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using var content = LoadFile(file);
@@ -173,7 +211,7 @@ namespace TcPlayer.Engine
             return Enumerable.Empty<PlaylistItem>();
         }
 
-        public async static Task<IEnumerable<PlaylistItem>> CreateFromWplFile(string file, CancellationToken cancellationToken)
+        private async static Task<IEnumerable<PlaylistItem>> CreateFromWplFile(string file, CancellationToken cancellationToken)
         {
             using var content = LoadFile(file);
             if (content != null)
