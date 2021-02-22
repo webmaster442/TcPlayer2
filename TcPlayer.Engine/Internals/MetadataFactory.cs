@@ -36,7 +36,7 @@ namespace TcPlayer.Engine.Internals
                     Year = tags.Tag.Year.ToString(),
                     Album = tags.Tag.Album,
                     AlbumArtist = tags.Tag.FirstAlbumArtist,
-                    AdditionalMeta = new List<string>
+                    AdditionalMeta = new []
                     {
                         Path.GetFileName(filePath),
                         $"{tags.Properties.AudioBitrate} kbit, {tags.Properties.AudioSampleRate} Hz",
@@ -59,7 +59,7 @@ namespace TcPlayer.Engine.Internals
                 Album = AudioCd.GetAlbum(),
                 AlbumArtist = string.Empty,
                 Year = string.Empty,
-                AdditionalMeta = new List<string>
+                AdditionalMeta = new []
                 {
                     $"Track #{track}",
                     "1411 kbit, 44100 Hz"

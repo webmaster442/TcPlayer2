@@ -8,7 +8,7 @@ namespace TcPlayer.Engine.Models
     {
         public byte[] Cover { get; init; }
         public IEnumerable<ChapterInfo> Chapters { get; init; }
-        public IReadOnlyList<string> AdditionalMeta { get; init; }
+        public string[] AdditionalMeta { get; init; }
 
         public MediaKind MediaKind { get; init; }
 
@@ -16,13 +16,14 @@ namespace TcPlayer.Engine.Models
         {
             Chapters = Enumerable.Empty<ChapterInfo>();
             Cover = Array.Empty<byte>();
-            AdditionalMeta = new List<string>();
+            AdditionalMeta = Array.Empty<string>();
             Artist = string.Empty;
             Title = string.Empty;
             Year = string.Empty;
             Album = string.Empty;
             AlbumArtist = string.Empty;
             MediaKind = MediaKind.File;
+            CoverUrl = string.Empty;
         }
 
         public string Artist { get; init; }
@@ -30,6 +31,7 @@ namespace TcPlayer.Engine.Models
         public string Year { get; init; }
         public string Album { get; init; }
 
+        public string CoverUrl { get; init; }
         public string AlbumArtist { get; init; }
 
         public IEnumerable<string> MetaIfos

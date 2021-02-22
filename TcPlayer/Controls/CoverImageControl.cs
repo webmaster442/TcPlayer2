@@ -48,6 +48,11 @@ namespace TcPlayer.Controls
                     LoadFromArray(SongMetaData.Cover);
                     return;
                 }
+                else if (!string.IsNullOrEmpty(SongMetaData.CoverUrl)
+                    && SongMetaData.MediaKind == MediaKind.Stream)
+                {
+                    downloaded = await DownloadCover(SongMetaData.CoverUrl);
+                }
                 else if (!string.IsNullOrEmpty(SongMetaData.Title)
                     && SongMetaData.MediaKind == MediaKind.Stream)
                 {
@@ -62,7 +67,7 @@ namespace TcPlayer.Controls
                 if (downloaded != null && downloaded.Length > 0)
                 {
                     LoadFromArray(downloaded);
-                    
+
                 }
                 else
                 {
@@ -114,35 +119,51 @@ namespace TcPlayer.Controls
             }
         }
 
+        private static WebClient CreateClientWithProxy()
+        {
+            var client = new WebClient();
+            IWebProxy defaultProxy = WebRequest.DefaultWebProxy;
+            if (defaultProxy != null)
+            {
+                defaultProxy.Credentials = CredentialCache.DefaultCredentials;
+                client.Proxy = defaultProxy;
+            }
+            return client;
+        }
+
+        private async Task<byte[]> DownloadCover(string coverUrl)
+        {
+            try
+            {
+                using (WebClient client = CreateClientWithProxy())
+                {
+                    return await client.DownloadDataTaskAsync(coverUrl);
+                }
+            }
+            catch (Exception)
+            {
+                return Array.Empty<byte>();
+            }
+        }
+
         private async Task<byte[]> GetCover(string query)
         {
             try
             {
-                using (var client = new WebClient())
+                using (WebClient client = CreateClientWithProxy())
                 {
-                    IWebProxy defaultProxy = WebRequest.DefaultWebProxy;
-                    if (defaultProxy != null)
-                    {
-                        defaultProxy.Credentials = CredentialCache.DefaultCredentials;
-                        client.Proxy = defaultProxy;
-                    }
-
                     string encoded = HttpUtility.UrlEncode(query);
                     string fulladdress = $"https://itunes.apple.com/search?term={encoded}&media=music&limit=1";
                     string response = client.DownloadString(fulladdress);
                     var responseObject = JsonSerializer.Deserialize<RootObject>(response);
                     if (responseObject != null && responseObject.resultCount > 0)
                     {
-
                         string artwork = responseObject.results?[0].artworkUrl100;
                         artwork = artwork?.Replace("100x100", "600x600");
 
                         return await client.DownloadDataTaskAsync(artwork);
                     }
-                    else
-                    {
-                        return Array.Empty<byte>();
-                    }
+                    return Array.Empty<byte>();
                 }
             }
             catch (Exception)

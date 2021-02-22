@@ -7,13 +7,18 @@ namespace TcPlayer.Engine.Internals
 {
     internal class NetworkMetadataFactory
     {
-        private static Regex StreamTitle = new Regex(@"StreamTitle=\'(.+)\'");
+        private static Regex StreamTitle = new Regex(@"StreamTitle=\'(.+)\'$");
+        private static Regex StreamWithCover = new Regex(@"StreamTitle=\'(.+)\';StreamUrl=\'(.+)\';");
 
         public static Metadata CreateFromStream(string url, string? meta)
         {
             if (!string.IsNullOrEmpty(meta))
             {
-                if (StreamTitle.IsMatch(meta))
+                if (StreamWithCover.IsMatch(meta))
+                {
+                    return ParseFromStreamTitleTagWithCover(url, meta);
+                }
+                else if (StreamTitle.IsMatch(meta))
                 {
                     return ParseFromStreamTitleTag(url, meta);
                 }
@@ -28,13 +33,32 @@ namespace TcPlayer.Engine.Internals
                 {
                     Chapters = CreateNoChapters(),
                     MediaKind = MediaKind.Stream,
-                    AdditionalMeta = new List<string>
+                    AdditionalMeta = new []
                     {
                         url,
                     }
                 };
             }
 
+        }
+
+        private static Metadata ParseFromStreamTitleTagWithCover(string url, string meta)
+        {
+            var title = StreamWithCover.Split(meta).First(x => !string.IsNullOrEmpty(x));
+            var coverUrl = StreamWithCover.Split(meta).Last(x => !string.IsNullOrEmpty(x));
+
+            return new Metadata
+            {
+                Artist = string.Empty,
+                Title = title,
+                Chapters = CreateNoChapters(),
+                MediaKind = MediaKind.Stream,
+                CoverUrl = coverUrl,
+                AdditionalMeta = new []
+                {
+                    url,
+                }
+            };
         }
 
         private static Metadata ParseFromStreamTitleTag(string url, string meta)
@@ -47,7 +71,7 @@ namespace TcPlayer.Engine.Internals
                 Title = title,
                 Chapters = CreateNoChapters(),
                 MediaKind = MediaKind.Stream,
-                AdditionalMeta = new List<string>
+                AdditionalMeta = new []
                 {
                     url,
                 }
@@ -60,7 +84,7 @@ namespace TcPlayer.Engine.Internals
             {
                 Chapters = CreateNoChapters(),
                 MediaKind = MediaKind.Stream,
-                AdditionalMeta = new List<string>
+                AdditionalMeta = new []
                 {
                     url,
                     meta,
