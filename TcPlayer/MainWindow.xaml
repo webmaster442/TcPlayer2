@@ -79,6 +79,11 @@
                 Style="{StaticResource MainTab}">
                 <local:PlaylistView DataContext="{Binding Playlist}" />
             </TabItem>
+            <TabItem
+                Header="Equalizer"
+                Style="{StaticResource MainTab}">
+                <controls:EqualizerControl />
+            </TabItem>
         </TabControl>
         <controls:UIBlocker
             x:Name="Blocker"
