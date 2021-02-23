@@ -19,10 +19,10 @@ namespace TcPlayer.Engine.Internals
         private int _fx;
         private GCHandle _handle;
         private PeakEQParameters _eq;
-        private float[] _defaultConfig = new float[BandCount];
+        private float[] _defaultConfig = new float[] { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
         private int _channelHandle;
 
-        public Equalizer()
+        public Equalizer(int channelHandle)
         {
             _eq = new PeakEQParameters
             {
@@ -31,14 +31,17 @@ namespace TcPlayer.Engine.Internals
                 lChannel = FXChannelFlags.All,
             };
             _handle = GCHandle.Alloc(_eq, GCHandleType.Pinned);
-        }
 
-        public void ApplyToChannel(int channelHandle)
-        {
             _channelHandle = channelHandle;
-            _fx = Bass.ChannelSetFX(channelHandle, EffectType.PeakEQ, 0);
 
-            for (int i=0; i< BandCount; i++)
+            _fx = Bass.ChannelSetFX(_channelHandle, EffectType.PeakEQ, 0);
+
+            if (_fx == 0)
+            {
+                throw new EngineException($"Error: {Bass.LastError}");
+            }
+
+            for (int i = 0; i < BandCount; i++)
             {
                 _eq.lBand = i;
                 _eq.fCenter = EqualizerCenterFrequencies[i];

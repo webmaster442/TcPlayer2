@@ -1,4 +1,5 @@
 ﻿using ManagedBass;
+using ManagedBass.Fx;
 using System;
 using System.Windows;
 using TcPlayer.Engine;
@@ -26,6 +27,8 @@ namespace TcPlayer
             {
                 Bass.PluginLoad(pluginFile);
             }
+
+            var version = BassFx.Version;
 
             base.OnStartup(e);
             IMessenger messenger = new Messenger();

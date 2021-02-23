@@ -21,5 +21,6 @@ namespace TcPlayer.Engine
         EngineState CurrentState { get; }
         Metadata Metadata { get; }
         IEnumerable<SoundDeviceInfo> AvailableOutputs { get; }
+        void SetEqualizerParameters(float[] parameters);
     }
 }

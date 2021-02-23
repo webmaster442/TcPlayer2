@@ -33,6 +33,8 @@ namespace TcPlayer.Engine
         private string? _lastStreamInfo;
         private string _currentFile;
 
+        private Equalizer? _equalizer;
+        
         public AudioEngine(IMessenger messenger)
         {
             _messenger = messenger;
@@ -54,9 +56,11 @@ namespace TcPlayer.Engine
             CurrentState = EngineState.NoFile;
             Metadata = MetadataFactory.CreateEmpty();
             TimerEnabled = false;
+            _equalizer?.Dispose();
+            _equalizer = null;
         }
 
-        private void Exception(string? message = null)
+        private static void Exception(string? message = null)
         {
             if (message != null)
             {
@@ -152,6 +156,11 @@ namespace TcPlayer.Engine
 
         public void Dispose()
         {
+            if (_equalizer != null)
+            {
+                _equalizer.Dispose();
+                _equalizer = null;
+            }
             if (_mixerChanel != 0)
             {
                 Bass.StreamFree(_mixerChanel);
@@ -174,6 +183,7 @@ namespace TcPlayer.Engine
         {
             if (_isInitialized)
             {
+                Reset();
                 Dispose();
             }
             if (Bass.Init(0, output.SamplingFrequency, DeviceInitFlags.Default) &&
@@ -244,6 +254,9 @@ namespace TcPlayer.Engine
             {
                 Exception();
             }
+
+            _equalizer = new Equalizer(_mixerChanel);
+
             long len = Bass.ChannelGetLength(_decodeChannel, PositionFlags.Bytes);
             if (len < 0)
                 Length = double.PositiveInfinity;
@@ -279,9 +292,17 @@ namespace TcPlayer.Engine
 
         public void Stop()
         {
+            Bass.ChannelStop(_mixerChanel);
             Reset();
             CurrentState = EngineState.ReadyToPlay;
-            Bass.ChannelStop(_mixerChanel);
+        }
+
+        public void SetEqualizerParameters(float[] parameters)
+        {
+            if (_equalizer == null)
+                return;
+
+            _equalizer.UpdateEqualizerConfig(parameters);
         }
     }
 }
