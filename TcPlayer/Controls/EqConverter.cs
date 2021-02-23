@@ -20,7 +20,7 @@ namespace TcPlayer.Controls
 
         private double MapX(int x, double width)
         {
-            double avaliable = width / 5;
+            double avaliable = width / 6;
             return avaliable * x;
         }
 
@@ -30,7 +30,7 @@ namespace TcPlayer.Controls
             if (parameter != null)
                 width = System.Convert.ToDouble(parameter);
 
-            PointCollection points = new PointCollection(6);
+            PointCollection points = new PointCollection(7);
             points.Add(new Point(0, MapY(0)));
             int x =1;
             foreach (var value in values.OfType<double>())
@@ -38,6 +38,7 @@ namespace TcPlayer.Controls
                 points.Add(new Point(MapX(x, width), MapY(value)));
                 ++x;
             }
+            points.Add(new Point(width, MapY(0)));
             return points;
         }
 

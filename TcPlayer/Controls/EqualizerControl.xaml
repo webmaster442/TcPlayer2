@@ -22,6 +22,13 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <Rectangle
+            Grid.Row="0"
+            Grid.ColumnSpan="5"
+            Height="2"
+            VerticalAlignment="Top"
+            StrokeThickness="8"
+            Margin="0,59,0,0" Fill="Black" />
         <Border
             Grid.ColumnSpan="5"
             BorderBrush="Black"
@@ -53,6 +60,7 @@
                 </Polyline.Points>
             </Polyline>
         </Border>
+
         <Slider
             x:Name="Slider0"
             Grid.Row="1"
@@ -126,10 +134,11 @@
         <Button
             Grid.Row="3"
             Grid.Column="4"
-            Margin="5"
-            Background="{StaticResource Buttons}"
-            HorizontalAlignment="Right"
             Width="100"
+            Margin="5"
+            HorizontalAlignment="Right"
+            Background="{StaticResource Buttons}"
+            Click="ResetClick"
             Content="Reset" />
     </Grid>
 </UserControl>
