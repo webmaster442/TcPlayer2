@@ -12,13 +12,13 @@ namespace TcPlayer.Controls
     {
         private const int VerticalHeight = 115;
 
-        double MapY(double input)
+        private static double MapY(double input)
         {
             var point = (input - 1) * (VerticalHeight - 0) / (-1 - 1);
             return point;
         }
 
-        private double MapX(int x, double width)
+        private static double MapX(int x, double width)
         {
             double avaliable = width / 6;
             return avaliable * x;
