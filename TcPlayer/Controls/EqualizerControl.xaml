@@ -26,9 +26,10 @@
             Grid.Row="0"
             Grid.ColumnSpan="5"
             Height="2"
+            Margin="0,59,0,0"
             VerticalAlignment="Top"
-            StrokeThickness="8"
-            Margin="0,59,0,0" Fill="Black" />
+            Fill="Black"
+            StrokeThickness="8" />
         <Border
             Grid.ColumnSpan="5"
             BorderBrush="Black"
@@ -68,7 +69,8 @@
             HorizontalAlignment="Center"
             Maximum="1"
             Minimum="-1"
-            Orientation="Vertical" />
+            Orientation="Vertical"
+            ValueChanged="SliderValueChanged" />
         <Slider
             x:Name="Slider1"
             Grid.Row="1"
@@ -76,7 +78,8 @@
             HorizontalAlignment="Center"
             Maximum="1"
             Minimum="-1"
-            Orientation="Vertical" />
+            Orientation="Vertical"
+            ValueChanged="SliderValueChanged" />
         <Slider
             x:Name="Slider2"
             Grid.Row="1"
@@ -84,7 +87,8 @@
             HorizontalAlignment="Center"
             Maximum="1"
             Minimum="-1"
-            Orientation="Vertical" />
+            Orientation="Vertical"
+            ValueChanged="SliderValueChanged" />
         <Slider
             x:Name="Slider3"
             Grid.Row="1"
@@ -92,7 +96,8 @@
             HorizontalAlignment="Center"
             Maximum="1"
             Minimum="-1"
-            Orientation="Vertical" />
+            Orientation="Vertical"
+            ValueChanged="SliderValueChanged" />
         <Slider
             x:Name="Slider4"
             Grid.Row="1"
@@ -100,7 +105,8 @@
             HorizontalAlignment="Center"
             Maximum="1"
             Minimum="-1"
-            Orientation="Vertical" />
+            Orientation="Vertical"
+            ValueChanged="SliderValueChanged" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="0"
