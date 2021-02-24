@@ -13,6 +13,7 @@ namespace TcPlayer.ViewModels
         private readonly IDialogProvider _dialogProvider;
         private readonly ISettingsFile _settingsFile;
         private SoundDeviceInfo _selectedAudioDevice;
+        private float[] _currentEq;
 
         public IEngine Engine { get; }
 
@@ -27,6 +28,8 @@ namespace TcPlayer.ViewModels
         public DelegateCommand PreviousCommand { get; }
         public DelegateCommand NextCommand { get; }
 
+        public DelegateCommand<float[]> ApplyEqCommand { get; }
+
         public SoundDeviceInfo SelectedAudioDevice
         {
             get => _selectedAudioDevice;
@@ -39,6 +42,18 @@ namespace TcPlayer.ViewModels
                     _settingsFile.Save();
                 }
             }
+        }
+
+        public float[] CurrentEq 
+        { 
+            get => _currentEq;
+            set
+            {
+                SetProperty(ref _currentEq, value);
+                _settingsFile.Settings.WriteList(SettingConst.AudioSettings, SettingConst.Equalizer, value);
+                _settingsFile.Save();
+            }
+
         }
 
         public Guid MessageReciverID => Guid.NewGuid();
@@ -58,8 +73,17 @@ namespace TcPlayer.ViewModels
             SetVolumeCommand = new DelegateCommand<double>(OnSetVolume);
             PreviousCommand = new DelegateCommand(OnPrevious);
             NextCommand = new DelegateCommand(OnNext);
+            ApplyEqCommand = new DelegateCommand<float[]>(OnApplyEq);
             Playlist = new PlaylistViewModel(dialogProvider, messenger);
             InitSavedAudioDevice();
+            InitSavedEq();
+
+        }
+
+        private void OnApplyEq(float[] obj)
+        {
+            Engine.SetEqualizerParameters(obj);
+            CurrentEq = obj;
         }
 
         private void LoadAndPlayPlaylistTrack()
@@ -95,11 +119,9 @@ namespace TcPlayer.ViewModels
         }
 
         private void InitSavedAudioDevice()
-        {//                   _settingsFile.Settings.WriteInt(SettingConst.AudioSettings, SettingConst.AudioOutput, _selectedAudioDevice.Index);
+        {
             if (Engine.AvailableOutputs.Any())
             {
-                
-
                 if (!_settingsFile.Settings.IsExisting(SettingConst.AudioSettings, SettingConst.AudioOutput)
                     || _settingsFile.Settings.GetInt(SettingConst.AudioSettings, SettingConst.AudioOutput) < 0)
                 {
@@ -124,6 +146,15 @@ namespace TcPlayer.ViewModels
             }
         }
 
+        private void InitSavedEq()
+        {
+            if (_settingsFile.Settings.IsExisting(SettingConst.AudioSettings, SettingConst.Equalizer))
+            {
+                CurrentEq = _settingsFile.Settings.GetList<float>(SettingConst.AudioSettings, SettingConst.Equalizer).ToArray();
+            }
+
+        }
+
         public void HandleMessage(LoadFileMessage message)
         {
             _dialogProvider.SetMainTab(MainTab.Play);
@@ -137,6 +168,7 @@ namespace TcPlayer.ViewModels
             {
                 Engine.Load(selected);
                 Engine.Play();
+                Engine.SetEqualizerParameters(CurrentEq);
             }
         }
     }

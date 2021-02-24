@@ -82,7 +82,9 @@
             <TabItem
                 Header="Equalizer"
                 Style="{StaticResource MainTab}">
-                <controls:EqualizerControl />
+                <controls:EqualizerControl
+                    EqualizerChangeCommand="{Binding ApplyEqCommand}"
+                    EqualizerParameters="{Binding CurrentEq}"/>
             </TabItem>
         </TabControl>
         <controls:UIBlocker
