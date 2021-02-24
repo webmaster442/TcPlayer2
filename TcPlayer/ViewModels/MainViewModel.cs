@@ -2,15 +2,16 @@
 using System.Linq;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Messages;
+using TcPlayer.Engine.Settings;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
-using TcPlayer.Properties;
 
 namespace TcPlayer.ViewModels
 {
     internal sealed class MainViewModel : ViewModelBase, IMessageClient<LoadFileMessage>
     {
         private readonly IDialogProvider _dialogProvider;
+        private readonly ISettingsFile _settingsFile;
         private SoundDeviceInfo _selectedAudioDevice;
 
         public IEngine Engine { get; }
@@ -34,18 +35,19 @@ namespace TcPlayer.ViewModels
                 if (SetProperty(ref _selectedAudioDevice, value))
                 {
                     Engine.Initialize(_selectedAudioDevice);
-                    Settings.Default.AudioOutIndex = _selectedAudioDevice.Index;
-                    Settings.Default.Save();
+                    _settingsFile.Settings.WriteInt(SettingConst.AudioSettings, SettingConst.AudioOutput, _selectedAudioDevice.Index);
+                    _settingsFile.Save();
                 }
             }
         }
 
         public Guid MessageReciverID => Guid.NewGuid();
 
-        public MainViewModel(IEngine engine, IDialogProvider dialogProvider, IMessenger messenger)
+        public MainViewModel(IEngine engine, IDialogProvider dialogProvider, IMessenger messenger, ISettingsFile settingsFile)
         {
             Engine = engine;
             _dialogProvider = dialogProvider;
+            _settingsFile = settingsFile;
             messenger.SubScribe(this);
 
             PlayCommand = new DelegateCommand((o) => Engine.Play());
@@ -93,16 +95,23 @@ namespace TcPlayer.ViewModels
         }
 
         private void InitSavedAudioDevice()
-        {
+        {//                   _settingsFile.Settings.WriteInt(SettingConst.AudioSettings, SettingConst.AudioOutput, _selectedAudioDevice.Index);
             if (Engine.AvailableOutputs.Any())
             {
-                if (Settings.Default.AudioOutIndex < 0)
+                
+
+                if (!_settingsFile.Settings.IsExisting(SettingConst.AudioSettings, SettingConst.AudioOutput)
+                    || _settingsFile.Settings.GetInt(SettingConst.AudioSettings, SettingConst.AudioOutput) < 0)
                 {
-                    SelectedAudioDevice = Engine.AvailableOutputs.First();
+                    var output = Engine.AvailableOutputs.FirstOrDefault();
+                    if (output == null)
+                        throw new InvalidOperationException("No sound device was found");
+
+                    SelectedAudioDevice = output;
                 }
                 else
                 {
-                    var candidate = Engine.AvailableOutputs.FirstOrDefault(i => i.Index == Settings.Default.AudioOutIndex);
+                    var candidate = Engine.AvailableOutputs.FirstOrDefault(i => i.Index == _settingsFile.Settings.GetInt(SettingConst.AudioSettings, SettingConst.AudioOutput));
                     if (candidate == null)
                     {
                         SelectedAudioDevice = Engine.AvailableOutputs.First();

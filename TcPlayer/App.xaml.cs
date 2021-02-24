@@ -1,8 +1,10 @@
 ﻿using ManagedBass;
 using ManagedBass.Fx;
 using System;
+using System.IO;
 using System.Windows;
 using TcPlayer.Engine;
+using TcPlayer.Engine.Settings;
 using TcPlayer.Engine.Ui;
 using TcPlayer.ViewModels;
 
@@ -32,13 +34,14 @@ namespace TcPlayer
 
             base.OnStartup(e);
             IMessenger messenger = new Messenger();
+            ISettingsFile settingsFile = new SettingsFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TcPlayer.Options.json")); 
 
             var window = new MainWindow(messenger);
 
             Current.MainWindow = window;
              _engine = new AudioEngine(messenger);
 
-            var model = new MainViewModel(_engine, window, messenger);
+            var model = new MainViewModel(_engine, window, messenger, settingsFile);
             Current.MainWindow.DataContext = model;
 
             Current.MainWindow.Show();
