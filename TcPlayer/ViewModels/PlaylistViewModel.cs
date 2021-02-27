@@ -31,6 +31,7 @@ namespace TcPlayer.ViewModels
 
         public DelegateCommand<int> LoadDiscCommand { get; }
         public DelegateCommand ImportUrlCommand { get; }
+        public DelegateCommand ImportDlnaCommand { get; }
 
 
         public bool TryStepNext()
@@ -84,6 +85,15 @@ namespace TcPlayer.ViewModels
             LoadDiscCommand = new DelegateCommand<int>(OnLoadDisc);
             ImportITunesCommand = new DelegateCommand(OnImportItunes, CanImportItunes);
             ImportUrlCommand = new DelegateCommand(OnImportUrl);
+            ImportDlnaCommand = new DelegateCommand(OnImportDlna);
+        }
+
+        private void OnImportDlna(object obj)
+        {
+            if (_dialogProvider.TryImportDlna())
+            {
+
+            }
         }
 
         private async void OnImportUrl(object obj)

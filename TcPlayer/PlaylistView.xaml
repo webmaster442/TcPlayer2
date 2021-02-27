@@ -54,7 +54,11 @@
                 <Separator />
                 <MenuItem
                     Command="{Binding ImportITunesCommand}"
-                    Header="Import from iTunes" />
+                    Header="Import from iTunes..." />
+                <Separator />
+                <MenuItem
+                    Command="{Binding ImportDlnaCommand}"
+                    Header="Import from DLNA..." />
             </MenuItem>
             <MenuItem Header="Sort">
                 <MenuItem

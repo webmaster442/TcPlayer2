@@ -16,5 +16,6 @@ namespace TcPlayer.Infrastructure
         void HideUiBlocker();
         bool TryImportITunes(out IEnumerable<ITunesTrack> items);
         bool TryImportUrl(out string url);
+        bool TryImportDlna();
     }
 }

@@ -10,6 +10,7 @@ using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
+using TcPlayer.ViewModels;
 
 namespace TcPlayer
 {
@@ -177,6 +178,20 @@ namespace TcPlayer
             else
             {
                 url = string.Empty;
+                return false;
+            }
+        }
+
+        public bool TryImportDlna()
+        {
+            var dialog = new DlnaImportDialog();
+            dialog.DataContext = new DlnaViewModel();
+            if (dialog.ShowDialog() == true)
+            {
+                return true;
+            }
+            else
+            {
                 return false;
             }
         }
