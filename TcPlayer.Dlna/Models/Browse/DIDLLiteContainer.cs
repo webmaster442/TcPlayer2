@@ -14,14 +14,22 @@ namespace TcPlayer.Dlna.Models.Browse
             set;
         }
 
-        
+
         [XmlElement(Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
         public string @class
         {
             get;
             set;
         }
-        
+
+        [XmlElement(Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
+        public long storageUsed
+        {
+            get;
+            set;
+        }
+
+
         [XmlAttribute()]
         public string id
         {
@@ -29,7 +37,7 @@ namespace TcPlayer.Dlna.Models.Browse
             set;
         }
 
-        
+
         [XmlAttribute()]
         public string parentID
         {
@@ -37,9 +45,23 @@ namespace TcPlayer.Dlna.Models.Browse
             set;
         }
 
-        
+
         [XmlAttribute()]
         public byte restricted
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute()]
+        public byte searchable
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute()]
+        public int childCount
         {
             get;
             set;

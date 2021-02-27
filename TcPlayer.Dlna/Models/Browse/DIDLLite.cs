@@ -8,11 +8,14 @@ namespace TcPlayer.Dlna.Models.Browse
     [XmlRoot("DIDL-Lite", Namespace = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/", IsNullable = false)]
     public partial class DIDLLite
     {
-        [XmlElement("container")]
-        public DIDLLiteContainer[] container
+        [XmlElement("container", typeof(DIDLLiteContainer))]
+        [XmlElement("item", typeof(DIDLLiteItem))]
+        public object[] Items
         {
             get;
             set;
         }
     }
+
+
 }

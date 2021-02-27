@@ -133,17 +133,32 @@ namespace TcPlayer.Dlna
         {
             List<DlnaItem> items = new List<DlnaItem>();
 
-            if (envelope?.Body?.BrowseResponse?.Result?.DIDLLite?.Any() == true)
+            if (envelope?.Body?.BrowseResponse?.Result?.DIDLLite?.Items.Any() == true)
             {
-                foreach (var item in envelope.Body.BrowseResponse.Result.DIDLLite)
+                foreach (var objItem in envelope.Body.BrowseResponse.Result.DIDLLite.Items)
                 {
-                    items.Add(new DlnaItem
+                    if (objItem is DIDLLiteItem item)
                     {
-                        Id = item.id,
-                        IsBrowsable = item.@class == "object.container.storageFolder",
-                        IsServer = false,
-                        Name = item.title,
-                    }) ;
+
+                        items.Add(new DlnaItem
+                        {
+                            Id = item.id,
+                            IsBrowsable = false,
+                            IsServer = false,
+                            Name = item.title,
+                        });
+                    }
+                    else if (objItem is DIDLLiteContainer container)
+                    {
+                        items.Add(new DlnaItem
+                        {
+                            Id = container.id,
+                            IsBrowsable = true,
+                            IsServer = false,
+                            Name = container.title,
+                        });
+                    }
+                           
                 }
             }
 

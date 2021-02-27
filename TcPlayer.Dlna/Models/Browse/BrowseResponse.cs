@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 
 namespace TcPlayer.Dlna.Models.Browse
-{
+{    
     [Serializable]
     [XmlType(AnonymousType = true, Namespace = "urn:schemas-upnp-org:service:ContentDirectory:1")]
     [XmlRoot(Namespace = "urn:schemas-upnp-org:service:ContentDirectory:1", IsNullable = false)]
@@ -39,6 +39,4 @@ namespace TcPlayer.Dlna.Models.Browse
             set;
         }
     }
-
-
 }
