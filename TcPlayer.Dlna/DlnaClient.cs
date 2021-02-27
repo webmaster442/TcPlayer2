@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml.Serialization;
 using TcPlayer.Dlna.Models.Browse;
 using TcPlayer.Dlna.Modles.Discovery;
@@ -67,12 +69,17 @@ namespace TcPlayer.Dlna
                     var content = await wc.DownloadStringTaskAsync(server);
                     using (var reader = new StringReader(content))
                     {
+                        if (content.Contains("<netRemote") || content.Contains("<html"))
+                        {
+                            continue;
+                        }
+
                         var xmlResponse = (Root)xs.Deserialize(reader);
                         var dlna = xmlResponse.Device.ServiceList?.Service.Where(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1").FirstOrDefault();
                         if (dlna != null)
                         {
                             var serverUrl = new Uri(server);
-                            var ctrl = $"http://{serverUrl.Host}{dlna.ControlURL}";
+                            var ctrl = $"http://{serverUrl.Host}:{serverUrl.Port}{dlna.ControlURL}";
 
                             dlnaServers.Add(new DlnaItem
                             {
@@ -88,40 +95,78 @@ namespace TcPlayer.Dlna
             return dlnaServers.ToList();
         }
 
-        public static async Task GetContents(string url, int id = 0)
+        public static async Task<IReadOnlyList<DlnaItem>> GetContents(string url, string id = "0")
         {
             using (var client = new HttpClient())
             {
-                var content = new ByteArrayContent(CreateEnvelope(id));
-                content.Headers.ContentType = new MediaTypeHeaderValue("text/xml; charset=utf-8");
-                content.Headers.Add("SOAPAction", "urn:schemas-upnp-org:service:ContentDirectory:1#Browse");
-                var response = await client.PostAsync(url, content);
+                var xml = CreateEnvelope(id);
 
+                var request = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri(url),
+                    Method = HttpMethod.Post
+                };
+                request.Content = new StringContent(xml, Encoding.UTF8, "text/xml");
+                request.Headers.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue("text/xml");
+                request.Headers.Add("SOAPAction", "urn:schemas-upnp-org:service:ContentDirectory:1#Browse");
+
+                var response = await client.SendAsync(request);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var xmlResponse = await response.Content.ReadAsStringAsync();
+                    using (var reader = new StringReader(HttpUtility.HtmlDecode(xmlResponse)))
+                    {
+                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(Envelope));
+                        var envelope = (Envelope)xmlSerializer.Deserialize(reader);
+                        return ProcesssBrowseResults(envelope);
+                    }
+                }
+
+                return Array.Empty<DlnaItem>();
             }
         }
 
-        private static byte[] CreateEnvelope(int id = 0)
+        private static IReadOnlyList<DlnaItem> ProcesssBrowseResults(Envelope envelope)
         {
-            var serializer = new XmlSerializer(typeof(Envelope));
-            var namespaces = new XmlSerializerNamespaces();
-            namespaces.Add("s", "http://schemas.xmlsoap.org/soap/envelope/");
-            namespaces.Add("u", "urn:schemas-upnp-org:service:ContentDirectory:1");
+            List<DlnaItem> items = new List<DlnaItem>();
 
-            Envelope e = new Envelope
+            if (envelope?.Body?.BrowseResponse?.Result?.DIDLLite?.Any() == true)
             {
-                Body = new Body
+                foreach (var item in envelope.Body.BrowseResponse.Result.DIDLLite)
                 {
-                    Browse = new Browse
+                    items.Add(new DlnaItem
                     {
-                        ObjectID = id,
-                    }
+                        Id = item.id,
+                        IsBrowsable = item.@class == "object.container.storageFolder",
+                        IsServer = false,
+                        Name = item.title,
+                    }) ;
                 }
-            };
-            using (var memoryStream = new MemoryStream(1024))
-            {
-                serializer.Serialize(memoryStream, e, namespaces);
-                return memoryStream.ToArray();
             }
+
+            return items;
+        }
+
+        private static string CreateEnvelope(string id = "0")
+        {
+            var builder = new StringBuilder(512);
+            builder.AppendLine("<?xml version=\"1.0\"?>");
+            builder.AppendLine("<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">");
+            builder.AppendLine("<s:Body>");
+            builder.AppendLine("<u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\">");
+            builder.AppendLine($"<ObjectID>{id}</ObjectID>");
+            builder.AppendLine("<BrowseFlag>BrowseDirectChildren</BrowseFlag>");
+            builder.AppendLine("<Filter>*</Filter>");
+            builder.AppendLine("<StartingIndex>0</StartingIndex>");
+            builder.AppendLine("<RequestedCount>0</RequestedCount>");
+            builder.AppendLine("<SortCriteria></SortCriteria>");
+            builder.AppendLine("</u:Browse>");
+            builder.AppendLine("</s:Body>");
+            builder.AppendLine("</s:Envelope>");
+            return builder.ToString();
         }
     }
 }

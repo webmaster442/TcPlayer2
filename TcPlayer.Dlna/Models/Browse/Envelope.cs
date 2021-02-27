@@ -1,14 +1,27 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace TcPlayer.Dlna.Models.Browse
 {
-    [XmlRoot(ElementName = "Envelope", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
-	public class Envelope
-	{
-		[XmlElement(ElementName = "Body", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
-		public Body Body { get; set; }
+    [Serializable]
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
+    [XmlRoot(Namespace = "http://schemas.xmlsoap.org/soap/envelope/", IsNullable = false)]
+    public partial class Envelope
+    {
+        public EnvelopeBody Body
+        {
+            get;
+            set;
+        }
 
-		[XmlAttribute(AttributeName = "encodingStyle", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
-		public string EncodingStyle => "http://schemas.xmlsoap.org/soap/encoding/";
-	}
+        
+        [XmlAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string encodingStyle
+        {
+            get;
+            set;
+        }
+    }
+
+
 }

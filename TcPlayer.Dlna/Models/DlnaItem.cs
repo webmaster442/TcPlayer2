@@ -8,6 +8,7 @@ namespace TcPlayer.Dlna
         public string Locaction { get; init; }
         public bool IsServer { get; init; }
         public bool IsBrowsable { get; init; }
+        public string Id { get; init; }
 
         public override bool Equals(object obj)
         {

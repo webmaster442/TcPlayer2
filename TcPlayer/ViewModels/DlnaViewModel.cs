@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using TcPlayer.Dlna;
 using TcPlayer.Engine.Ui;
 
@@ -24,6 +24,7 @@ namespace TcPlayer.ViewModels
             get => _isUiBlocked;
             set => SetProperty(ref _isUiBlocked, value);
         }
+        public string CurrentServer { get; private set; }
 
         public DlnaViewModel()
         {
@@ -37,10 +38,21 @@ namespace TcPlayer.ViewModels
             IsUiBlocked = true;
             if (obj.IsServer)
             {
-               await DlnaClient.GetContents(obj.Locaction);
+                CurrentServer = obj.Locaction;
+                await Update(obj.Locaction);
+            }
+            else if (obj.IsBrowsable)
+            {
+                await Update(CurrentServer, obj.Id);
             }
             IsUiBlocked = false;
 
+        }
+
+        private async Task Update(string url, string id = "0")
+        {
+            var items = await DlnaClient.GetContents(url, id);
+            Items = new ObservableCollection<DlnaItem>(items);
         }
 
         private async void OnListServers(object obj)
