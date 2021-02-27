@@ -146,6 +146,7 @@ namespace TcPlayer.Dlna
                             IsBrowsable = false,
                             IsServer = false,
                             Name = item.title,
+                            Locaction = item.res.Value,
                         });
                     }
                     else if (objItem is DIDLLiteContainer container)
