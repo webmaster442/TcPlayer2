@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using TcPlayer.Dlna;
 using TcPlayer.Engine.Ui;
@@ -9,9 +12,13 @@ namespace TcPlayer.ViewModels
     {
         private ObservableCollection<DlnaItem> _items;
         private bool _isUiBlocked;
+        private bool _canImport;
+
+        private Stack<string> Navigation { get; }
 
         public DelegateCommand ServersCommand { get; }
         public DelegateCommand<DlnaItem> ItemClickCommand { get; }
+        public DelegateCommand PreviousCommand { get; }
 
         public ObservableCollection<DlnaItem> Items
         {
@@ -19,11 +26,18 @@ namespace TcPlayer.ViewModels
             set => SetProperty(ref _items, value);
         }
 
-        public bool IsUiBlocked 
-        { 
+        public bool IsUiBlocked
+        {
             get => _isUiBlocked;
             set => SetProperty(ref _isUiBlocked, value);
         }
+
+        public bool CanImport 
+        { 
+            get => _canImport;
+            set => SetProperty(ref _canImport, value); 
+        }
+
         public string CurrentServer { get; private set; }
 
         public DlnaViewModel()
@@ -31,6 +45,23 @@ namespace TcPlayer.ViewModels
             Items = new ObservableCollection<DlnaItem>();
             ServersCommand = new DelegateCommand(OnListServers);
             ItemClickCommand = new DelegateCommand<DlnaItem>(OnItemClick);
+            Navigation = new Stack<string>();
+            PreviousCommand = new DelegateCommand(OnPrevious, CanNavigate);
+            CanImport = false;
+        }
+
+        private bool CanNavigate(object obj)
+        {
+            return Navigation.Count > 1;
+        }
+
+        private async void OnPrevious(object obj)
+        {
+            IsUiBlocked = true;
+            Navigation.Pop(); //current
+            var previousId = Navigation.Pop();
+            await Update(CurrentServer, previousId);
+            IsUiBlocked = false;
         }
 
         private async void OnItemClick(DlnaItem obj)
@@ -46,13 +77,17 @@ namespace TcPlayer.ViewModels
                 await Update(CurrentServer, obj.Id);
             }
             IsUiBlocked = false;
-
+            PreviousCommand.RaiseCanExecuteChanged();
         }
 
         private async Task Update(string url, string id = "0")
         {
             var items = await DlnaClient.GetContents(url, id);
             Items = new ObservableCollection<DlnaItem>(items);
+
+            CanImport = Items.Any(i => i.IsBrowsable == false);
+
+            Navigation.Push(id);
         }
 
         private async void OnListServers(object obj)
@@ -61,6 +96,12 @@ namespace TcPlayer.ViewModels
             var servers = await DlnaClient.GetServers();
             Items = new ObservableCollection<DlnaItem>(servers);
             IsUiBlocked = false;
+        }
+
+        public IEnumerable<string> GetUrls()
+        {
+            return Items.Where(i => i.IsBrowsable == false)
+                        .Select(i => i.Locaction);
         }
     }
 }
