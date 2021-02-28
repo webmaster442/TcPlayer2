@@ -152,6 +152,10 @@ namespace TcPlayer.ViewModels
             {
                 CurrentEq = _settingsFile.Settings.GetList<float>(SettingConst.AudioSettings, SettingConst.Equalizer).ToArray();
             }
+            else
+            {
+                CurrentEq = new float[5];
+            }
 
         }
 

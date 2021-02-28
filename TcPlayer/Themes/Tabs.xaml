@@ -11,23 +11,23 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
                     <Border
-                        Margin="2,0"
-                        BorderBrush="{StaticResource TitleBar}"
-                        BorderThickness="1"
-                        Background="{StaticResource TitleBarButton}">
+                        x:Name="PartBorder"
+                        Margin="5,0"
+                        BorderThickness="0,0,0,0"
+                        BorderBrush="{StaticResource TitleBarText}"
+                        Background="{x:Null}">
                         <TextBlock
                             x:Name="PartHeader"
                             Grid.Column="1"
                             Margin="0,0,5,2"
                             FontSize="16"
-                            Foreground="{StaticResource TitleBarButtonForeground}"
+                            Foreground="{StaticResource TitleBarText}"
                             Text="{TemplateBinding Header}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="PartHeader" Property="FontWeight" Value="Bold" />
-                            <Setter TargetName="PartHeader" Property="TextDecorations" Value="Underline" />
-                            <Setter TargetName="PartHeader" Property="Foreground" Value="{StaticResource TitleBar}" />
+                            <Setter TargetName="PartBorder" Property="BorderThickness" Value="0,2,0,0"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
