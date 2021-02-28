@@ -3,10 +3,10 @@ using System.Xml.Serialization;
 
 namespace TcPlayer.Dlna.Models.Browse
 {
-    [Serializable()]
+    [Serializable]
     [XmlType(AnonymousType = true)]
     [XmlRoot(Namespace = "", IsNullable = false)]
-    public partial class Result
+    public class Result
     {
         [XmlElement("DIDL-Lite", Namespace = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")]
         public DIDLLite DIDLLite

@@ -6,7 +6,7 @@ namespace TcPlayer.Dlna.Models.Browse
     [Serializable]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlType(AnonymousType = true, Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
-    public partial class EnvelopeBody
+    public class EnvelopeBody
     {
         [XmlElement(Namespace = "urn:schemas-upnp-org:service:ContentDirectory:1")]
         public BrowseResponse BrowseResponse

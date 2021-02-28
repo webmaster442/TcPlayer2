@@ -4,61 +4,61 @@ using System.Xml.Serialization;
 namespace TcPlayer.Dlna.Models.Browse
 {
     
-    [Serializable()]
+    [Serializable]
     [XmlType(AnonymousType = true, Namespace = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")]
-    public partial class DIDLLiteItemRes
+    public class DIDLLiteItemRes
     {
         
-        [XmlAttribute]
-        public long size
+        [XmlAttribute(AttributeName = "size")]
+        public long Size
         {
             get;
             set;
         }
 
         
-        [XmlAttribute]
-        public string duration
+        [XmlAttribute(AttributeName = "duration")]
+        public string Duration
         {
             get;
             set;
         }
 
         
-        [XmlAttribute]
-        public uint bitrate
+        [XmlAttribute(AttributeName = "bitrate")]
+        public uint Bitrate
         {
             get;
             set;
         }
 
         
-        [XmlAttribute]
-        public ushort sampleFrequency
+        [XmlAttribute(AttributeName = "sampleFrequency")]
+        public int SampleFrequency
         {
             get;
             set;
         }
 
         
-        [XmlAttribute]
-        public byte nrAudioChannels
+        [XmlAttribute(AttributeName = "nrAudioChannels")]
+        public byte NrAudioChannels
         {
             get;
             set;
         }
 
         
-        [XmlAttribute]
-        public string protocolInfo
+        [XmlAttribute(AttributeName = "protocolInfo")]
+        public string ProtocolInfo
         {
             get;
             set;
         }
 
         
-        [XmlAttribute]
-        public string resolution
+        [XmlAttribute(AttributeName = "resolution")]
+        public string Resolution
         {
             get;
             set;

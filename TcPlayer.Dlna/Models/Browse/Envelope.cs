@@ -6,7 +6,7 @@ namespace TcPlayer.Dlna.Models.Browse
     [Serializable]
     [XmlType(AnonymousType = true, Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
     [XmlRoot(Namespace = "http://schemas.xmlsoap.org/soap/envelope/", IsNullable = false)]
-    public partial class Envelope
+    public class Envelope
     {
         public EnvelopeBody Body
         {
@@ -15,8 +15,8 @@ namespace TcPlayer.Dlna.Models.Browse
         }
 
         
-        [XmlAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string encodingStyle
+        [XmlAttribute(AttributeName = "encodingStyle", Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string EncodingStyle
         {
             get;
             set;

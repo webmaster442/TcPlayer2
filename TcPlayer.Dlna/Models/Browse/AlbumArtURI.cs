@@ -6,16 +6,16 @@ namespace TcPlayer.Dlna.Models.Browse
     [Serializable()]
     [XmlType(AnonymousType = true, Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
     [XmlRoot(ElementName = "albumArtURI", Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/", IsNullable = false)]
-    public partial class AlbumArtURI
+    public class AlbumArtURI
     {
-        [XmlAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified, Namespace = "urn:schemas-dlna-org:metadata-1-0/")]
-        public string profileID
+        [XmlAttribute(AttributeName = "profileID", Form = System.Xml.Schema.XmlSchemaForm.Qualified, Namespace = "urn:schemas-dlna-org:metadata-1-0/")]
+        public string ProfileID
         {
             get;
             set;
         }
 
-        [XmlText()]
+        [XmlText]
         public string Value
         {
             get;

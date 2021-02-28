@@ -5,63 +5,63 @@ namespace TcPlayer.Dlna.Models.Browse
 {
     [Serializable]
     [XmlType(AnonymousType = true, Namespace = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")]
-    public partial class DIDLLiteContainer
+    public class DIDLLiteContainer
     {
-        [XmlElement(Namespace = "http://purl.org/dc/elements/1.1/")]
-        public string title
+        [XmlElement(ElementName = "title", Namespace = "http://purl.org/dc/elements/1.1/")]
+        public string Title
         {
             get;
             set;
         }
 
 
-        [XmlElement(Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
-        public string @class
+        [XmlElement(ElementName = "class", Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
+        public string Class
         {
             get;
             set;
         }
 
-        [XmlElement(Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
-        public long storageUsed
-        {
-            get;
-            set;
-        }
-
-
-        [XmlAttribute()]
-        public string id
+        [XmlElement(ElementName = "storageUsed", Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
+        public long StorageUsed
         {
             get;
             set;
         }
 
 
-        [XmlAttribute()]
-        public string parentID
+        [XmlAttribute(AttributeName = "id")]
+        public string Id
         {
             get;
             set;
         }
 
 
-        [XmlAttribute()]
-        public byte restricted
+        [XmlAttribute(AttributeName = "parentID")]
+        public string ParentID
         {
             get;
             set;
         }
 
-        [XmlAttribute()]
-        public byte searchable
+
+        [XmlAttribute(AttributeName = "restricted")]
+        public byte Restricted
         {
             get;
             set;
         }
 
-        [XmlAttribute()]
-        public int childCount
+        [XmlAttribute(AttributeName = "searchable")]
+        public byte Searchable
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute(AttributeName = "childCount")]
+        public int ChildCount
         {
             get;
             set;

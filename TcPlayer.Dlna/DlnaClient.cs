@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -142,21 +141,21 @@ namespace TcPlayer.Dlna
 
                         items.Add(new DlnaItem
                         {
-                            Id = item.id,
+                            Id = item.Id,
                             IsBrowsable = false,
                             IsServer = false,
-                            Name = item.title,
-                            Locaction = item.res.Value,
+                            Name = item.Title,
+                            Locaction = item.Res.Value,
                         });
                     }
                     else if (objItem is DIDLLiteContainer container)
                     {
                         items.Add(new DlnaItem
                         {
-                            Id = container.id,
+                            Id = container.Id,
                             IsBrowsable = true,
                             IsServer = false,
-                            Name = container.title,
+                            Name = container.Title,
                         });
                     }
                            
