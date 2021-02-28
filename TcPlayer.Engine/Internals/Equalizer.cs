@@ -19,7 +19,7 @@ namespace TcPlayer.Engine.Internals
         private int _fx;
         private GCHandle _handle;
         private PeakEQParameters _eq;
-        private float[] _defaultConfig = new float[] { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+        private float[] _defaultConfig = new float[] { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
         private int _channelHandle;
 
         public Equalizer(int channelHandle)
@@ -56,7 +56,7 @@ namespace TcPlayer.Engine.Internals
             {
                 _eq.lBand = i;
                 Bass.FXGetParameters(_fx, _handle.AddrOfPinnedObject());
-                _eq.fGain = configuration[i];
+                _eq.fGain = configuration[i] * 10;
                 Bass.FXSetParameters(_fx, _handle.AddrOfPinnedObject());
             }
         }
