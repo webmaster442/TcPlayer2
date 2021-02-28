@@ -156,9 +156,9 @@ namespace TcPlayer.Controls
                     string fulladdress = $"https://itunes.apple.com/search?term={encoded}&media=music&limit=1";
                     string response = client.DownloadString(fulladdress);
                     var responseObject = JsonSerializer.Deserialize<RootObject>(response);
-                    if (responseObject != null && responseObject.resultCount > 0)
+                    if (responseObject != null && responseObject.ResultCount > 0)
                     {
-                        string artwork = responseObject.results?[0].artworkUrl100;
+                        string artwork = responseObject.Results?[0].ArtworkUrl100;
                         artwork = artwork?.Replace("100x100", "600x600");
 
                         return await client.DownloadDataTaskAsync(artwork);
