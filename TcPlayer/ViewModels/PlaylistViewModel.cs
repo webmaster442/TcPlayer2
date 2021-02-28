@@ -88,11 +88,15 @@ namespace TcPlayer.ViewModels
             ImportDlnaCommand = new DelegateCommand(OnImportDlna);
         }
 
-        private void OnImportDlna(object obj)
+        private async void OnImportDlna(object obj)
         {
-            if (_dialogProvider.TryImportDlna())
+            if (_dialogProvider.TryImportDlna(out IEnumerable<string> urls))
             {
-
+                var source = _dialogProvider.ShowUiBlocker();
+                var canLoaded = urls.Where(x => Formats.AudioFormats.Contains(Path.GetExtension(x)));
+                var items = await PlaylistItemFactory.CreateFileInfos(canLoaded, source.Token);
+                UpdateList(items, false);
+                _dialogProvider.HideUiBlocker();
             }
         }
 

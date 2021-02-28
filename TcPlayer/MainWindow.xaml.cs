@@ -182,16 +182,19 @@ namespace TcPlayer
             }
         }
 
-        public bool TryImportDlna()
+        public bool TryImportDlna(out IEnumerable<string> urls)
         {
             var dialog = new DlnaImportDialog();
-            dialog.DataContext = new DlnaViewModel();
+            var vm = new DlnaViewModel();
+            dialog.DataContext = vm;
             if (dialog.ShowDialog() == true)
             {
+                urls = vm.GetUrls();
                 return true;
             }
             else
             {
+                urls = Enumerable.Empty<string>();
                 return false;
             }
         }

@@ -91,6 +91,18 @@ namespace TcPlayer.Dlna
                     }
                 }
             }
+
+            if (dlnaServers.Count < 1)
+            {
+                dlnaServers.Add(new DlnaItem
+                {
+                    IsBrowsable = false,
+                    IsServer = false,
+                    Locaction = string.Empty,
+                    Name = "No DLNA servers found"
+                });
+            }
+
             return dlnaServers.ToList();
         }
 
