@@ -14,6 +14,11 @@ namespace TcPlayer.Dlna.Models.Browse
             get;
             set;
         }
+
+        public EnvelopeBody()
+        {
+            BrowseResponse = new BrowseResponse();
+        }
     }
 
 

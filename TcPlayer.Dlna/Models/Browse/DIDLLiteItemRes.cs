@@ -18,7 +18,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
         
         [XmlAttribute(AttributeName = "duration")]
-        public string Duration
+        public string? Duration
         {
             get;
             set;
@@ -50,7 +50,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
         
         [XmlAttribute(AttributeName = "protocolInfo")]
-        public string ProtocolInfo
+        public string? ProtocolInfo
         {
             get;
             set;
@@ -58,7 +58,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
         
         [XmlAttribute(AttributeName = "resolution")]
-        public string Resolution
+        public string? Resolution
         {
             get;
             set;
@@ -66,7 +66,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
         
         [XmlText]
-        public string Value
+        public string? Value
         {
             get;
             set;

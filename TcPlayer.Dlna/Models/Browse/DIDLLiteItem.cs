@@ -8,7 +8,16 @@ namespace TcPlayer.Dlna.Models.Browse
     [XmlType(AnonymousType = true, Namespace = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")]
     public class DIDLLiteItem
     {
-       
+        public DIDLLiteItem()
+        {
+            Title = string.Empty;
+            Class = string.Empty;
+            Id = string.Empty;
+            ParentID = string.Empty;
+            AlbumArtURI = new AlbumArtURI();
+            Res = new DIDLLiteItemRes();
+        }
+
         [XmlElement(ElementName = "title", Namespace = "http://purl.org/dc/elements/1.1/")]
         public string Title
         {
@@ -26,7 +35,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
        
         [XmlElement(ElementName = "creator", Namespace = "http://purl.org/dc/elements/1.1/")]
-        public string Creator
+        public string? Creator
         {
             get;
             set;
@@ -34,7 +43,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
        
         [XmlElement(ElementName = "date", Namespace = "http://purl.org/dc/elements/1.1/")]
-        public string Date
+        public string? Date
         {
             get;
             set;
@@ -42,7 +51,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
        
         [XmlElement(ElementName = "artist", Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
-        public string Artist
+        public string? Artist
         {
             get;
             set;
@@ -50,7 +59,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
        
         [XmlElement(ElementName = "album", Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
-        public string Album
+        public string? Album
         {
             get;
             set;
@@ -58,7 +67,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
        
         [XmlElement(ElementName = "genre", Namespace = "urn:schemas-upnp-org:metadata-1-0/upnp/")]
-        public string Genre
+        public string? Genre
         {
             get;
             set;

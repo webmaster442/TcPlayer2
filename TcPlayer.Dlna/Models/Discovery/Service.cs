@@ -6,15 +6,15 @@ namespace TcPlayer.Dlna.Modles.Discovery
 		public class Service
 		{
 			[XmlElement(ElementName = "serviceType", Namespace = "urn:schemas-upnp-org:device-1-0")]
-			public string ServiceType { get; set; }
+			public string? ServiceType { get; set; }
 			[XmlElement(ElementName = "serviceId", Namespace = "urn:schemas-upnp-org:device-1-0")]
-			public string ServiceId { get; set; }
+			public string? ServiceId { get; set; }
 			[XmlElement(ElementName = "controlURL", Namespace = "urn:schemas-upnp-org:device-1-0")]
-			public string ControlURL { get; set; }
+			public string? ControlURL { get; set; }
 			[XmlElement(ElementName = "eventSubURL", Namespace = "urn:schemas-upnp-org:device-1-0")]
-			public string EventSubURL { get; set; }
+			public string? EventSubURL { get; set; }
 			[XmlElement(ElementName = "SCPDURL", Namespace = "urn:schemas-upnp-org:device-1-0")]
-			public string SCPDURL { get; set; }
+			public string? SCPDURL { get; set; }
 		}
 
 }

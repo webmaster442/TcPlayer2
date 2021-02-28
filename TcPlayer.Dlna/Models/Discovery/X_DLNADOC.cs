@@ -11,8 +11,8 @@ namespace TcPlayer.Dlna.Modles.Discovery
     public class X_DLNADOC
     {
         [XmlAttribute(AttributeName = "dlna", Namespace = "http://www.w3.org/2000/xmlns/")]
-        public string Dlna { get; set; }
+        public string? Dlna { get; set; }
         [XmlText]
-        public string Text { get; set; }
+        public string? Text { get; set; }
     }
 }

@@ -9,14 +9,14 @@ namespace TcPlayer.Dlna.Models.Browse
     public class AlbumArtURI
     {
         [XmlAttribute(AttributeName = "profileID", Form = System.Xml.Schema.XmlSchemaForm.Qualified, Namespace = "urn:schemas-dlna-org:metadata-1-0/")]
-        public string ProfileID
+        public string? ProfileID
         {
             get;
             set;
         }
 
         [XmlText]
-        public string Value
+        public string? Value
         {
             get;
             set;

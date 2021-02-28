@@ -73,8 +73,8 @@ namespace TcPlayer.Dlna
                             continue;
                         }
 
-                        var xmlResponse = (Root)xs.Deserialize(reader);
-                        var dlna = xmlResponse.Device.ServiceList?.Service.Where(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1").FirstOrDefault();
+                        var xmlResponse = xs.Deserialize(reader) as Root;
+                        var dlna = xmlResponse?.Device.ServiceList?.Service.Where(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1").FirstOrDefault();
                         if (dlna != null)
                         {
                             var serverUrl = new Uri(server);
@@ -84,7 +84,7 @@ namespace TcPlayer.Dlna
                             {
                                 IsBrowsable = true,
                                 IsServer = true,
-                                Name = xmlResponse.Device.FriendlyName,
+                                Name = xmlResponse?.Device?.FriendlyName ?? string.Empty,
                                 Locaction = ctrl,
                             });
                         }
@@ -131,8 +131,11 @@ namespace TcPlayer.Dlna
                     using (var reader = new StringReader(HttpUtility.HtmlDecode(xmlResponse)))
                     {
                         XmlSerializer xmlSerializer = new XmlSerializer(typeof(Envelope));
-                        var envelope = (Envelope)xmlSerializer.Deserialize(reader);
-                        return ProcesssBrowseResults(envelope);
+                        var envelope = xmlSerializer.Deserialize(reader) as Envelope;
+                        if (envelope != null)
+                        {
+                            return ProcesssBrowseResults(envelope);
+                        }
                     }
                 }
 
@@ -157,7 +160,7 @@ namespace TcPlayer.Dlna
                             IsBrowsable = false,
                             IsServer = false,
                             Name = item.Title,
-                            Locaction = item.Res.Value,
+                            Locaction = item.Res.Value ?? string.Empty,
                         });
                     }
                     else if (objItem is DIDLLiteContainer container)

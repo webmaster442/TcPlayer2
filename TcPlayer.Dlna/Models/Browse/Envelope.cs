@@ -8,6 +8,11 @@ namespace TcPlayer.Dlna.Models.Browse
     [XmlRoot(Namespace = "http://schemas.xmlsoap.org/soap/envelope/", IsNullable = false)]
     public class Envelope
     {
+        public Envelope()
+        {
+            Body = new EnvelopeBody();
+        }
+
         public EnvelopeBody Body
         {
             get;
@@ -16,7 +21,7 @@ namespace TcPlayer.Dlna.Models.Browse
 
         
         [XmlAttribute(AttributeName = "encodingStyle", Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string EncodingStyle
+        public string? EncodingStyle
         {
             get;
             set;

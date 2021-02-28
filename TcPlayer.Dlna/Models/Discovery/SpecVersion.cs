@@ -6,9 +6,9 @@ namespace TcPlayer.Dlna.Modles.Discovery
 		public class SpecVersion
 		{
 			[XmlElement(ElementName = "major", Namespace = "urn:schemas-upnp-org:device-1-0")]
-			public string Major { get; set; }
+			public string? Major { get; set; }
 			[XmlElement(ElementName = "minor", Namespace = "urn:schemas-upnp-org:device-1-0")]
-			public string Minor { get; set; }
+			public string? Minor { get; set; }
 		}
 
 }

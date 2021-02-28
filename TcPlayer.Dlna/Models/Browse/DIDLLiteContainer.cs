@@ -7,6 +7,14 @@ namespace TcPlayer.Dlna.Models.Browse
     [XmlType(AnonymousType = true, Namespace = "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")]
     public class DIDLLiteContainer
     {
+        public DIDLLiteContainer()
+        {
+            Title = string.Empty;
+            Class = string.Empty;
+            Id = string.Empty;
+            ParentID = string.Empty;
+        }
+
         [XmlElement(ElementName = "title", Namespace = "http://purl.org/dc/elements/1.1/")]
         public string Title
         {

@@ -8,6 +8,11 @@ namespace TcPlayer.Dlna.Models.Browse
     [XmlRoot(Namespace = "urn:schemas-upnp-org:service:ContentDirectory:1", IsNullable = false)]
     public class BrowseResponse
     {
+        public BrowseResponse()
+        {
+            Result = new Result();
+        }
+
         [XmlElement(Namespace = "")]
         public Result Result
         {
