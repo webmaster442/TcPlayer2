@@ -18,7 +18,7 @@
             <Setter Property="Maximum" Value="1" />
             <Setter Property="LayoutTransform">
                 <Setter.Value>
-                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
                 </Setter.Value>
             </Setter>
         </Style>
@@ -78,6 +78,48 @@
             </Polyline>
         </GroupBox>
 
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="30,10,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Text="+10 dB" />
+        <Rectangle
+            Grid.Row="1"
+            Grid.ColumnSpan="5"
+            Height="1"
+            Margin="55,5,70,0"
+            VerticalAlignment="Top"
+            Fill="{StaticResource TitleBar}" />
+        <Rectangle
+            Grid.Row="1"
+            Grid.ColumnSpan="5"
+            Height="1"
+            Margin="55,0,70,0"
+            VerticalAlignment="Center"
+            Fill="{StaticResource TitleBar}" />
+        <Rectangle
+            Grid.Row="1"
+            Grid.ColumnSpan="5"
+            Height="1"
+            Margin="55,0,70,5"
+            VerticalAlignment="Bottom"
+            Fill="{StaticResource TitleBar}" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="30,0,0,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Text="-10 dB" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="30,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Text="0 dB" />
         <Slider
             x:Name="Slider0"
             Grid.Row="1"
