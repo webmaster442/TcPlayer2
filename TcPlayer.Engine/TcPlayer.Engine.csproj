@@ -14,6 +14,7 @@
     <PackageReference Include="ManagedBass.Fx" Version="2.0.0" />
     <PackageReference Include="ManagedBass.Midi" Version="2.0.0" />
     <PackageReference Include="ManagedBass.Mix" Version="2.0.0" />
+    <PackageReference Include="ManagedBass.Tags" Version="2.0.0" />
     <PackageReference Include="ManagedBass.Wasapi" Version="2.0.0" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using ManagedBass;
 using ManagedBass.Mix;
+using ManagedBass.Tags;
 using ManagedBass.Wasapi;
 using System;
 using System.Collections.Generic;
@@ -218,6 +219,10 @@ namespace TcPlayer.Engine
                     Metadata = NetworkMetadataFactory.CreateFromStream(_currentFile, streamInfo);
                     _lastStreamInfo = streamInfo;
                 }
+            }
+            else
+            {
+                Metadata = NetworkMetadataFactory.CreateFromBassTags(_decodeChannel, _currentFile);
             }
         }
 

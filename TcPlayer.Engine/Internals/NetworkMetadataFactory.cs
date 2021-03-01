@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ManagedBass.Tags;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TcPlayer.Engine.Models;
@@ -7,7 +8,7 @@ namespace TcPlayer.Engine.Internals
 {
     internal class NetworkMetadataFactory
     {
-        private static Regex StreamTitle = new Regex(@"StreamTitle=\'(.+)\'$");
+        private static Regex StreamTitle = new Regex(@"StreamTitle=\'(.+)\';$");
         private static Regex StreamWithCover = new Regex(@"StreamTitle=\'(.+)\';StreamUrl=\'(.+)\';");
 
         public static Metadata CreateFromStream(string url, string? meta)
@@ -29,17 +30,22 @@ namespace TcPlayer.Engine.Internals
             }
             else
             {
-                return new Metadata
-                {
-                    Chapters = CreateNoChapters(),
-                    MediaKind = MediaKind.Stream,
-                    AdditionalMeta = new []
-                    {
-                        url,
-                    }
-                };
+                return CreateDefault(url);
             }
 
+        }
+
+        private static Metadata CreateDefault(string url)
+        {
+            return new Metadata
+            {
+                Chapters = CreateNoChapters(),
+                MediaKind = MediaKind.Stream,
+                AdditionalMeta = new[]
+                {
+                        url,
+                }
+            };
         }
 
         private static Metadata ParseFromStreamTitleTagWithCover(string url, string meta)
@@ -99,6 +105,23 @@ namespace TcPlayer.Engine.Internals
                 Name = "No chapters",
                 TimeStamp = double.NaN,
             };
+        }
+
+        private const string TitleFormat = "%TITL";
+        private const string ArtistFormat = "%ARTI";
+        private const string AlbumFormat = "%ALBM";
+        private const string YearFormat = "%YEAR";
+
+        internal static Metadata CreateFromBassTags(int decodeChannel, string url)
+        {
+            return CreateDefault(url) with
+            {
+                Title = BassTags.Read(decodeChannel, TitleFormat),
+                Artist = BassTags.Read(decodeChannel, ArtistFormat),
+                Album = BassTags.Read(decodeChannel, AlbumFormat),
+                Year = BassTags.Read(decodeChannel, YearFormat),
+            };
+
         }
     }
 }

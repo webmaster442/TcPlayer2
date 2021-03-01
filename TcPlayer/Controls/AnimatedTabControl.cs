@@ -40,8 +40,6 @@ namespace TcPlayer.Controls
                 return new TransitionSlideIn(TransitionSlideIn.SlideDirection.Up);
             }
             return new TransitionSlideIn(TransitionSlideIn.SlideDirection.Down);
-
-
         }
 
         public override void OnApplyTemplate()
