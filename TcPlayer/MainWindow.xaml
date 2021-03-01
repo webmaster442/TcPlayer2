@@ -62,7 +62,7 @@
             Height="30"
             VerticalAlignment="Bottom"
             Background="{StaticResource TitleBar}" />
-        <TabControl
+        <controls:AnimatedTabControl
             x:Name="MainTabs"
             Grid.Row="1"
             Background="Transparent"
@@ -86,7 +86,7 @@
                     EqualizerChangeCommand="{Binding ApplyEqCommand}"
                     EqualizerParameters="{Binding CurrentEq}"/>
             </TabItem>
-        </TabControl>
+        </controls:AnimatedTabControl>
         <controls:UIBlocker
             x:Name="Blocker"
             Grid.RowSpan="2"

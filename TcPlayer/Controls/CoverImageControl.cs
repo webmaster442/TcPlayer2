@@ -83,6 +83,8 @@ namespace TcPlayer.Controls
 
         private void LoadDefault()
         {
+            if (SongMetaData == null) return;
+
             string resource = "IconMusic";
             switch (SongMetaData.MediaKind)
             {

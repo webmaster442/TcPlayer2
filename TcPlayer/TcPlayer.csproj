@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Effects\TransitionSlideInEffect.ps" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TcPlayer.BassLibs\TcPlayer.BassLibs.csproj" />
     <ProjectReference Include="..\TcPlayer.Dlna\TcPlayer.Dlna.csproj" />
     <ProjectReference Include="..\TcPlayer.Engine\TcPlayer.Engine.csproj" />
@@ -17,6 +21,10 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Effects\TransitionSlideInEffect.ps" />
   </ItemGroup>
 
 </Project>
