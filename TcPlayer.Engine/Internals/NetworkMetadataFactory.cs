@@ -1,4 +1,5 @@
 ﻿using ManagedBass.Tags;
+using System;
 using System.Collections.Generic;
 using TcPlayer.Engine.Models;
 
@@ -6,20 +7,6 @@ namespace TcPlayer.Engine.Internals
 {
     internal class NetworkMetadataFactory
     {
-        public static Metadata CreateFromStream(string url, string? meta)
-        {
-            if (string.IsNullOrEmpty(meta))
-                return CreateDefault(url);
-
-            var metaData = StreamTagsParser.GetTags(meta);
-
-            return CreateDefault(url) with
-            {
-                Title = metaData.GetKey(StreamTagsParser.TagTitle),
-                CoverUrl = metaData.GetKey(StreamTagsParser.TagUrl),
-            };
-
-        }
 
         private static Metadata CreateDefault(string url)
         {
@@ -48,6 +35,21 @@ namespace TcPlayer.Engine.Internals
         private const string AlbumFormat = "%ALBM";
         private const string YearFormat = "%YEAR";
 
+        internal static Metadata CreateFromStream(string url, string? meta)
+        {
+            if (string.IsNullOrEmpty(meta))
+                return CreateDefault(url);
+
+            var metaData = StreamTagsParser.GetTags(meta);
+
+            return CreateDefault(url) with
+            {
+                Title = metaData.GetKey(StreamTagsParser.TagTitle),
+                CoverUrl = metaData.GetKey(StreamTagsParser.TagUrl),
+            };
+
+        }
+
         internal static Metadata CreateFromBassTags(int decodeChannel, string url)
         {
             return CreateDefault(url) with
@@ -58,6 +60,15 @@ namespace TcPlayer.Engine.Internals
                 Year = BassTags.Read(decodeChannel, YearFormat),
             };
 
+        }
+
+        internal static Metadata CreateFromYoutube(YoutubeDlResponse youtubeDlResponse)
+        {
+            return CreateDefault(youtubeDlResponse.YoutubeUrl) with
+            {
+                Title = youtubeDlResponse.Title,
+                CoverUrl = youtubeDlResponse.Thumbnail,
+            };
         }
     }
 }

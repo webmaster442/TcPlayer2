@@ -6,7 +6,7 @@ namespace TcPlayer.Engine.Internals
 {
     internal static class StreamTagsParser
     {
-        private static Regex TagRegex = new Regex(@"(.+)\=\'(.+)\'", RegexOptions.Compiled);
+        private static readonly Regex TagRegex = new Regex(@"(.+)\=\'(.+)\'", RegexOptions.Compiled);
 
         public const string TagTitle = "StreamTitle";
         public const string TagUrl = "StreamUrl";

@@ -1,6 +1,5 @@
 ﻿using ManagedBass;
 using ManagedBass.Mix;
-using ManagedBass.Tags;
 using ManagedBass.Wasapi;
 using System;
 using System.Collections.Generic;
@@ -27,6 +26,7 @@ namespace TcPlayer.Engine
         private float _volume;
         private bool _isvolumeSeeking;
         private bool _isSeeking;
+        private bool _isYoutubePlaying;
 
         private readonly WasapiProcedure _waspiCallback;
         private readonly DownloadProcedure _downloadCallback;
@@ -35,7 +35,7 @@ namespace TcPlayer.Engine
         private string _currentFile;
 
         private Equalizer? _equalizer;
-        
+
         public AudioEngine(IMessenger messenger)
         {
             _messenger = messenger;
@@ -210,6 +210,8 @@ namespace TcPlayer.Engine
 
         private void OnDownload(IntPtr Buffer, int Length, System.IntPtr User)
         {
+            if (_isYoutubePlaying) return;
+
             var ptr = Bass.ChannelGetTags(_decodeChannel, TagType.META);
             if (ptr != IntPtr.Zero)
             {
@@ -224,6 +226,15 @@ namespace TcPlayer.Engine
             {
                 Metadata = NetworkMetadataFactory.CreateFromBassTags(_decodeChannel, _currentFile);
             }
+        }
+
+        public bool LoadYoutube(YoutubeDlResponse youtubeDlResponse)
+        {
+            if (youtubeDlResponse.IsEmpty) return false;
+            Load(youtubeDlResponse.Url);
+            Metadata = NetworkMetadataFactory.CreateFromYoutube(youtubeDlResponse);
+            _isYoutubePlaying = true;
+            return true;
         }
 
         public void Load(string fileToPlay)
@@ -273,6 +284,7 @@ namespace TcPlayer.Engine
             CurrentState = EngineState.ReadyToPlay;
             TimerEnabled = false;
             _currentFile = fileToPlay;
+            _isYoutubePlaying = false;
         }
 
         public void Pause()

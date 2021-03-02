@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TcPlayer.Engine;
+using TcPlayer.Engine.Internals;
 using TcPlayer.Engine.Messages;
+using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Settings;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
@@ -14,6 +17,7 @@ namespace TcPlayer.ViewModels
         private readonly ISettingsFile _settingsFile;
         private SoundDeviceInfo _selectedAudioDevice;
         private float[] _currentEq;
+        private readonly YoutubeDlInterop _youtubeInterop;
 
         public IEngine Engine { get; }
 
@@ -64,6 +68,7 @@ namespace TcPlayer.ViewModels
             _dialogProvider = dialogProvider;
             _settingsFile = settingsFile;
             messenger.SubScribe(this);
+            _youtubeInterop = new YoutubeDlInterop();
 
             PlayCommand = new DelegateCommand((o) => Engine.Play());
             StopCommand = new DelegateCommand((o) => Engine.Stop());
@@ -86,25 +91,67 @@ namespace TcPlayer.ViewModels
             CurrentEq = obj;
         }
 
-        private void LoadAndPlayPlaylistTrack()
+        private async Task<bool> LoadAndPlay(string filename)
         {
-            Engine.Load(Playlist.Selected.FilePath);
-            Engine.Play();
-        }
-
-        private void OnNext(object obj)
-        {
-            if (Playlist.TryStepNext())
+            if (YoutubeDlInterop.IsYoutubeUrl(filename))
             {
-                LoadAndPlayPlaylistTrack();
+                if (_youtubeInterop.IsInstalled)
+                {
+                    YoutubeDlResponse response = await _youtubeInterop.ExtractData(filename);
+                    if (Engine.LoadYoutube(response))
+                    {
+                        Engine.Play();
+                        Engine.SetEqualizerParameters(CurrentEq);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                Engine.Load(filename);
+                Engine.Play();
+                Engine.SetEqualizerParameters(CurrentEq);
+                return true;
             }
         }
 
-        private void OnPrevious(object obj)
+        public async void HandleMessage(LoadFileMessage message)
+        {
+            _dialogProvider.SetMainTab(MainTab.Play);
+            _dialogProvider.ShowUiBlocker();
+            await LoadAndPlay(message.File);
+            _dialogProvider.HideUiBlocker();
+        }
+
+        private void Onload(object obj)
+        {
+            if (_dialogProvider.TrySelectFileDialog(Formats.AudioFormatFilterString, out string selected))
+            {
+                Engine.Load(selected);
+                Engine.Play();
+                Engine.SetEqualizerParameters(CurrentEq);
+            }
+        }
+
+
+        private async void OnNext(object obj)
+        {
+            if (Playlist.TryStepNext())
+            {
+                _dialogProvider.ShowUiBlocker();
+                await LoadAndPlay(Playlist.Selected.FilePath);
+                _dialogProvider.HideUiBlocker();
+            }
+        }
+
+        private async void OnPrevious(object obj)
         {
             if (Playlist.TryStepBack())
             {
-                LoadAndPlayPlaylistTrack();
+                _dialogProvider.ShowUiBlocker();
+                await LoadAndPlay(Playlist.Selected.FilePath);
+                _dialogProvider.HideUiBlocker();
             }
         }
 
@@ -157,23 +204,6 @@ namespace TcPlayer.ViewModels
                 CurrentEq = new float[5];
             }
 
-        }
-
-        public void HandleMessage(LoadFileMessage message)
-        {
-            _dialogProvider.SetMainTab(MainTab.Play);
-            Engine.Load(message.File);
-            Engine.Play();
-        }
-
-        private void Onload(object obj)
-        {
-            if (_dialogProvider.TrySelectFileDialog(Formats.AudioFormatFilterString, out string selected))
-            {
-                Engine.Load(selected);
-                Engine.Play();
-                Engine.SetEqualizerParameters(CurrentEq);
-            }
         }
     }
 }

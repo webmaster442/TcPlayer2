@@ -9,6 +9,7 @@ namespace TcPlayer.Engine
     {
         void Initialize(SoundDeviceInfo output);
         void Load(string fileToPlay);
+        bool LoadYoutube(YoutubeDlResponse youtubeDlResponse);
         void Pause();
         void Play();
         void Stop();
