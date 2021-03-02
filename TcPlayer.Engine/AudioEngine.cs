@@ -203,12 +203,12 @@ namespace TcPlayer.Engine
             }
         }
 
-        private int OnWasapiCallback(System.IntPtr Buffer, int Length, System.IntPtr User)
+        private int OnWasapiCallback(IntPtr Buffer, int Length, System.IntPtr User)
         {
             return Bass.ChannelGetData(_mixerChanel, Buffer, Length);
         }
 
-        private void OnDownload(System.IntPtr Buffer, int Length, System.IntPtr User)
+        private void OnDownload(IntPtr Buffer, int Length, System.IntPtr User)
         {
             var ptr = Bass.ChannelGetTags(_decodeChannel, TagType.META);
             if (ptr != IntPtr.Zero)
