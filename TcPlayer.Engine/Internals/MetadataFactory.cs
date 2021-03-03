@@ -1,11 +1,10 @@
 ﻿using ManagedBass.Cd;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using TagLib;
+using TcPlayer.Engine.Internals.Cue;
 using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Engine.Internals
@@ -78,6 +77,7 @@ namespace TcPlayer.Engine.Internals
         private static IEnumerable<ChapterInfo> CreateChapters(string filePath, TimeSpan duration)
         {
             string[] mp4 = new string[] { ".mp4", ".m4a", ".m4b" };
+            string cueFile = Path.ChangeExtension(filePath, "cue");
 
             if (mp4.Contains(Path.GetExtension(filePath).ToLower()))
             {
@@ -94,9 +94,26 @@ namespace TcPlayer.Engine.Internals
                     }
                 }
             }
+            else if (System.IO.File.Exists(cueFile))
+            {
+                return CreateChaptersFromCue(cueFile);
+            }
 
             return CreateTimeBasedChapters(duration);
 
+        }
+
+        private static IEnumerable<ChapterInfo> CreateChaptersFromCue(string cueFile)
+        {
+            CueSheet cueSheet = new CueSheet(cueFile);
+            foreach (var track in cueSheet.Tracks)
+            {
+                yield return new ChapterInfo
+                {
+                    Name = $"{track.Performer} -  {track.Title}",
+                    TimeStamp = track.Indices.First().ToDouble()
+                };
+            }
         }
 
         private static IEnumerable<ChapterInfo> CreateTimeBasedChapters(TimeSpan duration)

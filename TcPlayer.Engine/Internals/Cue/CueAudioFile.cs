@@ -11,39 +11,14 @@ namespace TcPlayer.Engine.Internals.Cue
     {
         public string Filename { get; init; }
 
-        /// <summary>
-        /// BINARY - Intel binary file (least significant byte first)
-        /// MOTOROLA - Motorola binary file (most significant byte first)
-        /// AIFF - Audio AIFF file
-        /// WAVE - Audio WAVE file
-        /// MP3 - Audio MP3 file
-        /// </summary>
-        public CueFileType Filetype { get; init; }
-
-        public CueAudioFile() : this(string.Empty, string.Empty)
+        public CueAudioFile() : this(string.Empty)
         {
 
         }
 
-        public CueAudioFile(string filename, string filetype)
+        public CueAudioFile(string filename)
         {
             Filename = filename;
-
-            Filetype = (filetype.Trim().ToUpper()) switch
-            {
-                "BINARY" => CueFileType.BINARY,
-                "MOTOROLA" => CueFileType.MOTOROLA,
-                "AIFF" => CueFileType.AIFF,
-                "WAVE" => CueFileType.WAVE,
-                "MP3" => CueFileType.MP3,
-                _ => CueFileType.BINARY,
-            };
-        }
-
-        public CueAudioFile(string filename, CueFileType filetype)
-        {
-            Filename = filename;
-            Filetype = filetype;
         }
     }
 }

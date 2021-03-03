@@ -2,6 +2,8 @@
 // Original author: Wyatt O'Day wyday.com/cuesharp
 // This is a heavily modified version for TCPlayer. Supports only reading
 
+using System;
+
 namespace TcPlayer.Engine.Internals.Cue
 {
     /// <summary>
@@ -14,9 +16,9 @@ namespace TcPlayer.Engine.Internals.Cue
         //0-99
         int m_number;
 
-        int m_minutes;
-        int m_seconds;
-        int m_frames;
+        int _hours;
+        int _minutes;
+        int _seconds;
 
         private static void SetValue(ref int field, int value, int limit)
         {
@@ -46,30 +48,30 @@ namespace TcPlayer.Engine.Internals.Cue
         /// <summary>
         /// Possible values: 0-99
         /// </summary>
-        public int Minutes
+        public int Hours
         {
-            get => m_minutes;
-            set => SetValue(ref m_minutes, value, 99);
+            get => _hours;
+            set => SetValue(ref _hours, value, 99);
         }
 
         /// <summary>
         /// Possible values: 0-59
         /// There are 60 seconds/minute
         /// </summary>
-        public int Seconds
+        public int Minutes
         {
-            get => m_seconds;
-            set => SetValue(ref m_seconds, value, 59);
+            get => _minutes;
+            set => SetValue(ref _minutes, value, 59);
         }
 
         /// <summary>
         /// Possible values: 0-74
         /// There are 75 frames/second
         /// </summary>
-        public int Frames
+        public int Seconds
         {
-            get => m_frames;
-            set => SetValue(ref m_frames, value, 74);
+            get => _seconds;
+            set => SetValue(ref _seconds, value, 74);
         }
 
         /// <summary>
@@ -82,9 +84,16 @@ namespace TcPlayer.Engine.Internals.Cue
         public CueIndex(int number, int minutes, int seconds, int frames)
         {
             m_number = number;
-            m_minutes = minutes;
-            m_seconds = seconds;
-            m_frames = frames;
+            _hours = minutes;
+            _minutes = seconds;
+            _seconds = frames;
+        }
+
+        internal double ToDouble()
+        {
+            double calculated = (Hours * 3600) + (Minutes * 60) + Seconds;
+
+            return calculated;
         }
     }
 }
