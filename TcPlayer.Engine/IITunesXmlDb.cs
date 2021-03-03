@@ -6,7 +6,7 @@ namespace TcPlayer.Engine
     /// <summary>
     /// Interface for ITunesXmlDb
     /// </summary>
-    public interface IITunesXmlDb
+    public interface IItunesXmlDb
     {
         /// <summary>
         /// Gets All Tracks from the Database

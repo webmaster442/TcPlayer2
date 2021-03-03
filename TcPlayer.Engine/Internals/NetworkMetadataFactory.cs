@@ -5,7 +5,8 @@ using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Engine.Internals
 {
-    internal class NetworkMetadataFactory
+#pragma warning disable S1121 // Assignments should not be made from within sub-expressions
+    internal static class NetworkMetadataFactory
     {
 
         private static Metadata CreateDefault(string url)
@@ -71,4 +72,5 @@ namespace TcPlayer.Engine.Internals
             };
         }
     }
+#pragma warning restore S1121 // Assignments should not be made from within sub-expressions
 }

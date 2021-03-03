@@ -21,7 +21,7 @@ namespace TcPlayer.Engine
 
         public const double UpdatePeriodSeconds = 0.1d;
 
-        public NotifyObject()
+        protected NotifyObject()
         {
             _timer = new DispatcherTimer(DispatcherPriority.Normal);
             _timer.Tick += OnTimerTick;

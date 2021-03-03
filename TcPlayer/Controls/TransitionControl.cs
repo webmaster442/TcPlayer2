@@ -111,7 +111,7 @@ namespace TcPlayer.Controls
             var tier = (RenderCapability.Tier >> 16);
 
             // if we dont have a selector, or the visual content is not a FE, do not animate
-            if (EnableTransitions == false || ContentTransitionSelector == null || oldContentVisual == null || tier < 2)
+            if (!EnableTransitions || ContentTransitionSelector == null || oldContentVisual == null || tier < 2)
             {
                 SetNonVisualChild(newContent);
                 return;

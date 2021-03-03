@@ -1,6 +1,6 @@
 ﻿namespace TcPlayer.Engine.Internals.Mp4Chapters
 {
-    public class Constants
+    internal static class Constants
     {
         public static readonly byte[] Tref = new byte[] { 0x74, 0x72, 0x65, 0x66 };
         public static readonly byte[] Chap = new byte[] { 0x63, 0x68, 0x61, 0x70 };

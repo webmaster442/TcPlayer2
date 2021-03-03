@@ -18,8 +18,8 @@ namespace TcPlayer.Engine.Internals
 
         private int _fx;
         private GCHandle _handle;
-        private PeakEQParameters _eq;
-        private float[] _defaultConfig = new float[] { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+        private readonly PeakEQParameters _eq;
+        private readonly float[] _defaultConfig = new float[] { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
         private int _channelHandle;
 
         public Equalizer(int channelHandle)

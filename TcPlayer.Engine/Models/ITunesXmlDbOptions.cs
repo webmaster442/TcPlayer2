@@ -1,6 +1,6 @@
 ﻿namespace TcPlayer.Engine.Models
 {
-    public record ITunesXmlDbOptions
+    public record ItunesXmlDbOptions
     {
         /// <summary>
         /// Exclude tracks that don't exist on the user's system
@@ -17,7 +17,7 @@
         /// <summary>
         /// Creates a new instance of ITunesXmlDbOptions
         /// </summary>
-        public ITunesXmlDbOptions()
+        public ItunesXmlDbOptions()
         {
             ParalelParsingEnabled = true;
             ExcludeNonExistingFiles = false;

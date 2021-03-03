@@ -91,9 +91,7 @@ namespace TcPlayer.Engine.Internals.Cue
 
         internal double ToDouble()
         {
-            double calculated = (Hours * 3600) + (Minutes * 60) + Seconds;
-
-            return calculated;
+            return (Hours * 3600) + (Minutes * 60) + Seconds;
         }
     }
 }

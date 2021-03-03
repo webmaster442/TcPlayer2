@@ -6,7 +6,7 @@ using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Engine
 {
-    public class PlaylistFormat
+    public static class PlaylistFormat
     {
         public static IEnumerable<PlaylistItem> Load(string file)
         {

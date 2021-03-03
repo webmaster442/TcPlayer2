@@ -87,7 +87,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
 
         private BoxInfo? FindBox(byte[] type)
         {
-            BoxInfo? box = null;
+            BoxInfo? box;
             do
             {
                 box = NextBox();
@@ -99,7 +99,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                     }
                     SeekNext(box.Value);
                 }
-            } while (!(box == null || box.Value.Last));
+            } while (box?.Last == false);
             return null;
         }
 
@@ -111,7 +111,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                 var moovData = new MoovInfo();
                 var tracks = new List<TrakInfo>();
                 var maxLen = moovBox.Value.BoxOffset + moovBox.Value.Offset;
-                BoxInfo? box = null;
+                BoxInfo? box;
                 do
                 {
                     box = NextBox(maxLen);
@@ -128,7 +128,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                         SeekNext(box.Value);
                     }
                 }
-                while (!(box == null || box.Value.Last));
+                while (box?.Last == false);
                 moovData.Tracks = tracks.ToArray();
                 return moovData;
             }
@@ -139,7 +139,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
         {
             var maxLen = trakBox.BoxOffset + trakBox.Offset;
             var trakData = new TrakInfo();
-            BoxInfo? box = null;
+            BoxInfo? box;
             do
             {
                 box = NextBox(maxLen);
@@ -159,14 +159,14 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                     }
                     SeekNext(box.Value);
                 }
-            } while (!(box == null || box.Value.Last));
+            } while (box?.Last == false);
             return trakData;
         }
 
         private void ReadTref(ref TrakInfo trakData, BoxInfo box2)
         {
             var maxLen = box2.BoxOffset + box2.Offset;
-            BoxInfo? box = null;
+            BoxInfo? box;
             do
             {
                 box = NextBox(maxLen);
@@ -178,7 +178,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                     }
                     SeekNext(box.Value);
                 }
-            } while (!(box == null || box.Value.Last));
+            } while (box?.Last == false);
         }
 
         private void ReadChap(ref TrakInfo trakData, BoxInfo box2)
@@ -197,7 +197,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
         private void ReadMdia(ref TrakInfo trackData, BoxInfo mdiaBox)
         {
             var maxLen = mdiaBox.BoxOffset + mdiaBox.Offset;
-            BoxInfo? box = null;
+            BoxInfo? box;
             do
             {
                 box = NextBox(maxLen);
@@ -217,13 +217,13 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                     }
                     SeekNext(box.Value);
                 }
-            } while (!(box == null || box.Value.Last));
+            } while (box?.Last == false);
         }
 
         private void ReadMinf(ref TrakInfo trakData, BoxInfo box2)
         {
             var maxLen = box2.BoxOffset + box2.Offset;
-            BoxInfo? box = null;
+            BoxInfo? box;
             do
             {
                 box = NextBox(maxLen);
@@ -235,13 +235,13 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                     }
                     SeekNext(box.Value);
                 }
-            } while (!(box == null || box.Value.Last));
+            } while (box?.Last == false);
         }
 
         private void ReadStbl(ref TrakInfo trakData, BoxInfo box2)
         {
             var maxLen = box2.BoxOffset + box2.Offset;
-            BoxInfo? box = null;
+            BoxInfo? box;
             do
             {
                 box = NextBox(maxLen);
@@ -257,7 +257,7 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
                     }
                     SeekNext(box.Value);
                 }
-            } while (!(box == null || box.Value.Last));
+            } while (box?.Last == false);
         }
 
         private void ReadStts(ref TrakInfo trakData)
@@ -322,22 +322,6 @@ namespace TcPlayer.Engine.Internals.Mp4Chapters
             _stream?.Seek(3 + (isv8 ? 8 + 8 : 4 + 4), SeekOrigin.Current);
             moovData.TimeUnitPerSecond = ReadUint32();
         }
-
-#if DEBUG
-        private void DebugBoxes(long? maxLen)
-        {
-            BoxInfo? box = null;
-            do
-            {
-                box = NextBox(maxLen);
-                if (box != null)
-                {
-                    Debug.WriteLine("{0}: {1} -> {2}", box.Value.Type, box.Value.BoxOffset, box.Value.Offset);
-                    SeekNext(box.Value);
-                }
-            } while (!(box == null || box.Value.Last));
-        }
-#endif
 
         private void SeekNext(BoxInfo box)
         {

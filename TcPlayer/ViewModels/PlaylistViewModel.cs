@@ -113,7 +113,7 @@ namespace TcPlayer.ViewModels
 
         private bool CanImportItunes(object obj)
         {
-            return ITunesXmlDb.UserHasItunesDb;
+            return ItunesXmlDb.UserHasItunesDb;
         }
 
         private void OnImportItunes(object obj)

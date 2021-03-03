@@ -13,7 +13,7 @@ namespace TcPlayer.Controls
 
         public object Content
         {
-            get { return (object)GetValue(ContentProperty); }
+            get { return GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
 

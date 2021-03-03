@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 namespace TcPlayer.ViewModels
 {
-    public class ITunesViewModel : ViewModelBase
+    public class ItunesViewModel : ViewModelBase
     {
-        private readonly ITunesXmlDb _iTunes;
+        private readonly ItunesXmlDb _iTunes;
         private ItunesTab _filter;
         private string _filterText;
         private string _selectedItem;
@@ -78,16 +78,16 @@ namespace TcPlayer.ViewModels
             set => SetProperty(ref _selectedItem, value);
         }
 
-        public ITunesViewModel()
+        public ItunesViewModel()
         {
-            ITunesXmlDbOptions options = new ITunesXmlDbOptions
+            ItunesXmlDbOptions options = new ItunesXmlDbOptions
             {
                 ExcludeNonExistingFiles = true,
                 ParalelParsingEnabled = true
             };
-            if (ITunesXmlDb.UserHasItunesDb)
+            if (ItunesXmlDb.UserHasItunesDb)
             {
-                _iTunes = new ITunesXmlDb(ITunesXmlDb.UserItunesDbPath, options);
+                _iTunes = new ItunesXmlDb(ItunesXmlDb.UserItunesDbPath, options);
                 FilterText = string.Empty;
                 Filter = ItunesTab.Artists;
                 DoFiltering();

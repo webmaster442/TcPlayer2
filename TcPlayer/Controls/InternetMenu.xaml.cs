@@ -26,11 +26,12 @@ namespace TcPlayer.Controls
         public static readonly DependencyProperty SongMetadataProperty =
             DependencyProperty.Register("SongMetadata", typeof(Metadata), typeof(InternetMenu), new PropertyMetadata(null));
 
-
+#pragma warning disable S1075 // URIs should not be hardcoded
         private const string GoogleUrlFormat = "https://www.google.com/search?&q={0}";
         private const string YoutubeUrlFormat = "https://www.youtube.com/results?search_query={0}";
         private const string SpotifyUrlFormat = "https://open.spotify.com/search/{0}";
         private const string DiscogsUrlFormat = "https://www.discogs.com/search/?q={0}&type=all";
+#pragma warning restore S1075 // URIs should not be hardcoded
 
         private static void SearchTheWeb(string provider, string term)
         {

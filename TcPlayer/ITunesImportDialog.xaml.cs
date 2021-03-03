@@ -14,7 +14,7 @@ namespace TcPlayer
         {
             InitializeComponent();
             SourceInitialized += ITunesImportDialog_SourceInitialized;
-            DataContext = new ITunesViewModel();
+            DataContext = new ItunesViewModel();
             
         }
 
@@ -37,7 +37,7 @@ namespace TcPlayer
 
         internal IEnumerable<ITunesTrack> GetItems()
         {
-            if (DataContext is ITunesViewModel vm)
+            if (DataContext is ItunesViewModel vm)
             {
                 return vm.GetItems();
             }

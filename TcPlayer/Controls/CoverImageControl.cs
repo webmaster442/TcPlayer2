@@ -34,11 +34,13 @@ namespace TcPlayer.Controls
         {
             if (d is CoverImageControl cic)
             {
-                cic.Refresh();
+                 cic.Refresh();
             }
         }
 
+#pragma warning disable S3168 // "async" methods should not return "void"
         private async void Refresh()
+#pragma warning restore S3168 // "async" methods should not return "void"
         {
             byte[] downloaded = null;
             if (SongMetaData != null)

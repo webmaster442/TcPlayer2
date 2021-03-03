@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TcPlayer.Engine.Internals
 {
-    internal class Wasapi
+    internal static class Wasapi
     {
         public const WasapiInitFlags InitFlags = WasapiInitFlags.AutoFormat | WasapiInitFlags.Buffer;
         public const float BufferSize = 0.1f;

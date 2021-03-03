@@ -64,7 +64,7 @@ namespace TcPlayer.Effects
         /// <summary>
         /// Updates the shader's variables to the default values.
         /// </summary>
-        public Transition(Uri source)
+        protected Transition(Uri source)
         {
             var shader = new PixelShader();
             shader.UriSource = source;

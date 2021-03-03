@@ -128,14 +128,14 @@ namespace TcPlayer.Engine.Settings
             return _storage.ContainsKey(compositeKey);
         }
 
-        public void WriteList<T>(Guid container, string settingKey, IReadOnlyList<T> list)
+        public void WriteList<T>(Guid container, string settingKey, IReadOnlyList<T> value)
         {
-            string[] values = new string[list.Count];
+            string[] values = new string[value.Count];
             if (typeof(T).IsAssignableFrom(typeof(IConvertible)))
             {
-                for (int i = 0; i < list.Count; i++)
+                for (int i = 0; i < value.Count; i++)
                 {
-                    var converted = Convert.ChangeType(list[i], typeof(string));
+                    var converted = Convert.ChangeType(value[i], typeof(string));
                     if (converted == null)
                         throw new InvalidCastException();
                     values[i] = (string)converted;
@@ -143,9 +143,9 @@ namespace TcPlayer.Engine.Settings
             }
             else
             {
-                for (int i = 0; i < list.Count; i++)
+                for (int i = 0; i < value.Count; i++)
                 {
-                    values[i] = JsonSerializer.Serialize(list[i], _JsonOptions);
+                    values[i] = JsonSerializer.Serialize(value[i], _JsonOptions);
                 }
             }
             WriteType(container, settingKey, values);

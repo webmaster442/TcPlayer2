@@ -68,7 +68,6 @@ namespace TcPlayer.Engine.Internals
                 }
                 catch (Exception error)
                 {
-                    isStarted = false;
                     return new AsyncProcesssResult
                     {
                         Completed = true,
@@ -102,7 +101,8 @@ namespace TcPlayer.Engine.Internals
                             process.Kill();
                         }
                         catch
-                        { //we don't do anything with exceptions here }
+                        { 
+                            //we don't do anything with exceptions here
                         }
                     }
                 }

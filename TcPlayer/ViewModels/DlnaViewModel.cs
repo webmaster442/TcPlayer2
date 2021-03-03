@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,10 +31,10 @@ namespace TcPlayer.ViewModels
             set => SetProperty(ref _isUiBlocked, value);
         }
 
-        public bool CanImport 
-        { 
+        public bool CanImport
+        {
             get => _canImport;
-            set => SetProperty(ref _canImport, value); 
+            set => SetProperty(ref _canImport, value);
         }
 
         public string CurrentServer { get; private set; }
@@ -85,7 +84,7 @@ namespace TcPlayer.ViewModels
             var items = await DlnaClient.GetContents(url, id);
             Items = new ObservableCollection<DlnaItem>(items);
 
-            CanImport = Items.Any(i => i.IsBrowsable == false);
+            CanImport = Items.Any(i => !i.IsBrowsable);
 
             Navigation.Push(id);
         }
@@ -100,7 +99,7 @@ namespace TcPlayer.ViewModels
 
         public IEnumerable<string> GetUrls()
         {
-            return Items.Where(i => i.IsBrowsable == false)
+            return Items.Where(i => !i.IsBrowsable)
                         .Select(i => i.Locaction);
         }
     }

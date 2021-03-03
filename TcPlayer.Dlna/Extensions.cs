@@ -4,7 +4,7 @@
     {
         public static string ChopOffBefore(this string s, string Before)
         {
-            int End = s.ToUpper().IndexOf(Before.ToUpper());
+            int End = s.IndexOf(Before, System.StringComparison.OrdinalIgnoreCase);
             if (End > -1)
             {
                 return s[(End + Before.Length)..];
@@ -15,7 +15,7 @@
 
         public static string ChopOffAfter(this string s, string After)
         {
-            int End = s.ToUpper().IndexOf(After.ToUpper());
+            int End = s.IndexOf(After, System.StringComparison.OrdinalIgnoreCase);
             if (End > -1)
             {
                 return s.Substring(0, End);

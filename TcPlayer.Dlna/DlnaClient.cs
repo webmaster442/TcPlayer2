@@ -42,7 +42,7 @@ namespace TcPlayer.Dlna
                         if (ReceivedBytes > 0)
                         {
                             string Data = Encoding.UTF8.GetString(ReceiveBuffer, 0, ReceivedBytes);
-                            if (Data.ToUpper().IndexOf("LOCATION: ") > -1)
+                            if (Data.IndexOf("LOCATION: ", StringComparison.OrdinalIgnoreCase) > -1)
                             {
                                 Data = Data.ChopOffBefore("LOCATION: ").ChopOffAfter(Environment.NewLine);
                             }
@@ -74,7 +74,7 @@ namespace TcPlayer.Dlna
                         }
 
                         var xmlResponse = xs.Deserialize(reader) as Root;
-                        var dlna = xmlResponse?.Device.ServiceList?.Service.Where(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1").FirstOrDefault();
+                        var dlna = xmlResponse?.Device.ServiceList?.Service.FirstOrDefault(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1");
                         if (dlna != null)
                         {
                             var serverUrl = new Uri(server);

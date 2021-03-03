@@ -19,7 +19,7 @@ namespace TcPlayer.Controls
 
         public object LoadDiscCommandParameter
         {
-            get { return (object)GetValue(LoadDiscCommandParameterProperty); }
+            get { return GetValue(LoadDiscCommandParameterProperty); }
             set { SetValue(LoadDiscCommandParameterProperty, value); }
         }
 

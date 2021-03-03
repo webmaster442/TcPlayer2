@@ -10,11 +10,11 @@ namespace TcPlayer.Engine
     /// <summary>
     /// A class for Interacting iTunes xml database 
     /// </summary>
-    public class ITunesXmlDb: IITunesXmlDb
+    public class ItunesXmlDb: IItunesXmlDb
     {
-        private XDocument _xml;
+        private readonly XDocument _xml;
         private List<ITunesTrack> _tracks;
-        private ITunesXmlDbOptions _options;
+        private readonly ItunesXmlDbOptions _options;
 
         #region ctor
         /// <summary>
@@ -22,8 +22,8 @@ namespace TcPlayer.Engine
         /// </summary>
         /// <param name="fileLocation">full path of iTunes Music Library.xml</param>
         /// <param name="options">Parser options. If not specified default options will be used.</param>
-        /// <seealso cref="ITunesXmlDbOptions"/>
-        public ITunesXmlDb(string fileLocation, ITunesXmlDbOptions options)
+        /// <seealso cref="ItunesXmlDbOptions"/>
+        public ItunesXmlDb(string fileLocation, ItunesXmlDbOptions options)
         {
             _xml = XDocument.Load(fileLocation);
             _options = options;
@@ -56,8 +56,6 @@ namespace TcPlayer.Engine
             {
                 if (_tracks.Count == 0)
                 {
-                    var trackElements = LoadTrackElements();
-
                     var query = from trackElement in LoadTrackElements()
                                 select Parser.CreateTrack(trackElement, _options.ExcludeNonExistingFiles);
 
@@ -109,7 +107,7 @@ namespace TcPlayer.Engine
                     var parent = item.ParseStringValue("Parent Persistent ID");
                     if (!string.IsNullOrEmpty(parent))
                     {
-                        var parentitem = playlistNodes.Where(i => i.ParseStringValue("Playlist Persistent ID") == parent).FirstOrDefault();
+                        var parentitem = playlistNodes.FirstOrDefault(i => i.ParseStringValue("Playlist Persistent ID") == parent);
                         if (parentitem != null)
                         {
                             yield return $"{parentitem.ParseStringValue("Name")} \\ {item.ParseStringValue("Name")}";
@@ -159,8 +157,8 @@ namespace TcPlayer.Engine
             {
                 foreach (var subitem in item)
                 {
-                    var trackid = Int32.Parse(subitem.ParseStringValue("Track ID"));
-                    var track = Tracks.Where(t => t?.TrackId == trackid).FirstOrDefault();
+                    var trackid = int.Parse(subitem.ParseStringValue("Track ID"));
+                    var track = Tracks.FirstOrDefault(t => t?.TrackId == trackid);
                     if (track != null)
                     {
                         yield return track;

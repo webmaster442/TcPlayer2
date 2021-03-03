@@ -202,8 +202,6 @@ namespace TcPlayer.Engine.Internals.Cue
                         Tracks[trackOn].Title = line;
                     }
                     break;
-                default:
-                    break;
             }
         }
 

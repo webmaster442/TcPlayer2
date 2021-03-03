@@ -10,7 +10,7 @@ namespace TcPlayer.Engine.Ui
         Guid MessageReciverID { get; }
     }
 
-    public interface IMessageClient<Tmsg> : IMessageClient
+    public interface IMessageClient<in Tmsg> : IMessageClient
     {
         /// <summary>
         /// Handler for a message

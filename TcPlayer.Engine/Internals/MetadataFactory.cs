@@ -84,7 +84,7 @@ namespace TcPlayer.Engine.Internals
                 using (var extractor = new Mp4Chapters.ChapterExtractor(System.IO.File.OpenRead(filePath)))
                 {
                     var chapters = extractor.ExtractChapters().ToArray();
-                    if (chapters.Any())
+                    if (chapters.Length > 0)
                     {
                         return chapters;
                     }
