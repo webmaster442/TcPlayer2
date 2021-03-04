@@ -15,8 +15,6 @@ namespace TcPlayer.Engine.Internals.Cue
     /// </summary>
     internal class CueSheet
     {
-        private List<string> cueLines;
-
         /// <summary>
         /// Returns/Sets track in this cuefile.
         /// </summary>
@@ -38,7 +36,6 @@ namespace TcPlayer.Engine.Internals.Cue
         /// </summary>
         public CueSheet()
         {
-            cueLines = new List<string>();
             Tracks = new List<CueTrack>();
         }
 
@@ -69,7 +66,7 @@ namespace TcPlayer.Engine.Internals.Cue
             // read in the full cue file
             TextReader tr = new StreamReader(filename, encoding);
             //read in file
-            cueLines = tr.ReadToEnd().Split(delimiters).ToList();
+            var cueLines = tr.ReadToEnd().Split(delimiters).ToList();
 
             // close the stream
             tr.Close();
@@ -102,20 +99,18 @@ namespace TcPlayer.Engine.Internals.Cue
                 switch (file[i].Substring(0, file[i].IndexOf(' ')).ToUpper())
                 {
                     case "FILE":
-                        currentFile = ParseFile(file[i], trackOn);
+                        currentFile = ParseFile(file[i]);
                         break;
                     case "INDEX":
                         ParseIndex(file[i], trackOn);
                         break;
                     case "PERFORMER":
-                        ParseString(file[i], trackOn);
-                        break;
                     case "TITLE":
                         ParseString(file[i], trackOn);
                         break;
                     case "TRACK":
                         trackOn++;
-                        ParseTrack(file[i], trackOn);
+                        ParseTrack(file[i]);
                         if (currentFile.Filename != "") //if there's a file
                         {
                             Tracks[trackOn].DataFile = currentFile;
@@ -129,7 +124,7 @@ namespace TcPlayer.Engine.Internals.Cue
 
         }
 
-        private CueAudioFile ParseFile(string line, int trackOn)
+        private CueAudioFile ParseFile(string line)
         {
             line = line[line.IndexOf(' ')..].Trim();
 
@@ -210,19 +205,13 @@ namespace TcPlayer.Engine.Internals.Cue
         /// </summary>
         /// <param name="line">The line in the cue file that contains the TRACK command.</param>
         /// <param name="trackOn">The track currently processing.</param>
-        private void ParseTrack(string line, int trackOn)
+        private void ParseTrack(string line)
         {
             string tempString;
             int trackNumber;
 
             tempString = line[line.IndexOf(' ')..].Trim();
-
-            try
-            {
-                trackNumber = Convert.ToInt32(tempString.Substring(0, tempString.IndexOf(' ')));
-            }
-            catch (Exception)
-            { throw; }
+            trackNumber = Convert.ToInt32(tempString.Substring(0, tempString.IndexOf(' ')));
 
             //find the data type.
             tempString = tempString.Substring(tempString.IndexOf(' '), tempString.Length - tempString.IndexOf(' ')).Trim();

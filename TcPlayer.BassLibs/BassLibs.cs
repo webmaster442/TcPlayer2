@@ -29,7 +29,7 @@ namespace TcPlayer.BassLibs
             using (var stream = assembly?.GetManifestResourceStream("TcPlayer.BassLibs.TcPlayer.BassLibs.sha512"))
             {
                 string? line;
-                if (stream == null) return null;
+                if (stream == null) return new Dictionary<string, string>();
                 using (var streamreader = new StreamReader(stream))
                 {
                     while ((line = streamreader.ReadLine()) != null)

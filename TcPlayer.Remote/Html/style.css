@@ -1,0 +1,43 @@
+body {
+    background-color: #81808E;
+    color: black;
+    margin: 0px;
+    padding: 0px;
+    font-size: large;
+}
+
+#header {
+    background-color: #444442;
+    color: #A5A6AB;
+    padding: 5px;
+}
+
+#header h1 {
+    margin-bottom: 1%;
+    margin-top: 1%;
+    text-align: center;
+}
+
+#headerButtons {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.headerButton {
+    width: 49%;
+    padding: 7px 8px;
+}
+
+#SongTitle {
+    padding: 10px;
+}
+
+#menu .mainButton {
+    width: 98%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 14px 16px;
+    margin-top: 1%;
+}
