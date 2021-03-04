@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using TcPlayer.Dialogs;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;

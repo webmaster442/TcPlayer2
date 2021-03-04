@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace TcPlayer
+namespace TcPlayer.Dialogs
 {
     /// <summary>
     /// Interaction logic for OpenUrlDialog.xaml

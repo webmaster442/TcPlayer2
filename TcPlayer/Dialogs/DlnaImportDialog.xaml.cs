@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using TcPlayer.ViewModels;
 
-namespace TcPlayer
+namespace TcPlayer.Dialogs
 {
     /// <summary>
     /// Interaction logic for DlnaImport.xaml

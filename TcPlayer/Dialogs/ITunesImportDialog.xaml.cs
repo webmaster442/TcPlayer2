@@ -6,7 +6,7 @@ using TcPlayer.Engine.Models;
 using TcPlayer.Infrastructure;
 using TcPlayer.ViewModels;
 
-namespace TcPlayer
+namespace TcPlayer.Dialogs
 {
     public partial class ITunesImportDialog : Window
     {
