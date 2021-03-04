@@ -199,5 +199,11 @@ namespace TcPlayer
                 return false;
             }
         }
+
+        private void RemoteButtonClick(object sender, RoutedEventArgs e)
+        {
+            var remote = new RemoteServerDialog(_messenger);
+            remote.ShowDialog();
+        }
     }
 }

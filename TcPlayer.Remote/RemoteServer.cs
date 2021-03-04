@@ -1,35 +1,56 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TcPlayer.Engine;
 using WatsonWebserver;
 
 namespace TcPlayer.Remote
 {
     public sealed class RemoteServer : IDisposable
     {
-        private Server _server;
+        private Server? _server;
 
         private Guid _sessionId;
-        private const int _port = 9999;
+        private const int _port = 8080;
         private readonly string _hostName;
 
         private readonly ConcurrentDictionary<string, string> _cache;
+        private readonly IMessenger messenger;
 
-
-        public RemoteServer()
+        public RemoteServer(IMessenger messenger)
         {
-            _hostName = Dns.GetHostName();
+            _hostName = "localhost";
             _sessionId = Guid.NewGuid();
             _cache = new ConcurrentDictionary<string, string>();
+            var commandsRegex = new Regex($"^/{_sessionId}/player/(play|pause|stop|next|previous)", RegexOptions.Compiled);
             FillCache();
             _server = new Server(_hostName, _port, false, HandleDefaultRoute);
             _server.Routes.Static.Add(HttpMethod.GET, "app.js", (ctx) => HandleContent(ctx, "app.js"));
             _server.Routes.Static.Add(HttpMethod.GET, "style.css", (ctx) => HandleContent(ctx, "style.css"));
             _server.Routes.Static.Add(HttpMethod.GET, $"/{_sessionId}/", (ctx) => HandleContent(ctx, "index.html"));
+            _server.Routes.Dynamic.Add(HttpMethod.GET, commandsRegex, CommandHandler);
+            this.messenger = messenger;
+        }
+
+        private async Task CommandHandler(HttpContext ctx)
+        {
+            var command = ctx.Request.Url.RawWithoutQuery.Replace($"/{_sessionId}/player/", "");
+
+            messenger.SendMessage(new RemoteControlMessage
+            {
+                Command = Enum.Parse<RemoteControlCommand>(command),
+                Value = 0
+            }) ;
+
+            ctx.Response.StatusCode = 200;
+            await ctx.Response.Send(string.Empty);
+        }
+
+        public void Start()
+        {
+            _server?.Start();
         }
 
         public string ServerLink
@@ -40,12 +61,22 @@ namespace TcPlayer.Remote
         private void FillCache()
         {
             var current = System.Reflection.Assembly.GetAssembly(typeof(RemoteServer));
-            foreach (var resourceName in current.GetManifestResourceNames())
+
+            var name = current?.GetName().Name ?? string.Empty;
+
+            var names = current?.GetManifestResourceNames() ?? Enumerable.Empty<string>();
+
+            foreach (var resourceName in names)
             {
-                using (var reader = new System.IO.StreamReader(current.GetManifestResourceStream(resourceName)))
+                var stream = current?.GetManifestResourceStream(resourceName);
+                if (stream != null)
                 {
-                    var content = reader.ReadToEnd();
-                    _cache.TryAdd(resourceName, content);
+                    using (var reader = new System.IO.StreamReader(stream))
+                    {
+                        var key = resourceName.Replace(name + ".Html.", "");
+                        var content = reader.ReadToEnd();
+                        _cache.TryAdd(key, content);
+                    }
                 }
             }
         }

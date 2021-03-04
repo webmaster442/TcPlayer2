@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <OutputPath>../bin/$(configuration)</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Nullable>Enable</Nullable>
@@ -16,12 +16,16 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Html\app.js" />
-    <EmbeddedResource Include="Html\Index.html" />
+    <EmbeddedResource Include="Html\index.html" />
     <EmbeddedResource Include="Html\style.css" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Watson" Version="4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TcPlayer.Engine\TcPlayer.Engine.csproj" />
   </ItemGroup>
 
 </Project>

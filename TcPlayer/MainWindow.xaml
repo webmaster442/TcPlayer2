@@ -54,7 +54,13 @@
             Grid.Row="0"
             ControlledWindow="{Binding ElementName=Main}">
             <controls:Titlebar.Content>
-                <controls:InternetMenu SongMetadata="{Binding Engine.Metadata}" />
+                <StackPanel Orientation="Horizontal">
+                    <Button
+                        Click="RemoteButtonClick"
+                        Background="{StaticResource TitleBarButton}"
+                        Content="Remote" />
+                    <controls:InternetMenu SongMetadata="{Binding Engine.Metadata}" />
+                </StackPanel>
             </controls:Titlebar.Content>
         </controls:Titlebar>
         <Border
@@ -84,7 +90,7 @@
                 Style="{StaticResource MainTab}">
                 <controls:EqualizerControl
                     EqualizerChangeCommand="{Binding ApplyEqCommand}"
-                    EqualizerParameters="{Binding CurrentEq}"/>
+                    EqualizerParameters="{Binding CurrentEq}" />
             </TabItem>
         </controls:AnimatedTabControl>
         <controls:UIBlocker

@@ -17,6 +17,7 @@
     <ProjectReference Include="..\TcPlayer.BassLibs\TcPlayer.BassLibs.csproj" />
     <ProjectReference Include="..\TcPlayer.Dlna\TcPlayer.Dlna.csproj" />
     <ProjectReference Include="..\TcPlayer.Engine\TcPlayer.Engine.csproj" />
+    <ProjectReference Include="..\TcPlayer.Remote\TcPlayer.Remote.csproj" />
   </ItemGroup>
 
   <ItemGroup>
