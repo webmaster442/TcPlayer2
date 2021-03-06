@@ -72,7 +72,10 @@ namespace TcPlayer.BassLibs
                 yield return Path.Combine(currentdir, "bass_ape.dll");
                 yield return Path.Combine(currentdir, "bass_spx.dll");
                 yield return Path.Combine(currentdir, "bassalac.dll");
+                yield return Path.Combine(currentdir, "bassdsd.dll");
                 yield return Path.Combine(currentdir, "bassflac.dll");
+                yield return Path.Combine(currentdir, "basshls.dll");
+                yield return Path.Combine(currentdir, "bassopus.dll");
                 yield return Path.Combine(currentdir, "basswebm.dll");
                 yield return Path.Combine(currentdir, "basswma.dll");
                 yield return Path.Combine(currentdir, "basswv.dll");
