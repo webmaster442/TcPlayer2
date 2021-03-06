@@ -64,9 +64,7 @@ namespace TcPlayer.Remote
 
             var name = current?.GetName().Name ?? string.Empty;
 
-            var names = current?.GetManifestResourceNames() ?? Enumerable.Empty<string>();
-
-            foreach (var resourceName in names)
+            foreach (var resourceName in current?.GetManifestResourceNames() ?? Enumerable.Empty<string>())
             {
                 var stream = current?.GetManifestResourceStream(resourceName);
                 if (stream != null)

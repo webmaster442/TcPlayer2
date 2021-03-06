@@ -4,29 +4,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TcPlayer 2</title>
+    <title>TcPlayer 2 Remote</title>
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="app.js"></script>
 </head>
 
 <body>
     <div id="header">
-        <h1>Tc Player</h1>
-        <div id="headerButtons">
-            <input class="headerButton" type="button" value="Player" />
-            <input class="headerButton" type="button" value="Playlist" />
-        </div>
-    </div>
-    <div id="SongTitle">
-        Song title
+        <h1>Tc Player Remote</h1>
     </div>
     <div id="contents">
         <div id="menu">
-            <input class="mainButton" type="button" value="Previous" />
-            <input class="mainButton" type="button" value="Play" />
-            <input class="mainButton" type="button" value="Pause" />
-            <input class="mainButton" type="button" value="Stop" />
-            <input class="mainButton" type="button" value="Next" />
+            <input class="mainButton" data-url="player/previous" type="button" value="Previous" />
+            <input class="mainButton" data-url="player/play" type="button" value="Play" />
+            <input class="mainButton" data-url="player/pause" type="button" value="Pause" />
+            <input class="mainButton" data-url="player/stop" type="button" value="Stop" />
+            <input class="mainButton" data-url="player/next" type="button" value="Next" />
         </div>
     </div>
 </body>

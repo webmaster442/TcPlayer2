@@ -4,6 +4,7 @@ body {
     margin: 0px;
     padding: 0px;
     font-size: large;
+    font-family: 'Segoe UI Semilight';
 }
 
 #header {
@@ -18,26 +19,31 @@ body {
     text-align: center;
 }
 
-#headerButtons {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.headerButton {
-    width: 49%;
-    padding: 7px 8px;
-}
-
-#SongTitle {
-    padding: 10px;
-}
-
 #menu .mainButton {
-    width: 98%;
-    display: block;
+    box-shadow: inset 0px 1px 0px 0px #ffffff;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
+    color: #666666;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    width: 95%;
+    padding: 24px 0px;
+    text-decoration: none;
+    margin-top: 1%;
+    text-shadow: 0px 1px 0px #ffffff;
     margin-left: auto;
     margin-right: auto;
-    padding: 14px 16px;
-    margin-top: 1%;
+    display: block;
+}
+
+#menu .mainButton:hover {
+    background-color: #f6f6f6;
+}
+
+#menu .mainButton:active {
+    position: relative;
+    top: 1px;
 }
