@@ -6,6 +6,7 @@ using System.Windows;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Settings;
 using TcPlayer.Engine.Ui;
+using TcPlayer.Network.Http;
 using TcPlayer.ViewModels;
 
 namespace TcPlayer
@@ -16,9 +17,12 @@ namespace TcPlayer
     public sealed partial class App : Application, IDisposable
     {
         private IEngine _engine;
+        private HttpServer server;
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            server = new HttpServer(8080);
+
             if (!BassLibs.BassLibs.VerifyDllFiles())
             {
                 MessageBox.Show("Engine dll files corrupted. Please reinstall.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -45,6 +49,7 @@ namespace TcPlayer
             Current.MainWindow.DataContext = model;
 
             Current.MainWindow.Show();
+            server.Start();
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -54,6 +59,11 @@ namespace TcPlayer
 
         public void Dispose()
         {
+            if (server != null)
+            {
+                server.Dispose();
+                server = null;
+            }
             if (_engine != null)
             {
                 _engine.Dispose();
