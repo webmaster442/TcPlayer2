@@ -9,11 +9,10 @@ using TcPlayer.Engine.Models;
 using TcPlayer.Engine.Settings;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
-using TcPlayer.Remote;
 
 namespace TcPlayer.ViewModels
 {
-    internal sealed class MainViewModel : ViewModelBase, IMessageClient<LoadFileMessage>, IMessageClient<RemoteControlMessage>
+    internal sealed class MainViewModel : ViewModelBase, IMessageClient<LoadFileMessage>
     {
         private readonly IDialogProvider _dialogProvider;
         private readonly ISettingsFile _settingsFile;
@@ -125,32 +124,6 @@ namespace TcPlayer.ViewModels
             await LoadAndPlay(message.File);
             _dialogProvider.HideUiBlocker();
         }
-
-        public void HandleMessage(RemoteControlMessage message)
-        {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                switch (message.Command)
-                {
-                    case RemoteControlCommand.Next:
-                        OnNext(null);
-                        break;
-                    case RemoteControlCommand.Previous:
-                        OnPrevious(null);
-                        break;
-                    case RemoteControlCommand.Play:
-                        Engine.Play();
-                        break;
-                    case RemoteControlCommand.Pause:
-                        Engine.Pause();
-                        break;
-                    case RemoteControlCommand.Stop:
-                        Engine.Stop();
-                        break;
-                }
-            });
-        }
-
 
         private void Onload(object obj)
         {

@@ -55,10 +55,6 @@
             ControlledWindow="{Binding ElementName=Main}">
             <controls:Titlebar.Content>
                 <StackPanel Orientation="Horizontal">
-                    <Button
-                        Click="RemoteButtonClick"
-                        Background="{StaticResource TitleBarButton}"
-                        Content="Remote" />
                     <controls:InternetMenu SongMetadata="{Binding Engine.Metadata}" />
                 </StackPanel>
             </controls:Titlebar.Content>

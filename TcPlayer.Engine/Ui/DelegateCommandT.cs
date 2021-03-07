@@ -20,7 +20,11 @@ namespace TcPlayer.Engine.Ui
         {
             if (_canExecute == null) return true;
 
-            return _canExecute((T)parameter);
+            if (parameter != null)
+            {
+                return _canExecute((T)parameter);
+            }
+            return false;
         }
 
         public void Execute(object? parameter)
