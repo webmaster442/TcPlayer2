@@ -4,11 +4,11 @@ function HandleError() {
 
 function DoRequest(url) {
     var xmlRq = new XMLHttpRequest();
-    xmlRq.open('GET', 'url', true);
+    xmlRq.open('GET', window.location.href + url, true);
     xmlRq.onload = function() {
         if (this.status >= 200 && this.status < 400) {
             //everything ok;
-            console.log(url);
+            console.log(window.location.href + url);
         } else {
             HandleError();
         }
