@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace TcPlayer.Dlna.Modles.Discovery
+namespace TcPlayer.Network.Modles.Discovery
 {
 
     [XmlRoot(ElementName = "X_DLNADOC", Namespace = "urn:schemas-dlna-org:device-1-0")]

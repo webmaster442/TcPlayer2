@@ -1,4 +1,4 @@
-﻿namespace TcPlayer.Dlna
+﻿namespace TcPlayer.Network
 {
     public sealed record DlnaItem
     {

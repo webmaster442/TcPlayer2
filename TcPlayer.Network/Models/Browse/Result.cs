@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace TcPlayer.Dlna.Models.Browse
+namespace TcPlayer.Network.Models.Browse
 {
     [Serializable]
     [XmlType(AnonymousType = true)]

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace TcPlayer.Dlna.Modles.Discovery
+namespace TcPlayer.Network.Modles.Discovery
 {
     [XmlRoot(ElementName = "iconList", Namespace = "urn:schemas-upnp-org:device-1-0")]
     public class IconList

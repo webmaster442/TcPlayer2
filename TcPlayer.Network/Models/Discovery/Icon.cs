@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace TcPlayer.Dlna.Modles.Discovery
+namespace TcPlayer.Network.Modles.Discovery
 {
     [XmlRoot(ElementName = "icon", Namespace = "urn:schemas-upnp-org:device-1-0")]
 		public class Icon

@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using TcPlayer.Dlna;
+using TcPlayer.Network;
 using TcPlayer.Engine.Ui;
 
 namespace TcPlayer.ViewModels

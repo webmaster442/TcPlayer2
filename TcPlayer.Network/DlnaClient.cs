@@ -10,10 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
-using TcPlayer.Dlna.Models.Browse;
-using TcPlayer.Dlna.Modles.Discovery;
+using TcPlayer.Network.Models.Browse;
+using TcPlayer.Network.Modles.Discovery;
 
-namespace TcPlayer.Dlna
+namespace TcPlayer.Network
 {
     //https://developer.sony.com/develop/audio-control-api/get-started/browse-dlna-file#tutorial-step-2
     public static class DlnaClient

@@ -1,4 +1,4 @@
-﻿namespace TcPlayer.Dlna
+﻿namespace TcPlayer.Network
 {
     internal static class Extensions
     {
