@@ -17,7 +17,6 @@ namespace TcPlayer.Controls
     {
         public CoverImageControl()
         {
-            StretchDirection = StretchDirection.DownOnly;
             Stretch = Stretch.Uniform;
         }
 
@@ -117,9 +116,20 @@ namespace TcPlayer.Controls
                 image.DecodePixelWidth = 300;
                 image.CacheOption = BitmapCacheOption.OnLoad;
                 image.EndInit();
+
                 if (image.CanFreeze)
                     image.Freeze();
+
                 Source = image;
+
+                if (image.DpiX != 96)
+                {
+                    StretchDirection = StretchDirection.Both;
+                }
+                else
+                {
+                    StretchDirection = StretchDirection.DownOnly;
+                }
             }
         }
 
