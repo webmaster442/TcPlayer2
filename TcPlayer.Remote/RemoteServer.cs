@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using TcPlayer.Engine;
 using WatsonWebserver;
 
@@ -22,7 +22,7 @@ namespace TcPlayer.Remote
 
         public RemoteServer(IMessenger messenger)
         {
-            _hostName = FirewallHelper.GetLocalIP();
+            _hostName = Dns.GetHostName();
             _sessionId = Guid.NewGuid();
             _cache = new ConcurrentDictionary<string, string>();
             var commandsRegex = new Regex($"^/{_sessionId}/player/(play|pause|stop|next|previous)", RegexOptions.Compiled);
