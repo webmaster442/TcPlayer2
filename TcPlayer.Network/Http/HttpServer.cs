@@ -9,7 +9,7 @@ namespace TcPlayer.Network.Http
 #pragma warning disable RCS1090 // Add call to 'ConfigureAwait' (or vice versa).
     public sealed class HttpServer : IDisposable
     {
-        private readonly TcpListener _listner;
+        private TcpListener? _listner;
         private bool _canRun;
         private const int _buffersize = 4096 * 2;
         public Routertable Routes { get; }
@@ -25,23 +25,24 @@ namespace TcPlayer.Network.Http
         public async void Start()
 #pragma warning restore S3168 // "async" methods should not return "void"
         {
-            _listner.Start();
-            while (_canRun)
+            _listner?.Start();
+            while (_canRun && _listner != null)
             {
                 var client = await _listner.AcceptTcpClientAsync();
                 await HandleClient(client);
             }
-            _listner.Stop();
         }
 
         public void Stop()
         {
             _canRun = false;
+            _listner?.Stop();
         }
 
         public void Dispose()
         {
             Stop();
+            _listner = null;
         }
 
         private async Task HandleClient(TcpClient client)

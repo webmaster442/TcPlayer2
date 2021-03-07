@@ -17,7 +17,6 @@ namespace TcPlayer
     public sealed partial class App : Application, IDisposable
     {
         private IEngine _engine;
-        private HttpServer server;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -49,7 +48,6 @@ namespace TcPlayer
             Current.MainWindow.DataContext = model;
 
             Current.MainWindow.Show();
-            server.Start();
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -59,11 +57,6 @@ namespace TcPlayer
 
         public void Dispose()
         {
-            if (server != null)
-            {
-                server.Dispose();
-                server = null;
-            }
             if (_engine != null)
             {
                 _engine.Dispose();
