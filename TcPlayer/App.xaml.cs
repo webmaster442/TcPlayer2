@@ -20,8 +20,6 @@ namespace TcPlayer
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            server = new HttpServer(8080);
-
             if (!BassLibs.BassLibs.VerifyDllFiles())
             {
                 MessageBox.Show("Engine dll files corrupted. Please reinstall.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

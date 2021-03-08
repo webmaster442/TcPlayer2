@@ -1,8 +1,10 @@
-﻿using System;
+using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
+using TcPlayer.Network.Http.Internals;
+using TcPlayer.Network.Http.Models;
 
 namespace TcPlayer.Network.Http
 {
@@ -11,14 +13,23 @@ namespace TcPlayer.Network.Http
     {
         private TcpListener? _listner;
         private bool _canRun;
-        private const int _buffersize = 4096 * 2;
+        private const int _buffersize = 4096 * 2; //8kiB
+        private const int _maxRequestSize = 1024 * 1024 * 4; //4MiB
+        private readonly ILog _log;
+
         public Routertable Routes { get; }
 
-        public HttpServer(int port)
+        public HttpServer(ILog log, int port)
         {
             _listner = new TcpListener(IPAddress.Any, port);
             _canRun = true;
             Routes = new Routertable();
+            _log = log;
+        }
+
+        public void LoadRoutes(object objectWithRouteHandlers)
+        {
+            RouteLoader.Load(objectWithRouteHandlers, Routes);
         }
 
 #pragma warning disable S3168 // "async" methods should not return "void"
@@ -48,8 +59,10 @@ namespace TcPlayer.Network.Http
         private async Task HandleClient(TcpClient client)
         {
             await Task.Yield();
+            int totalSize = 0;
             using (client)
             {
+                HttpRequest? request = null;
                 using (var stream = client.GetStream())
                 {
                     var response = new HttpResponse(stream);
@@ -57,28 +70,40 @@ namespace TcPlayer.Network.Http
                     {
                         int readed = 0;
                         var buffer = new byte[_buffersize];
-                        HttpRequest? request = null;
-                        while (stream.DataAvailable && client.Available < _buffersize && readed < client.Available)
+
+                        using (var requestSteam = new MemoryStream())
                         {
-                            readed = await stream.ReadAsync(buffer, 0, _buffersize);
-                            var str = Encoding.UTF8.GetString(buffer, 0, readed);
-                            request = new HttpRequest(str);
+                            while (stream.DataAvailable && client.Available > 0)
+                            {
+                                readed = await stream.ReadAsync(buffer.AsMemory(0, _buffersize));
+                                totalSize += readed;
+                                if (totalSize > _maxRequestSize)
+                                {
+                                    throw new InvalidOperationException("Too big header");
+                                }
+                                await requestSteam.WriteAsync(buffer.AsMemory(0, readed));
+                            }
+
+                            request = RequestParser.ParseRequest(requestSteam);
                         }
                         if (request != null)
                         {
                             var hadndler = Routes.GetHandlerForUrl(request);
                             if (hadndler != null)
                             {
+                                _log.Log("Handling: {0}", request?.Location ?? "unknown location");
                                 await hadndler.Invoke(response);
                             }
                             else
                             {
+                                _log.Log("Not found: {0}", request?.Location ?? "unknown location");
                                 await Handle404(response);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
+                        _log.Log("Exception on serving: {0}", request?.Location ?? "unknown location");
                         await HandleServerError(response, ex);
                     }
                 }
@@ -86,7 +111,7 @@ namespace TcPlayer.Network.Http
 
         }
 
-        private async Task HandleServerError(HttpResponse response, Exception ex)
+        private static async Task HandleServerError(HttpResponse response, Exception ex)
         {
             response.StatusCode = 500;
             response.ContentType = "text/plain";
@@ -97,7 +122,7 @@ namespace TcPlayer.Network.Http
 #endif
         }
 
-        private async Task Handle404(HttpResponse response)
+        private static async Task Handle404(HttpResponse response)
         {
             response.StatusCode = 404;
             response.ContentType = "text/plain";

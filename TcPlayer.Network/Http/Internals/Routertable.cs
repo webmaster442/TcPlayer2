@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TcPlayer.Network.Http.Models;
 
-namespace TcPlayer.Network.Http
+namespace TcPlayer.Network.Http.Internals
 {
     public delegate Task RequestHandler(HttpResponse response);
 
-    public class Routertable
+    public sealed class Routertable
     {
-
         internal record Route
         {
-            public Method Method { get; init; }
+            public RequestMethod Method { get; init; }
             public RequestHandler RequestHandler { get; init; }
 
             public Route()
@@ -34,7 +34,7 @@ namespace TcPlayer.Network.Http
             _dynamicRoutes = new Dictionary<Regex, Route>();
         }
 
-        public void RegisterStaticRoute(string url, Method method, RequestHandler handler)
+        public void RegisterStaticRoute(string url, RequestMethod method, RequestHandler handler)
         {
             var entry = new Route
             {
@@ -44,7 +44,7 @@ namespace TcPlayer.Network.Http
             _staticRoutes.Add(url, entry);
         }
 
-        public void RegisterDynamicRoute(Regex pattern, Method method, RequestHandler handler)
+        public void RegisterDynamicRoute(Regex pattern, RequestMethod method, RequestHandler handler)
         {
             var entry = new Route
             {

@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
-namespace TcPlayer.Network.Http
+namespace TcPlayer.Network.Http.Models
 {
     public sealed class HttpResponse : IDisposable
     {
@@ -30,9 +31,9 @@ namespace TcPlayer.Network.Http
         private string CreateHeaders(int length)
         {
             StringBuilder response = new StringBuilder();
-            response.AppendLine($"HTTP/1.0 {StatusCode} OK");
-            response.AppendLine($"Content-Length: {length}");
-            response.AppendLine($"Content-Type: {ContentType}");
+            response.Append("HTTP/1.0 ").Append(StatusCode).AppendLine(" OK");
+            response.Append("Content-Length: ").Append(length).AppendLine();
+            response.Append("Content-Type: ").AppendLine(ContentType);
             response.AppendLine();
             return response.ToString();
         }
@@ -51,6 +52,13 @@ namespace TcPlayer.Network.Http
 #pragma warning restore RCS1090 // Add call to 'ConfigureAwait' (or vice versa).
             }
 
+        }
+
+        internal async Task WriteJson<T>(T input, JsonSerializerOptions? options = null)
+        {
+            var serialized = JsonSerializer.Serialize(input, options);
+            ContentType = "text/json";
+            await Write(serialized);
         }
     }
 }
