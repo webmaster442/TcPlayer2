@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TcPlayer.Engine;
@@ -89,13 +87,28 @@ namespace TcPlayer.Network.Remote
         }
 
         [DynamicRoute(RequestMethod.Get, @"\/|index\.html|style\.css|app\.js")]
-        private async Task HandleRemoteFiles(HttpResponse response)
+        private async Task HandleRemoteFiles(HttpRequest request, HttpResponse response)
         {
+            string file = request.Location;
+            if (_cache.ContainsKey(file))
+            {
+                response.StatusCode = 200;
+                response.ContentType = GetContentType(file);
+                await response.Write(_cache[file]);
+            }
         }
 
-        private async Task HandleApiCall(HttpResponse response)
+        private async Task HandleApiCall(HttpRequest request, HttpResponse response)
         {
+            var command = request.Location.Replace($"/{_sessionId}/player/", "");
 
+            _messenger.SendMessage(new RemoteControlMessage
+            {
+                Command = Enum.Parse<RemoteControlCommand>(command, true),
+            });
+
+            response.StatusCode = 200;
+            await response.Write("ok");
         }
     }
 }

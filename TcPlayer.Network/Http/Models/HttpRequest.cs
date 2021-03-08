@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace TcPlayer.Network.Http.Models
 {
-    internal sealed class HttpRequest
+    public sealed class HttpRequest
     {
         public RequestMethod Method { get; init; }
         public string Location { get; init; }

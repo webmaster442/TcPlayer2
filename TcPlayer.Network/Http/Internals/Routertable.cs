@@ -5,7 +5,7 @@ using TcPlayer.Network.Http.Models;
 
 namespace TcPlayer.Network.Http.Internals
 {
-    public delegate Task RequestHandler(HttpResponse response);
+    public delegate Task RequestHandler(HttpRequest request, HttpResponse response);
 
     public sealed class Routertable
     {
@@ -19,7 +19,7 @@ namespace TcPlayer.Network.Http.Internals
                 RequestHandler = DefaultHandler;
             }
 
-            private Task DefaultHandler(HttpResponse response)
+            private Task DefaultHandler(HttpRequest request, HttpResponse response)
             {
                 return Task.Delay(0);
             }

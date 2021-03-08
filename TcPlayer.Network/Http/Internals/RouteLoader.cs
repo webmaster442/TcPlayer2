@@ -48,11 +48,10 @@ namespace TcPlayer.Network.Http.Internals
         private static bool CheckMethodReturnAndInputParams(MethodInfo method)
         {
             var parameters = method.GetParameters();
-            if (parameters.Length != 1) return false;
+            if (parameters.Length != 2) return false;
 
-            return parameters[0].ParameterType == typeof(HttpResponse)
-                && !parameters[0].IsOut
-                && !parameters[0].IsOptional
+            return parameters[0].ParameterType == typeof(HttpRequest)
+                && parameters[1].ParameterType == typeof(HttpResponse)
                 && method.ReturnType == typeof(Task);
         }
     }

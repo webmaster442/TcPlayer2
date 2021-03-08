@@ -92,7 +92,7 @@ namespace TcPlayer.Network.Http
                             if (hadndler != null)
                             {
                                 _log.Log("Handling: {0}", request?.Location ?? "unknown location");
-                                await hadndler.Invoke(response);
+                                await hadndler.Invoke(request!, response);
                             }
                             else
                             {
