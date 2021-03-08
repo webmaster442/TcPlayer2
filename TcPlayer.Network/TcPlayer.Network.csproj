@@ -8,6 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="RemoteHtml\app.js" />
+    <None Remove="RemoteHtml\index.html" />
+    <None Remove="RemoteHtml\style.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="RemoteHtml\app.js" />
+    <EmbeddedResource Include="RemoteHtml\index.html" />
+    <EmbeddedResource Include="RemoteHtml\style.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TcPlayer.Engine\TcPlayer.Engine.csproj" />
   </ItemGroup>
 

@@ -26,11 +26,14 @@ namespace TcPlayer.Network.Remote
             _hostName = Dns.GetHostName();
             _sessionId = Guid.NewGuid();
             _cache = new ConcurrentDictionary<string, string>();
-            var commandsRegex = new Regex($"^/{_sessionId}/player/(play|pause|stop|next|previous)", RegexOptions.Compiled);
             FillCache();
             _httpServer = new HttpServer(serverLog, _port);
-            _httpServer.LoadRoutes(this);
+
+            var commandsRegex = new Regex($"^/{_sessionId}/player/(play|pause|stop|next|previous)", RegexOptions.Compiled);
+            var filesRegex = new Regex($"^/{_sessionId}(/)|(index\\.html)|(style\\.css)|app(\\.js)|()", RegexOptions.Compiled);
+            _httpServer.Routes.RegisterDynamicRoute(filesRegex, RequestMethod.Get, HandleRemoteFiles);
             _httpServer.Routes.RegisterDynamicRoute(commandsRegex, RequestMethod.Get, HandleApiCall);
+
 
         }
 
@@ -86,10 +89,10 @@ namespace TcPlayer.Network.Remote
             };
         }
 
-        [DynamicRoute(RequestMethod.Get, @"\/|index\.html|style\.css|app\.js")]
         private async Task HandleRemoteFiles(HttpRequest request, HttpResponse response)
         {
-            string file = request.Location;
+            string file = request.Location.Replace($"/{_sessionId}", "");
+            if (string.IsNullOrEmpty(file) || file == "/") file = "index.html";
             if (_cache.ContainsKey(file))
             {
                 response.StatusCode = 200;

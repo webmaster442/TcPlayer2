@@ -12,15 +12,7 @@ namespace TcPlayer.Network.Http.Internals
     {
         private static readonly Regex splitter = new Regex(@"\?|\&");
 
-        internal static HttpRequest? ParseRequest(MemoryStream requestSteam)
-        {
-            using (var reader = new StreamReader(requestSteam, Encoding.UTF8, false))
-            {
-                return ParseRequest(reader.ReadToEnd());
-            }
-        }
-
-        private static HttpRequest ParseRequest(string headers)
+        public static HttpRequest ParseRequest(string headers)
         {
             var lines = headers.Split('\n');
 

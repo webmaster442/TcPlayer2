@@ -70,6 +70,12 @@ namespace TcPlayer
             };
         }
 
+        private void RemoteButtonClick(object sender, RoutedEventArgs e)
+        {
+            var remote = new RemoteServerDialog(_messenger);
+            remote.ShowDialog();
+        }
+
         public bool TrySelectFileDialog(string filters, out string selectedFile)
         {
             OpenFileDialog openFileDialog = CreateSelectDialog(filters);

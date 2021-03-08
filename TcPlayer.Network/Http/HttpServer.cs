@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using TcPlayer.Network.Http.Internals;
 using TcPlayer.Network.Http.Models;
@@ -84,7 +85,9 @@ namespace TcPlayer.Network.Http
                                 await requestSteam.WriteAsync(buffer.AsMemory(0, readed));
                             }
 
-                            request = RequestParser.ParseRequest(requestSteam);
+                            var requestContent = Encoding.UTF8.GetString(requestSteam.ToArray(), 0, (int)requestSteam.Length);
+
+                            request = RequestParser.ParseRequest(requestContent);
                         }
                         if (request != null)
                         {
