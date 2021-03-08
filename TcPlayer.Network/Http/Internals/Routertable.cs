@@ -63,7 +63,7 @@ namespace TcPlayer.Network.Http.Internals
             }
             else
             {
-                foreach (var dynamic  in _dynamicRoutes)
+                foreach (var dynamic in _dynamicRoutes)
                 {
                     if (dynamic.Key.IsMatch(request.Location)
                         && dynamic.Value.Method == request.Method)

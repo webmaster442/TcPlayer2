@@ -92,12 +92,21 @@ namespace TcPlayer.Network.Remote
         private async Task HandleRemoteFiles(HttpRequest request, HttpResponse response)
         {
             string file = request.Location.Replace($"/{_sessionId}", "");
-            if (string.IsNullOrEmpty(file) || file == "/") file = "index.html";
+
+            if (file.StartsWith("/")) file = file.Substring(1, file.Length - 1);
+
+            if (string.IsNullOrEmpty(file)) file = "index.html";
             if (_cache.ContainsKey(file))
             {
                 response.StatusCode = 200;
                 response.ContentType = GetContentType(file);
                 await response.Write(_cache[file]);
+            }
+            else
+            {
+                response.StatusCode = 404;
+                response.ContentType = "text/plain";
+                await response.Write("not found");
             }
         }
 
