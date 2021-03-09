@@ -4,6 +4,12 @@ using TcPlayer.Engine.Models;
 
 namespace TcPlayer.Infrastructure
 {
+    public enum YoutubeDlState
+    {
+        NotInstalled,
+        Outdated,
+    }
+
     internal interface IDialogProvider
     {
         bool TrySelectFileDialog(string filters, out string selectedFile);
@@ -17,5 +23,6 @@ namespace TcPlayer.Infrastructure
         bool TryImportITunes(out IEnumerable<ITunesTrack> items);
         bool TryImportUrl(out string url);
         bool TryImportDlna(out IEnumerable<string> urls);
+        void ShowYoutubeDlDialog(YoutubeDlState state);
     }
 }

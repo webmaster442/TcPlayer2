@@ -106,8 +106,17 @@ namespace TcPlayer.ViewModels
                         Engine.SetEqualizerParameters(CurrentEq);
                         return true;
                     }
+                    else
+                    {
+                        _dialogProvider.ShowYoutubeDlDialog(YoutubeDlState.Outdated);
+                        return false;
+                    }
                 }
-                return false;
+                else
+                {
+                    _dialogProvider.ShowYoutubeDlDialog(YoutubeDlState.NotInstalled);
+                    return false;
+                }
             }
             else
             {

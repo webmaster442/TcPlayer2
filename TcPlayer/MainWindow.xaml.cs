@@ -209,5 +209,11 @@ namespace TcPlayer
                 return false;
             }
         }
+
+        public void ShowYoutubeDlDialog(YoutubeDlState state)
+        {
+            var dialog = new NoYoutubeDlFoundDialog(state);
+            dialog.ShowDialog();
+        }
     }
 }
