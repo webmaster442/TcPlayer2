@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TcPlayer.Engine;
 using TcPlayer.Network.Http;
@@ -20,6 +19,8 @@ namespace TcPlayer.Network.Remote
         private readonly IMessenger _messenger;
         private HttpServer? _httpServer;
 
+        private readonly string[] _apiUrls;
+
         public RemoteServer(IMessenger messenger, ILog serverLog)
         {
             _messenger = messenger;
@@ -29,12 +30,10 @@ namespace TcPlayer.Network.Remote
             FillCache();
             _httpServer = new HttpServer(serverLog, _port);
 
-            var commandsRegex = new Regex($"^/{_sessionId}/player/(play|pause|stop|next|previous)", RegexOptions.Compiled);
-            var filesRegex = new Regex($"^/{_sessionId}(/)|(index\\.html)|(style\\.css)|app(\\.js)|()", RegexOptions.Compiled);
-            _httpServer.Routes.RegisterDynamicRoute(filesRegex, RequestMethod.Get, HandleRemoteFiles);
-            _httpServer.Routes.RegisterDynamicRoute(commandsRegex, RequestMethod.Get, HandleApiCall);
+            _httpServer.Routes.RegisterRoute(IsRemoteFile, HandleRemoteFiles);
+            _httpServer.Routes.RegisterRoute(IsApiCall, HandleApiCall);
 
-
+            _apiUrls = Enum.GetNames<RemoteControlCommand>().Select(x => $"/{_sessionId}/player/{x.ToLower()}").ToArray();
         }
 
         public void Start()
@@ -53,7 +52,7 @@ namespace TcPlayer.Network.Remote
 
         public string ServerLink
         {
-            get => $"http://{_hostName}:{_port}/{_sessionId}";
+            get => $"http://{_hostName}:{_port}/{_sessionId}/";
         }
 
         private void FillCache()
@@ -88,6 +87,29 @@ namespace TcPlayer.Network.Remote
                 _ => "text/plain",
             };
         }
+
+        private bool IsApiCall((string url, RequestMethod method) obj)
+        {
+            return
+                obj.method == RequestMethod.Get
+                && _apiUrls.Contains(obj.url);
+        }
+
+        private bool IsRemoteFile((string url, RequestMethod method) obj)
+        {
+            if (obj.url.StartsWith($"/{_sessionId}"))
+            {
+                string file = obj.url.Replace($"/{_sessionId}", "");
+                file = System.IO.Path.GetFileName(file);
+
+                if (string.IsNullOrEmpty(file))
+                    file = "index.html";
+
+                return _cache.ContainsKey(file);
+            }
+            return false;
+        }
+
 
         private async Task HandleRemoteFiles(HttpRequest request, HttpResponse response)
         {

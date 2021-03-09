@@ -16,6 +16,7 @@ namespace TcPlayer.Network.Http
         private bool _canRun;
         private const int _buffersize = 4096 * 2; //8kiB
         private const int _maxRequestSize = 1024 * 1024 * 4; //4MiB
+        private const int _timeout = 2000;
         private readonly ILog _log;
 
         public Routertable Routes { get; }
@@ -28,11 +29,6 @@ namespace TcPlayer.Network.Http
             _log = log;
         }
 
-        public void LoadRoutes(object objectWithRouteHandlers)
-        {
-            RouteLoader.Load(objectWithRouteHandlers, Routes);
-        }
-
 #pragma warning disable S3168 // "async" methods should not return "void"
         public async void Start()
 #pragma warning restore S3168 // "async" methods should not return "void"
@@ -40,8 +36,15 @@ namespace TcPlayer.Network.Http
             _listner?.Start();
             while (_canRun && _listner != null)
             {
-                var client = await _listner.AcceptTcpClientAsync();
-                await HandleClient(client);
+                try
+                {
+                    var client = await _listner.AcceptTcpClientAsync();
+                    await HandleClient(client);
+                }
+                catch (Exception ex)
+                {
+                    _log.Log(ex.Message);
+                }
             }
         }
 
@@ -64,6 +67,7 @@ namespace TcPlayer.Network.Http
             using (client)
             {
                 HttpRequest? request = null;
+                string requestContent = "";
                 using (var stream = client.GetStream())
                 {
                     var response = new HttpResponse(stream);
@@ -71,9 +75,18 @@ namespace TcPlayer.Network.Http
                     {
                         int readed = 0;
                         var buffer = new byte[_buffersize];
-
+                        int delay = 0;
                         using (var requestSteam = new MemoryStream())
                         {
+                            while (client.Available < 1)
+                            {
+                                delay += 10;
+                                await Task.Delay(10);
+
+                                if (delay > _timeout)
+                                    throw new InvalidOperationException("Client timeout");
+                            }
+
                             while (stream.DataAvailable && client.Available > 0)
                             {
                                 readed = await stream.ReadAsync(buffer.AsMemory(0, _buffersize));
@@ -85,7 +98,7 @@ namespace TcPlayer.Network.Http
                                 await requestSteam.WriteAsync(buffer.AsMemory(0, readed));
                             }
 
-                            var requestContent = Encoding.UTF8.GetString(requestSteam.ToArray(), 0, (int)requestSteam.Length);
+                            requestContent = Encoding.UTF8.GetString(requestSteam.ToArray(), 0, (int)requestSteam.Length);
 
                             request = RequestParser.ParseRequest(requestContent);
                         }
@@ -106,7 +119,16 @@ namespace TcPlayer.Network.Http
                     }
                     catch (Exception ex)
                     {
-                        _log.Log("Exception on serving: {0}", request?.Location ?? "unknown location");
+                        if (request == null)
+                        {
+                            _log.Log("Exception on serving: {0}", requestContent ?? "empty request");
+                        }
+                        else
+                        {
+                            _log.Log("Exception on serving: {0}", request);
+                        }
+
+                        
                         await HandleServerError(response, ex);
                     }
                 }

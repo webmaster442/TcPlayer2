@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TcPlayer.Network.Http.Models;
 
@@ -11,12 +11,18 @@ namespace TcPlayer.Network.Http.Internals
     {
         internal record Route
         {
-            public RequestMethod Method { get; init; }
             public RequestHandler RequestHandler { get; init; }
+            public Predicate<(string url, RequestMethod method)> RouteSelector { get; init; }
 
             public Route()
             {
                 RequestHandler = DefaultHandler;
+                RouteSelector = DefaultRouteSelector;
+            }
+
+            private bool DefaultRouteSelector((string url, RequestMethod method) obj)
+            {
+                return false;
             }
 
             private Task DefaultHandler(HttpRequest request, HttpResponse response)
@@ -25,55 +31,34 @@ namespace TcPlayer.Network.Http.Internals
             }
         }
 
-        private readonly Dictionary<string, Route> _staticRoutes;
-        private readonly Dictionary<Regex, Route> _dynamicRoutes;
+        private readonly List<Route> _routes;
+
 
         public Routertable()
         {
-            _staticRoutes = new Dictionary<string, Route>();
-            _dynamicRoutes = new Dictionary<Regex, Route>();
+            _routes = new List<Route>();
         }
 
-        public void RegisterStaticRoute(string url, RequestMethod method, RequestHandler handler)
+        public void RegisterRoute(Predicate<(string url, RequestMethod method)> routeSelector,  RequestHandler handler)
         {
             var entry = new Route
             {
-                Method = method,
+                RouteSelector = routeSelector,
                 RequestHandler = handler
             };
-            _staticRoutes.Add(url, entry);
-        }
-
-        public void RegisterDynamicRoute(Regex pattern, RequestMethod method, RequestHandler handler)
-        {
-            var entry = new Route
-            {
-                Method = method,
-                RequestHandler = handler
-            };
-            _dynamicRoutes.Add(pattern, entry);
+            _routes.Add(entry);
         }
 
         internal RequestHandler? GetHandlerForUrl(HttpRequest request)
         {
-            if (_staticRoutes.ContainsKey(request.Location)
-                && _staticRoutes[request.Location].Method == request.Method)
+            foreach (var route in _routes)
             {
-                return _staticRoutes[request.Location].RequestHandler;
-            }
-            else
-            {
-                foreach (var dynamic in _dynamicRoutes)
+                if (route.RouteSelector.Invoke((request.Location, request.Method)))
                 {
-                    if (dynamic.Key.IsMatch(request.Location)
-                        && dynamic.Value.Method == request.Method)
-                    {
-                        return dynamic.Value.RequestHandler;
-                    }
+                    return route.RequestHandler;
                 }
             }
             return null;
         }
-
     }
 }

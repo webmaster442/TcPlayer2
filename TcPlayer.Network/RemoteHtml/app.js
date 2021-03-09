@@ -4,11 +4,12 @@
 
 function DoRequest(url) {
     var xmlRq = new XMLHttpRequest();
-    xmlRq.open('GET', window.location.href + url, true);
+    var baseLocation = window.location.href.substring(0, window.location.href.length - 1);
+    xmlRq.open('GET', baseLocation + url, true);
     xmlRq.onload = function () {
         if (this.status >= 200 && this.status < 400) {
-            //everything ok;
-            console.log(window.location.href + url);
+            //everything was ok;
+            console.log(baseLocation + url);
         } else {
             HandleError();
         }
