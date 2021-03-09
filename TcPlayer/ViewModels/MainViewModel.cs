@@ -111,6 +111,7 @@ namespace TcPlayer.ViewModels
             }
             else
             {
+                Engine.Stop();
                 Engine.Load(filename);
                 Engine.Play();
                 Engine.SetEqualizerParameters(CurrentEq);
@@ -121,6 +122,7 @@ namespace TcPlayer.ViewModels
         public async void HandleMessage(LoadFileMessage message)
         {
             _dialogProvider.SetMainTab(MainTab.Play);
+            await Task.Delay(1000);
             _dialogProvider.ShowUiBlocker();
             await LoadAndPlay(message.File);
             _dialogProvider.HideUiBlocker();

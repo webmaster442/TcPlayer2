@@ -14,6 +14,7 @@ namespace TcPlayer.Engine
     public sealed class AudioEngine : NotifyObject, IEngine
     {
         private bool _isInitialized;
+        private bool _downloadEnabled;
         private int _decodeChannel;
         private int _mixerChanel;
 
@@ -210,7 +211,7 @@ namespace TcPlayer.Engine
 
         private void OnDownload(IntPtr Buffer, int Length, System.IntPtr User)
         {
-            if (_isYoutubePlaying) return;
+            if (_isYoutubePlaying || !_downloadEnabled) return;
 
             var ptr = Bass.ChannelGetTags(_decodeChannel, TagType.META);
             if (ptr != IntPtr.Zero)
@@ -239,7 +240,12 @@ namespace TcPlayer.Engine
 
         public void Load(string fileToPlay)
         {
-            Reset();
+            if (_mixerChanel != 0)
+            {
+                Bass.ChannelStop(_mixerChanel);
+                Reset();
+                _downloadEnabled = false;
+            }
             if (!_isInitialized)
             {
                 Exception(Resources.ErrorNotInitialized);
@@ -248,8 +254,8 @@ namespace TcPlayer.Engine
             if (MediaLoader.IsStream(fileToPlay))
             {
                 _lastStreamInfo = string.Empty;
+                _downloadEnabled = true;
                 _decodeChannel = Bass.CreateStream(fileToPlay, 0, Wasapi.FileLoadFlags, _downloadCallback);
-                Metadata = NetworkMetadataFactory.CreateFromStream(_currentFile, string.Empty);
             }
             else
             {
@@ -283,8 +289,8 @@ namespace TcPlayer.Engine
             CurrentPosition = Bass.ChannelBytes2Seconds(_decodeChannel, pos);
             CurrentState = EngineState.ReadyToPlay;
             TimerEnabled = false;
-            _currentFile = fileToPlay;
             _isYoutubePlaying = false;
+            _currentFile = fileToPlay;
         }
 
         public void Pause()
