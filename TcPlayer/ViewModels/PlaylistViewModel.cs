@@ -18,7 +18,7 @@ namespace TcPlayer.ViewModels
         private readonly Random _random;
 
         private PlaylistItem _selected;
-
+        private readonly IMainWindow _mainWindow;
 
         public BindingList<PlaylistItem> Items { get; }
         public DelegateCommand AddFilesCommand { get; }
@@ -71,11 +71,12 @@ namespace TcPlayer.ViewModels
             set => SetProperty(ref _selected, value);
         }
 
-        public PlaylistViewModel(IDialogProvider dialogProvider, IMessenger messenger)
+        public PlaylistViewModel(IDialogProvider dialogProvider, IMainWindow mainWindow, IMessenger messenger)
         {
             _random = new Random();
             _dialogProvider = dialogProvider;
             _messenger = messenger;
+            _mainWindow = mainWindow;
             Items = new BindingList<PlaylistItem>();
             LoadListCommand = new DelegateCommand<bool>(OnLoad);
             SaveListCommand = new DelegateCommand(OnSave);
@@ -86,17 +87,18 @@ namespace TcPlayer.ViewModels
             ImportITunesCommand = new DelegateCommand(OnImportItunes, CanImportItunes);
             ImportUrlCommand = new DelegateCommand(OnImportUrl);
             ImportDlnaCommand = new DelegateCommand(OnImportDlna);
+            
         }
 
         private async void OnImportDlna(object obj)
         {
             if (_dialogProvider.TryImportDlna(out IEnumerable<string> urls))
             {
-                var source = _dialogProvider.ShowUiBlocker();
+                var source = _mainWindow.ShowUiBlocker();
                 var canLoaded = urls.Where(x => Formats.AudioFormats.Contains(Path.GetExtension(x)));
                 var items = await PlaylistItemFactory.CreateFileInfos(canLoaded, source.Token);
                 UpdateList(items, false);
-                _dialogProvider.HideUiBlocker();
+                _mainWindow.HideUiBlocker();
             }
         }
 
@@ -104,10 +106,10 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TryImportUrl(out string url))
             {
-                var source = _dialogProvider.ShowUiBlocker();
+                var source = _mainWindow.ShowUiBlocker();
                 var items = await PlaylistItemFactory.CreateFromUrl(url, source.Token);
                 UpdateList(items, false);
-                _dialogProvider.HideUiBlocker();
+                _mainWindow.HideUiBlocker();
             }
         }
 
@@ -138,20 +140,20 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TrySelectFileDialog(Formats.PlaylistFilterString, out string selected))
             {
-                var source = _dialogProvider.ShowUiBlocker();
+                var source = _mainWindow.ShowUiBlocker();
                 IEnumerable<PlaylistItem> items = await PlaylistItemFactory.LoadPlaylist(selected, source.Token);
 
                 UpdateList(items, clearsList);
-                _dialogProvider.HideUiBlocker();
+                _mainWindow.HideUiBlocker();
             }
         }
 
         private async void OnLoadDisc(int obj)
         {
-            var source = _dialogProvider.ShowUiBlocker();
+            var source = _mainWindow.ShowUiBlocker();
             IEnumerable<PlaylistItem> items = await PlaylistItemFactory.LoadCd(obj, source.Token);
             UpdateList(items, true);
-            _dialogProvider.HideUiBlocker();
+            _mainWindow.HideUiBlocker();
         }
 
         private void OnSave(object obj)
@@ -166,10 +168,10 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TrySelectFilesDialog(Formats.AudioFormatFilterString, out string[] files))
             {
-                var source = _dialogProvider.ShowUiBlocker();
+                var source = _mainWindow.ShowUiBlocker();
                 var items = await PlaylistItemFactory.CreateFileInfos(files, source.Token);
                 UpdateList(items, false);
-                _dialogProvider.HideUiBlocker();
+                _mainWindow.HideUiBlocker();
             }
         }
 

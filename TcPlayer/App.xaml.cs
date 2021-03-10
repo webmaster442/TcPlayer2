@@ -6,8 +6,9 @@ using System.Windows;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Settings;
 using TcPlayer.Engine.Ui;
-using TcPlayer.Network.Http;
+using TcPlayer.Infrastructure;
 using TcPlayer.ViewModels;
+using TcPlayer.Views;
 
 namespace TcPlayer
 {
@@ -16,9 +17,21 @@ namespace TcPlayer
     /// </summary>
     public sealed partial class App : Application, IDisposable
     {
+        private IMessenger _messenger;
         private IEngine _engine;
+        private ISettingsFile _settings;
+        private IDialogProvider _dialogProvider;
 
-        protected override void OnStartup(StartupEventArgs e)
+
+        internal void SetupDependencies()
+        {
+            _messenger = new Messenger();
+            _settings = new SettingsFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TcPlayer.Options.json"));
+            _engine = new AudioEngine(_messenger);
+            _dialogProvider = new DialogProvider();
+        }
+
+        internal void SetupEngineDependencies()
         {
             if (!BassLibs.BassLibs.VerifyDllFiles())
             {
@@ -32,19 +45,15 @@ namespace TcPlayer
             }
 
             var version = BassFx.Version;
+        }
 
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
             base.OnStartup(e);
-            IMessenger messenger = new Messenger();
-            ISettingsFile settingsFile = new SettingsFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TcPlayer.Options.json")); 
-
-            var window = new MainWindow(messenger);
-
+            var window = new MainWindow(_messenger);
             Current.MainWindow = window;
-             _engine = new AudioEngine(messenger);
-
-            var model = new MainViewModel(_engine, window, messenger, settingsFile);
-            Current.MainWindow.DataContext = model;
-
+            Current.MainWindow.DataContext = new MainViewModel(_engine, _dialogProvider, window, _messenger, _settings);
             Current.MainWindow.Show();
         }
 

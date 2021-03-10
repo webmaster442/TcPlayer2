@@ -1,4 +1,4 @@
-﻿namespace TcPlayer
+﻿namespace TcPlayer.ViewModels
 {
     internal enum PlaylistSorting
     {

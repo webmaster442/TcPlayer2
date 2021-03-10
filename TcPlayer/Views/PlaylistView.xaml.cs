@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace TcPlayer
+namespace TcPlayer.Views
 {
     /// <summary>
     /// Interaction logic for PlaylistView.xaml

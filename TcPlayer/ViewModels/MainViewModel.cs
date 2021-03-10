@@ -17,6 +17,7 @@ namespace TcPlayer.ViewModels
     {
         private readonly IDialogProvider _dialogProvider;
         private readonly ISettingsFile _settingsFile;
+        private readonly IMainWindow _mainWindow;
         private SoundDeviceInfo _selectedAudioDevice;
         private float[] _currentEq;
         private readonly YoutubeDlInterop _youtubeInterop;
@@ -64,9 +65,14 @@ namespace TcPlayer.ViewModels
 
         public Guid MessageReciverID => Guid.NewGuid();
 
-        public MainViewModel(IEngine engine, IDialogProvider dialogProvider, IMessenger messenger, ISettingsFile settingsFile)
+        public MainViewModel(IEngine engine,
+                             IDialogProvider dialogProvider,
+                             IMainWindow mainWindow,
+                             IMessenger messenger,
+                             ISettingsFile settingsFile)
         {
             Engine = engine;
+            _mainWindow = mainWindow;
             _dialogProvider = dialogProvider;
             _settingsFile = settingsFile;
             messenger.SubScribe(this);
@@ -81,7 +87,7 @@ namespace TcPlayer.ViewModels
             PreviousCommand = new DelegateCommand(OnPrevious);
             NextCommand = new DelegateCommand(OnNext);
             ApplyEqCommand = new DelegateCommand<float[]>(OnApplyEq);
-            Playlist = new PlaylistViewModel(dialogProvider, messenger);
+            Playlist = new PlaylistViewModel(dialogProvider, _mainWindow, messenger);
             InitSavedAudioDevice();
             InitSavedEq();
 
@@ -130,11 +136,11 @@ namespace TcPlayer.ViewModels
 
         public async void HandleMessage(LoadFileMessage message)
         {
-            _dialogProvider.SetMainTab(MainTab.Play);
+            _mainWindow.SetMainTab(MainTab.Play);
             await Task.Delay(1000);
-            _dialogProvider.ShowUiBlocker();
+            _mainWindow.ShowUiBlocker();
             await LoadAndPlay(message.File);
-            _dialogProvider.HideUiBlocker();
+            _mainWindow.HideUiBlocker();
         }
 
         public void HandleMessage(RemoteControlMessage message)
@@ -177,9 +183,9 @@ namespace TcPlayer.ViewModels
         {
             if (Playlist.TryStepNext())
             {
-                _dialogProvider.ShowUiBlocker();
+                _mainWindow.ShowUiBlocker();
                 await LoadAndPlay(Playlist.Selected.FilePath);
-                _dialogProvider.HideUiBlocker();
+                _mainWindow.HideUiBlocker();
             }
         }
 
@@ -187,9 +193,9 @@ namespace TcPlayer.ViewModels
         {
             if (Playlist.TryStepBack())
             {
-                _dialogProvider.ShowUiBlocker();
+                _mainWindow.ShowUiBlocker();
                 await LoadAndPlay(Playlist.Selected.FilePath);
-                _dialogProvider.HideUiBlocker();
+                _mainWindow.HideUiBlocker();
             }
         }
 
