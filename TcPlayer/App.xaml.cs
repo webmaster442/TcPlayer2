@@ -24,6 +24,8 @@ namespace TcPlayer
         private IEngine _engine;
         private ISettingsFile _settings;
         private IDialogProvider _dialogProvider;
+        private ShellIntegration _shellIntegration;
+
         private Mutex _mutex;
         private bool _mutexCreated;
         private Thread _ipcThread;
@@ -74,6 +76,7 @@ namespace TcPlayer
                 var window = new MainWindow(_messenger);
                 Current.MainWindow = window;
                 Current.MainWindow.DataContext = new MainViewModel(_engine, _dialogProvider, window, _messenger, _settings);
+                _shellIntegration = new ShellIntegration(_messenger, window);
                 Current.MainWindow.Show();
 
                 _messenger.SendMessage(new AppArgumentsMessage

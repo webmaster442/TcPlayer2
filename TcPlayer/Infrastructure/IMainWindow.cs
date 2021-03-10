@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Windows.Shell;
 
 namespace TcPlayer.Infrastructure
 {
@@ -7,5 +8,6 @@ namespace TcPlayer.Infrastructure
         void HideUiBlocker();
         CancellationTokenSource ShowUiBlocker();
         void SetMainTab(MainTab tab);
+        TaskbarItemInfo TaskbarItemInfo { get; }
     }
 }

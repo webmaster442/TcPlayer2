@@ -4,9 +4,6 @@ using System.Threading;
 using System.Windows;
 using TcPlayer.Dialogs;
 using TcPlayer.Engine;
-using TcPlayer.Engine.Messages;
-using TcPlayer.Engine.Models;
-using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
 
 namespace TcPlayer.Views
@@ -14,7 +11,7 @@ namespace TcPlayer.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : Window, IMessageClient<PositionInfoMessage>, IMainWindow, IDisposable
+    public sealed partial class MainWindow : Window, IMainWindow, IDisposable
     {
         private readonly IMessenger _messenger;
 
@@ -22,7 +19,6 @@ namespace TcPlayer.Views
         {
             InitializeComponent();
             _messenger = messenger;
-            _messenger.SubScribe(this);
         }
 
         #region IMainWindow
@@ -44,37 +40,6 @@ namespace TcPlayer.Views
             });
         }
         #endregion
-
-        public Guid MessageReciverID => Guid.NewGuid();
-
-        public void HandleMessage(PositionInfoMessage message)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                switch (message.State)
-                {
-                    case EngineState.ReadyToPlay:
-                    case EngineState.NoFile:
-                        TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
-                        TaskbarItemInfo.ProgressValue = 0;
-                        break;
-                    case EngineState.Playing:
-
-                        if (message.IsIndeterminate)
-                            TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
-                        else
-                            TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
-                        break;
-                    case EngineState.Paused:
-                        TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Paused;
-                        break;
-                }
-
-                if (!message.IsIndeterminate)
-                    TaskbarItemInfo.ProgressValue = message.Percent;
-
-            });
-        }
 
         private void RemoteButtonClick(object sender, RoutedEventArgs e)
         {
