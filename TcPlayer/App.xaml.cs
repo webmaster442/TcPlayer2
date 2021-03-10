@@ -2,6 +2,7 @@
 using ManagedBass.Fx;
 using System;
 using System.IO;
+using System.IO.Pipes;
 using System.Threading;
 using System.Windows;
 using TcPlayer.Engine;
@@ -24,10 +25,12 @@ namespace TcPlayer
         private IDialogProvider _dialogProvider;
         private Mutex _mutex;
         private bool _mutexCreated;
+        private CancellationTokenSource _cancellationTokenSource;
 
-        public App(string mutexName) : base()
+        public App()
         {
-            _mutex = new Mutex(true, mutexName, out _mutexCreated);
+            _mutex = new Mutex(true, Entrypoint.MutexName, out _mutexCreated);
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         internal void SetupDependencies()
@@ -60,6 +63,7 @@ namespace TcPlayer
             if (_mutexCreated)
             {
                 //1st instance
+                StartIpcListening(_cancellationTokenSource.Token);
                 base.OnStartup(e);
                 var window = new MainWindow(_messenger);
                 Current.MainWindow = window;
@@ -69,8 +73,50 @@ namespace TcPlayer
             else
             {
                 _mutex = null;
-                //TODO: Post message to existing app
+                WriteStartupParametersOnIpc();
                 Current.Shutdown();
+            }
+        }
+
+        private bool WriteStartupParametersOnIpc(int timeout = 300)
+        {
+            using (var client = new NamedPipeClientStream(Entrypoint.MutexName))
+            {
+                try { client.Connect(timeout); }
+                catch { return false; }
+
+                if (!client.IsConnected) return false;
+
+                string payload = System.Text.Json.JsonSerializer.Serialize(Environment.GetCommandLineArgs());
+
+                using (StreamWriter writer = new StreamWriter(client))
+                {
+                    writer.Write(payload);
+                    writer.Flush();
+                }
+            }
+            return true;
+        }
+
+        private async void StartIpcListening(CancellationToken cancelToken)
+        {
+            using (var server = new NamedPipeServerStream(Entrypoint.MutexName))
+            {
+                while (true)
+                {
+                    await server.WaitForConnectionAsync(cancelToken);
+                    using (StreamReader reader = new StreamReader(server))
+                    {
+                        string json = reader.ReadToEnd();
+                        string[] arguments = System.Text.Json.JsonSerializer.Deserialize<string[]>(json);
+                        //todo: post messages
+                    }
+
+                    if (cancelToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                }
             }
         }
 
@@ -82,6 +128,12 @@ namespace TcPlayer
 
         public void Dispose()
         {
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
             if (_engine != null)
             {
                 _engine.Dispose();

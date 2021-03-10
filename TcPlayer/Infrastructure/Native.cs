@@ -5,9 +5,9 @@ namespace TcPlayer.Infrastructure
 {
     internal static class Native
     {
-        public const int GWL_STYLE = -16,
-                     WS_MAXIMIZEBOX = 0x10000,
-                     WS_MINIMIZEBOX = 0x20000;
+        public const int GWL_STYLE = -16;
+        public const int WS_MAXIMIZEBOX = 0x10000;
+        public const int WS_MINIMIZEBOX = 0x20000;
 
         [DllImport("user32.dll")]
         public extern static int GetWindowLong(IntPtr hwnd, int index);
