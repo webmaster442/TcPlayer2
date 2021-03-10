@@ -2,6 +2,7 @@
 using ManagedBass.Fx;
 using System;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Settings;
@@ -21,7 +22,13 @@ namespace TcPlayer
         private IEngine _engine;
         private ISettingsFile _settings;
         private IDialogProvider _dialogProvider;
+        private Mutex _mutex;
+        private bool _mutexCreated;
 
+        public App(string mutexName) : base()
+        {
+            _mutex = new Mutex(true, mutexName, out _mutexCreated);
+        }
 
         internal void SetupDependencies()
         {
@@ -50,16 +57,27 @@ namespace TcPlayer
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-            var window = new MainWindow(_messenger);
-            Current.MainWindow = window;
-            Current.MainWindow.DataContext = new MainViewModel(_engine, _dialogProvider, window, _messenger, _settings);
-            Current.MainWindow.Show();
+            if (_mutexCreated)
+            {
+                //1st instance
+                base.OnStartup(e);
+                var window = new MainWindow(_messenger);
+                Current.MainWindow = window;
+                Current.MainWindow.DataContext = new MainViewModel(_engine, _dialogProvider, window, _messenger, _settings);
+                Current.MainWindow.Show();
+            }
+            else
+            {
+                _mutex = null;
+                //TODO: Post message to existing app
+                Current.Shutdown();
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             Dispose();
+            base.OnExit(e);
         }
 
         public void Dispose()
@@ -68,6 +86,12 @@ namespace TcPlayer
             {
                 _engine.Dispose();
                 _engine = null;
+            }
+            if (_mutex != null)
+            {
+                _mutex.ReleaseMutex();
+                _mutex.Close();
+                _mutex = null;
             }
         }
     }
