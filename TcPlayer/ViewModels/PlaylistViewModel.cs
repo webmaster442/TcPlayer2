@@ -11,7 +11,7 @@ using TcPlayer.Infrastructure;
 
 namespace TcPlayer.ViewModels
 {
-    internal class PlaylistViewModel : ViewModelBase
+    internal class PlaylistViewModel : ViewModelBase, IMessageClient<AppArgumentsMessage>
     {
         private readonly IDialogProvider _dialogProvider;
         private readonly IMessenger _messenger;
@@ -71,6 +71,8 @@ namespace TcPlayer.ViewModels
             set => SetProperty(ref _selected, value);
         }
 
+        public Guid MessageReciverID => Guid.NewGuid();
+
         public PlaylistViewModel(IDialogProvider dialogProvider, IMainWindow mainWindow, IMessenger messenger)
         {
             _random = new Random();
@@ -87,7 +89,41 @@ namespace TcPlayer.ViewModels
             ImportITunesCommand = new DelegateCommand(OnImportItunes, CanImportItunes);
             ImportUrlCommand = new DelegateCommand(OnImportUrl);
             ImportDlnaCommand = new DelegateCommand(OnImportDlna);
-            
+            _messenger.SubScribe(this);
+        }
+
+        public void HandleMessage(AppArgumentsMessage message)
+        {
+            _mainWindow.SetMainTab(MainTab.Playlist);
+            OnImportFiles(message.Arguments, true);
+        }
+
+        private async void OnImportFiles(IEnumerable<string> items, bool clearList)
+        {
+            var source = _mainWindow.ShowUiBlocker();
+            var itemsToAdd = new List<PlaylistItem>();
+            foreach (var item in items)
+            {
+                if (Formats.IsAudioFile(item))
+                {
+                    var files = await PlaylistItemFactory.CreateFileInfos(new[] { item }, source.Token);
+                    itemsToAdd.AddRange(files);
+                }
+                else if (Formats.IsPLaylist(item))
+                {
+                    var playlistItems = await PlaylistItemFactory.LoadPlaylist(item, source.Token);
+                    itemsToAdd.AddRange(playlistItems);
+                }
+                else if (item.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+                    || item.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    var urls = await PlaylistItemFactory.CreateFromUrl(item, source.Token);
+                    itemsToAdd.AddRange(urls);
+                }
+            }
+            UpdateList(itemsToAdd, clearList);
+            _mainWindow.HideUiBlocker();
+
         }
 
         private async void OnImportDlna(object obj)

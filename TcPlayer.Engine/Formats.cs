@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace TcPlayer.Engine
@@ -15,6 +16,22 @@ namespace TcPlayer.Engine
         public static string AudioFormatFilterString
         {
             get => CreateFilterString(AudioFormats, "All audio files");
+        }
+
+        public static bool IsPLaylist(string file)
+        {
+            string extension = System.IO.Path.GetExtension(file);
+            return
+                !string.IsNullOrEmpty(extension)
+                && PlaylsitExtensions.Contains(extension);
+        }
+
+        public static bool IsAudioFile(string file)
+        {
+            string extension = System.IO.Path.GetExtension(file);
+            return
+                !string.IsNullOrEmpty(extension)
+                && AudioFormats.Contains(extension);
         }
 
         public static IEnumerable<string> PlaylsitExtensions
