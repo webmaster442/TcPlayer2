@@ -6,6 +6,7 @@ using System.IO.Pipes;
 using System.Threading;
 using System.Windows;
 using TcPlayer.Engine;
+using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Settings;
 using TcPlayer.Engine.Ui;
 using TcPlayer.Infrastructure;
@@ -25,12 +26,13 @@ namespace TcPlayer
         private IDialogProvider _dialogProvider;
         private Mutex _mutex;
         private bool _mutexCreated;
-        private CancellationTokenSource _cancellationTokenSource;
+        private Thread _ipcThread;
+        private const string ipcAbort = "__abort__";
 
         public App()
         {
             _mutex = new Mutex(true, Entrypoint.MutexName, out _mutexCreated);
-            _cancellationTokenSource = new CancellationTokenSource();
+            _ipcThread = new Thread(IpcListener);
         }
 
         internal void SetupDependencies()
@@ -54,7 +56,11 @@ namespace TcPlayer
                 Bass.PluginLoad(pluginFile);
             }
 
+            //required to initialize BassFx
+            //Unused local variables should be removed
+#pragma warning disable S1481
             var version = BassFx.Version;
+#pragma warning restore S1481
         }
 
 
@@ -63,22 +69,31 @@ namespace TcPlayer
             if (_mutexCreated)
             {
                 //1st instance
-                StartIpcListening(_cancellationTokenSource.Token);
+                _ipcThread.Start();
                 base.OnStartup(e);
                 var window = new MainWindow(_messenger);
                 Current.MainWindow = window;
                 Current.MainWindow.DataContext = new MainViewModel(_engine, _dialogProvider, window, _messenger, _settings);
                 Current.MainWindow.Show();
+
+                _messenger.SendMessage(new AppArgumentsMessage
+                {
+                    Arguments = Environment.GetCommandLineArgs()
+                });
+
             }
             else
             {
                 _mutex = null;
-                WriteStartupParametersOnIpc();
+                if (!WriteStartupParametersOnIpc())
+                {
+                    MessageBox.Show("Running app activation failed");
+                }
                 Current.Shutdown();
             }
         }
 
-        private bool WriteStartupParametersOnIpc(int timeout = 300)
+        private bool WriteIpc(string payload, int timeout = 300)
         {
             using (var client = new NamedPipeClientStream(Entrypoint.MutexName))
             {
@@ -86,8 +101,6 @@ namespace TcPlayer
                 catch { return false; }
 
                 if (!client.IsConnected) return false;
-
-                string payload = System.Text.Json.JsonSerializer.Serialize(Environment.GetCommandLineArgs());
 
                 using (StreamWriter writer = new StreamWriter(client))
                 {
@@ -98,23 +111,35 @@ namespace TcPlayer
             return true;
         }
 
-        private async void StartIpcListening(CancellationToken cancelToken)
+        private bool WriteStartupParametersOnIpc(int timeout = 300)
+        {
+            string payload = System.Text.Json.JsonSerializer.Serialize(Environment.GetCommandLineArgs());
+            return WriteIpc(payload, timeout);
+        }
+
+        private void IpcListener()
         {
             using (var server = new NamedPipeServerStream(Entrypoint.MutexName))
             {
                 while (true)
                 {
-                    await server.WaitForConnectionAsync(cancelToken);
+                    //ipc connection needed to abort
+                    server.WaitForConnection();
                     using (StreamReader reader = new StreamReader(server))
                     {
-                        string json = reader.ReadToEnd();
-                        string[] arguments = System.Text.Json.JsonSerializer.Deserialize<string[]>(json);
-                        //todo: post messages
-                    }
-
-                    if (cancelToken.IsCancellationRequested)
-                    {
-                        break;
+                        string payload = reader.ReadToEnd();
+                        if (payload == ipcAbort)
+                        {
+                            //app is shuting down, break the cycle
+                            break;
+                        }
+                        else
+                        {
+                            _messenger.SendMessage(new AppArgumentsMessage
+                            {
+                                Arguments = System.Text.Json.JsonSerializer.Deserialize<string[]>(payload)
+                            });
+                        }
                     }
                 }
             }
@@ -128,11 +153,11 @@ namespace TcPlayer
 
         public void Dispose()
         {
-            if (_cancellationTokenSource != null)
+            if (_ipcThread != null)
             {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
+                WriteIpc(ipcAbort);
+                _ipcThread.Join();
+                _ipcThread = null;
             }
             if (_engine != null)
             {
