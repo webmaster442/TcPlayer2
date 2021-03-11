@@ -19,6 +19,7 @@ namespace TcPlayer
         private readonly IMainWindow _mainWindow;
         UwpMedia.SystemMediaTransportControls _systemControl;
         private readonly IMessenger _messenger;
+        private readonly string _tempFile;
 
         public ShellIntegration(IMessenger messenger, IMainWindow mainWindow)
         {
@@ -33,6 +34,7 @@ namespace TcPlayer
             _systemControl.ButtonPressed += OnSystemControlButtonPress;
             _messenger = messenger;
             _messenger.SubScribe(this);
+            _tempFile = System.IO.Path.GetTempFileName();
         }
 
         public void Dispose()
@@ -40,6 +42,11 @@ namespace TcPlayer
             _systemControl.DisplayUpdater.ClearAll();
             _systemControl.IsEnabled = false;
             _systemControl = null;
+            if (File.Exists(_tempFile))
+            {
+                File.Delete(_tempFile);
+            }
+
         }
 
         private void OnSystemControlButtonPress(UwpMedia.SystemMediaTransportControls sender, UwpMedia.SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -63,19 +70,13 @@ namespace TcPlayer
 
         public void HandleMessage(CoverImageChangeMessage message)
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            using (var f = File.Create(_tempFile))
             {
-                _systemControl.DisplayUpdater.AppMediaId = "TcPlayer";
-                using (var stream = new MemoryStream(message.CoverData))
-                {
-                    _systemControl.DisplayUpdater.Thumbnail = UwpStreams.RandomAccessStreamReference.CreateFromStream(stream.AsRandomAccessStream());
-                    _systemControl.DisplayUpdater.Update();
-                }
-
-            });
+                f.Write(message.CoverData, 0, message.CoverData.Length);
+            }
         }
 
-        private void UpdateSystemMediaControls(ShellNotificationMessage message)
+        private async void UpdateSystemMediaControls(ShellNotificationMessage message)
         {
             _systemControl.DisplayUpdater.ClearAll();
             _systemControl.DisplayUpdater.AppMediaId = "TcPlayer";
@@ -83,12 +84,13 @@ namespace TcPlayer
             _systemControl.DisplayUpdater.MusicProperties.Title = message.Metadata.Title;
             _systemControl.DisplayUpdater.MusicProperties.Artist = message.Metadata.Artist;
             _systemControl.PlaybackStatus = GetPlaybackStatus(message.State);
-            _systemControl.UpdateTimelineProperties(new UwpMedia.SystemMediaTransportControlsTimelineProperties
+
+            if (File.Exists(_tempFile))
             {
-                StartTime = TimeSpan.FromSeconds(0),
-                Position = TimeSpan.FromSeconds(message.Position),
-                EndTime = TimeSpan.FromSeconds(message.Length),
-            });
+                var str = await Windows.Storage.StorageFile.GetFileFromPathAsync(Path.Combine(_tempFile));
+                _systemControl.DisplayUpdater.Thumbnail = UwpStreams.RandomAccessStreamReference.CreateFromFile(str);
+            }
+
             _systemControl.DisplayUpdater.Update();
         }
 
