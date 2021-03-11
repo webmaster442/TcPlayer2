@@ -8,6 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TcPlayer.Engine;
+using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;
 using TcPlayer.Infrastructure;
 
@@ -15,6 +17,8 @@ namespace TcPlayer.Controls
 {
     internal class CoverImageControl : Image
     {
+        public static IMessenger? Messenger { get; set; }
+
         public CoverImageControl()
         {
             Stretch = Stretch.Uniform;
@@ -121,6 +125,11 @@ namespace TcPlayer.Controls
                     image.Freeze();
 
                 Source = image;
+
+                Messenger?.SendMessage(new CoverImageChangeMessage
+                {
+                    CoverData = array
+                });
 
                 if (image.DpiX != 96)
                 {

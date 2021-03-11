@@ -117,10 +117,12 @@ namespace TcPlayer.Engine
 
         private void SendTaskBarInfoMessage()
         {
-            _messenger.SendMessage(new PositionInfoMessage
+            _messenger.SendMessage(new ShellNotificationMessage
             {
                 State = CurrentState,
-                Percent = double.IsInfinity(_length) || double.IsNaN(_length) ? double.PositiveInfinity : (_currentPosition / _length)
+                Length = Length,
+                Position = CurrentPosition,
+                Metadata = Metadata
             });
         }
 

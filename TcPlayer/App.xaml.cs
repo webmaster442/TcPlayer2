@@ -43,6 +43,8 @@ namespace TcPlayer
             _settings = new SettingsFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TcPlayer.Options.json"));
             _engine = new AudioEngine(_messenger);
             _dialogProvider = new DialogProvider();
+
+            Controls.CoverImageControl.Messenger = _messenger;
         }
 
         internal void SetupEngineDependencies()
@@ -156,6 +158,11 @@ namespace TcPlayer
 
         public void Dispose()
         {
+            if (_shellIntegration != null)
+            {
+                _shellIntegration.Dispose();
+                _shellIntegration = null;
+            }
             if (_ipcThread != null)
             {
                 WriteIpc(ipcAbort);
