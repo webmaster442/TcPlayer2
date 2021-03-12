@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;
@@ -34,7 +33,9 @@ namespace TcPlayer
             _systemControl.ButtonPressed += OnSystemControlButtonPress;
             _messenger = messenger;
             _messenger.SubScribe(this);
-            _tempFile = System.IO.Path.GetTempFileName();
+#pragma warning disable S5445 // Insecure temporary file creation methods should not be used
+            _tempFile = Path.GetTempFileName();
+#pragma warning restore S5445 // Insecure temporary file creation methods should not be used
         }
 
         public void Dispose()
@@ -76,7 +77,9 @@ namespace TcPlayer
             }
         }
 
+#pragma warning disable S3168 // "async" methods should not return "void"
         private async void UpdateSystemMediaControls(ShellNotificationMessage message)
+#pragma warning restore S3168 // "async" methods should not return "void"
         {
             _systemControl.DisplayUpdater.ClearAll();
             _systemControl.DisplayUpdater.AppMediaId = "TcPlayer";

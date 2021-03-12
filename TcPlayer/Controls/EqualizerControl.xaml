@@ -48,8 +48,10 @@
         <GroupBox
             Grid.ColumnSpan="5"
             BorderBrush="Black"
-            BorderThickness="0,0,0,0"
-            Header="Equalizer graph">
+            BorderThickness="0,0,0,0">
+            <GroupBox.Header>
+                <TextBlock Text="Equalizer graph" FontWeight="Bold"/>
+            </GroupBox.Header>
             <Polyline
                 Height="120"
                 Stroke="{StaticResource Slider}"
