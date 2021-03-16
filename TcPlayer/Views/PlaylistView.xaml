@@ -1,6 +1,6 @@
 ﻿<!--
- Copyright (c) 2021 Ruzsinszki Gábor
- This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+    Copyright (c) 2021 Ruzsinszki Gábor
+    This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 -->
 
 <UserControl
@@ -94,6 +94,7 @@
             </MenuItem>
         </Menu>
         <DataGrid
+            x:Name="PlaylistDataGrid"
             Grid.Row="1"
             AlternationCount="2"
             AutoGenerateColumns="False"
@@ -131,6 +132,14 @@
                     Header="Length"
                     IsReadOnly="True" />
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu Tag="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
+                    <MenuItem
+                        CommandParameter="{Binding Tag.SelectedItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                        Command="{Binding DeleteSelected}"
+                        Header="Remove selected" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </DataGrid>
     </Grid>
 </UserControl>

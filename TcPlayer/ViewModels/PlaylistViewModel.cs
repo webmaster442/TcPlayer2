@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using TcPlayer.Engine;
 using TcPlayer.Engine.Messages;
 using TcPlayer.Engine.Models;
@@ -38,11 +39,16 @@ namespace TcPlayer.ViewModels
         public DelegateCommand ImportUrlCommand { get; }
         public DelegateCommand ImportDlnaCommand { get; }
 
+        public DelegateCommand<IList<object>> DeleteSelected { get; }
 
         public bool TryStepNext()
         {
             int index = Items.IndexOf(Selected);
-            if (index == -1) index = -1;
+            if (index == -1)
+            {
+                index = -1;
+            }
+
             if (index + 1 > Items.Count - 1)
             {
                 return false;
@@ -57,8 +63,12 @@ namespace TcPlayer.ViewModels
         public bool TryStepBack()
         {
             int index = Items.IndexOf(Selected);
-            if (index == -1) index = 0;
-            if (index -1 < 0)
+            if (index == -1)
+            {
+                index = 0;
+            }
+
+            if (index - 1 < 0)
             {
                 return false;
             }
@@ -70,8 +80,7 @@ namespace TcPlayer.ViewModels
         }
 
 
-        public PlaylistItem Selected
-        {
+        public PlaylistItem Selected {
             get => _selected;
             set => SetProperty(ref _selected, value);
         }
@@ -94,7 +103,29 @@ namespace TcPlayer.ViewModels
             ImportITunesCommand = new DelegateCommand(OnImportItunes, CanImportItunes);
             ImportUrlCommand = new DelegateCommand(OnImportUrl);
             ImportDlnaCommand = new DelegateCommand(OnImportDlna);
+            DeleteSelected = new DelegateCommand<IList<object>>(OnDeleteSelected, CanDeleteSelected);
             _messenger.SubScribe(this);
+        }
+
+        private bool CanDeleteSelected(IList<object> obj)
+        {
+            return obj?.Count > 0;
+        }
+
+        private void OnDeleteSelected(IList<object> obj)
+        {
+            if (obj.Count == Items.Count)
+            {
+                //full list is selected
+                Items.Clear();
+            }
+            while (obj.Count > 0)
+            {
+                if (obj[0] is PlaylistItem item)
+                {
+                    Items.Remove(item);
+                }
+            }
         }
 
         public void HandleMessage(AppArgumentsMessage message)
@@ -111,18 +142,18 @@ namespace TcPlayer.ViewModels
             {
                 if (Formats.IsAudioFile(item))
                 {
-                    var files = await PlaylistItemFactory.CreateFileInfos(new[] { item }, source.Token);
+                    IEnumerable<PlaylistItem> files = await PlaylistItemFactory.CreateFileInfos(new[] { item }, source.Token);
                     itemsToAdd.AddRange(files);
                 }
                 else if (Formats.IsPLaylist(item))
                 {
-                    var playlistItems = await PlaylistItemFactory.LoadPlaylist(item, source.Token);
+                    IEnumerable<PlaylistItem> playlistItems = await PlaylistItemFactory.LoadPlaylist(item, source.Token);
                     itemsToAdd.AddRange(playlistItems);
                 }
                 else if (item.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
                     || item.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
-                    var urls = await PlaylistItemFactory.CreateFromUrl(item, source.Token);
+                    IEnumerable<PlaylistItem> urls = await PlaylistItemFactory.CreateFromUrl(item, source.Token);
                     itemsToAdd.AddRange(urls);
                 }
             }
@@ -135,9 +166,9 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TryImportDlna(out IEnumerable<string> urls))
             {
-                var source = _mainWindow.ShowUiBlocker();
-                var canLoaded = urls.Where(x => Formats.AudioFormats.Contains(Path.GetExtension(x)));
-                var items = await PlaylistItemFactory.CreateFileInfos(canLoaded, source.Token);
+                CancellationTokenSource source = _mainWindow.ShowUiBlocker();
+                IEnumerable<string> canLoaded = urls.Where(x => Formats.AudioFormats.Contains(Path.GetExtension(x)));
+                IEnumerable<PlaylistItem> items = await PlaylistItemFactory.CreateFileInfos(canLoaded, source.Token);
                 UpdateList(items, false);
                 _mainWindow.HideUiBlocker();
             }
@@ -147,8 +178,8 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TryImportUrl(out string url))
             {
-                var source = _mainWindow.ShowUiBlocker();
-                var items = await PlaylistItemFactory.CreateFromUrl(url, source.Token);
+                CancellationTokenSource source = _mainWindow.ShowUiBlocker();
+                IEnumerable<PlaylistItem> items = await PlaylistItemFactory.CreateFromUrl(url, source.Token);
                 UpdateList(items, false);
                 _mainWindow.HideUiBlocker();
             }
@@ -163,14 +194,18 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TryImportITunes(out IEnumerable<ITunesTrack> itunesItems))
             {
-                var items = PlaylistItemFactory.CreateFromITunesTracks(itunesItems);
+                IEnumerable<PlaylistItem> items = PlaylistItemFactory.CreateFromITunesTracks(itunesItems);
                 UpdateList(items, false);
             }
         }
 
         private void OnSelected(PlaylistItem obj)
         {
-            if (obj == null) return;
+            if (obj == null)
+            {
+                return;
+            }
+
             _messenger.SendMessage(new LoadFileMessage
             {
                 File = obj.FilePath
@@ -181,7 +216,7 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TrySelectFileDialog(Formats.PlaylistFilterString, out string selected))
             {
-                var source = _mainWindow.ShowUiBlocker();
+                CancellationTokenSource source = _mainWindow.ShowUiBlocker();
                 IEnumerable<PlaylistItem> items = await PlaylistItemFactory.LoadPlaylist(selected, source.Token);
 
                 UpdateList(items, clearsList);
@@ -191,7 +226,7 @@ namespace TcPlayer.ViewModels
 
         private async void OnLoadDisc(int obj)
         {
-            var source = _mainWindow.ShowUiBlocker();
+            CancellationTokenSource source = _mainWindow.ShowUiBlocker();
             IEnumerable<PlaylistItem> items = await PlaylistItemFactory.LoadCd(obj, source.Token);
             UpdateList(items, true);
             _mainWindow.HideUiBlocker();
@@ -209,8 +244,8 @@ namespace TcPlayer.ViewModels
         {
             if (_dialogProvider.TrySelectFilesDialog(Formats.AudioFormatFilterString, out string[] files))
             {
-                var source = _mainWindow.ShowUiBlocker();
-                var items = await PlaylistItemFactory.CreateFileInfos(files, source.Token);
+                CancellationTokenSource source = _mainWindow.ShowUiBlocker();
+                IEnumerable<PlaylistItem> items = await PlaylistItemFactory.CreateFileInfos(files, source.Token);
                 UpdateList(items, false);
                 _mainWindow.HideUiBlocker();
             }
@@ -246,18 +281,26 @@ namespace TcPlayer.ViewModels
 
         private void UpdateList(IEnumerable<PlaylistItem> items, bool clear)
         {
-            if (items == null) return;
+            if (items == null)
+            {
+                return;
+            }
 
             if (clear)
+            {
                 Items.Clear();
+            }
+
             Items.RaiseListChangedEvents = false;
-            foreach (var item in items)
+            foreach (PlaylistItem item in items)
             {
                 Items.Add(item);
             }
             Items.RaiseListChangedEvents = true;
             if (Items.Count > 0)
+            {
                 Items.ResetItem(0);
+            }
         }
     }
 }

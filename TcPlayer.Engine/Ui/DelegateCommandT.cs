@@ -41,13 +41,19 @@ namespace TcPlayer.Engine.Ui
                     var converted = (T)Convert.ChangeType(parameter, typeof(T));
                     _execute(converted);
                 }
+                else if (parameter is T)
+                {
+                    _execute((T)parameter);
+                }
                 else
                 {
                     throw new InvalidCastException(nameof(parameter));
                 }
             }
             else
+            {
                 _execute((T)parameter);
+            }
         }
 
 
