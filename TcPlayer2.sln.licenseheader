@@ -1,0 +1,11 @@
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// ------------------------------------------------------------------------------------------------
+// Copyright (c) 2021 Ruzsinszki Gábor
+// This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+// ------------------------------------------------------------------------------------------------
+extensions: .xaml
+<!--
+ Copyright (c) 2021 Ruzsinszki Gábor
+ This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+-->
