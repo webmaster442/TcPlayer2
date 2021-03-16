@@ -22,6 +22,8 @@ namespace TcPlayer
     {
         private readonly IMainWindow _mainWindow;
         UwpMedia.SystemMediaTransportControls _systemControl;
+        private EngineState _previousState;
+        private string _previousTitle;
         private readonly IMessenger _messenger;
         private readonly string _tempFile;
 
@@ -70,7 +72,14 @@ namespace TcPlayer
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 SetTaskbarProgress(message);
-                UpdateSystemMediaControls(message);
+
+                if (message.State != _previousState
+                || message?.Metadata?.Title != _previousTitle)
+                {
+                    UpdateSystemMediaControls(message);
+                    _previousState = message.State;
+                    _previousTitle = message.Metadata.Title;
+                }
             });
         }
 
