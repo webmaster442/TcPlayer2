@@ -39,7 +39,8 @@ namespace TcPlayer.ViewModels
         public DelegateCommand ImportUrlCommand { get; }
         public DelegateCommand ImportDlnaCommand { get; }
 
-        public DelegateCommand<IList<object>> DeleteSelected { get; }
+        public DelegateCommand<IList<object>> DeleteSelectedCommand { get; }
+        public DelegateCommand<string[]> FilesDropCommand { get; }
 
         public bool TryStepNext()
         {
@@ -103,7 +104,8 @@ namespace TcPlayer.ViewModels
             ImportITunesCommand = new DelegateCommand(OnImportItunes, CanImportItunes);
             ImportUrlCommand = new DelegateCommand(OnImportUrl);
             ImportDlnaCommand = new DelegateCommand(OnImportDlna);
-            DeleteSelected = new DelegateCommand<IList<object>>(OnDeleteSelected, CanDeleteSelected);
+            DeleteSelectedCommand = new DelegateCommand<IList<object>>(OnDeleteSelected, CanDeleteSelected);
+            FilesDropCommand = new DelegateCommand<string[]>(OnFilesDrop);
             _messenger.SubScribe(this);
         }
 
@@ -132,6 +134,11 @@ namespace TcPlayer.ViewModels
         {
             _mainWindow.SetMainTab(MainTab.Playlist);
             OnImportFiles(message.Arguments, true);
+        }
+
+        private void OnFilesDrop(string[] obj)
+        {
+            OnImportFiles(obj, false);
         }
 
         private async void OnImportFiles(IEnumerable<string> items, bool clearList)

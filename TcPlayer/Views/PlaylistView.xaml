@@ -96,6 +96,7 @@
         <DataGrid
             x:Name="PlaylistDataGrid"
             Grid.Row="1"
+            controls:DragDropBehaviour.FileDraggedInCommmand="{Binding FilesDropCommand}"
             AlternationCount="2"
             AutoGenerateColumns="False"
             Background="{StaticResource BaseColor}"
@@ -135,8 +136,8 @@
             <DataGrid.ContextMenu>
                 <ContextMenu Tag="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
                     <MenuItem
+                        Command="{Binding DeleteSelectedCommand}"
                         CommandParameter="{Binding Tag.SelectedItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                        Command="{Binding DeleteSelected}"
                         Header="Remove selected" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
