@@ -1,4 +1,9 @@
-﻿// Code based on CueSharp 0.5 March 24, 2007
+﻿// ------------------------------------------------------------------------------------------------
+// Copyright (c) 2021 Ruzsinszki Gábor
+// This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+// ------------------------------------------------------------------------------------------------
+
+// Code based on CueSharp 0.5 March 24, 2007
 // Original author: Wyatt O'Day wyday.com/cuesharp
 // This is a heavily modified version for TCPlayer. Supports only reading
 

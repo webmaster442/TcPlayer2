@@ -1,4 +1,9 @@
-﻿namespace TcPlayer.Engine.Internals.Mp4Chapters
+﻿// ------------------------------------------------------------------------------------------------
+// Copyright (c) 2021 Ruzsinszki Gábor
+// This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+// ------------------------------------------------------------------------------------------------
+
+namespace TcPlayer.Engine.Internals.Mp4Chapters
 {
     internal static class Constants
     {

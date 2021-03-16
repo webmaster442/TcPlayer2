@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ------------------------------------------------------------------------------------------------
+// Copyright (c) 2021 Ruzsinszki Gábor
+// This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+// ------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
