@@ -20,6 +20,7 @@
     Closing="Main_Closing"
     ResizeMode="NoResize"
     WindowStyle="None"
+    Icon="../logo-48.png"
     mc:Ignorable="d">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo
