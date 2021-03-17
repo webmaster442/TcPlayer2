@@ -1,8 +1,7 @@
 {
   "profiles": {
     "TcPlayer": {
-      "commandName": "Project",
-      "commandLineArgs": "\"d:\\0Zene\\HardStyle\\Bass Modulators - Limitless\\02_bass_modulators_-_warrior.mp3\""
+      "commandName": "Project"
     }
   }
 }

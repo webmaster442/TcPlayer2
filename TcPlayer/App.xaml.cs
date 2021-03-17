@@ -86,10 +86,16 @@ namespace TcPlayer
                 _shellIntegration = new ShellIntegration(_messenger, window);
                 Current.MainWindow.Show();
 
-                _messenger.SendMessage(new AppArgumentsMessage
+                string[] args = Environment.GetCommandLineArgs();
+
+                if (args.Length > 1)
                 {
-                    Arguments = Environment.GetCommandLineArgs()
-                });
+                    //1st argument allways is program location
+                    _messenger.SendMessage(new AppArgumentsMessage
+                    {
+                        Arguments = args
+                    });
+                }
 
             }
             else
@@ -103,7 +109,7 @@ namespace TcPlayer
             }
         }
 
-        private bool WriteIpc(string payload, int timeout = 300)
+        private static bool WriteIpc(string payload, int timeout = 300)
         {
             using (var client = new NamedPipeClientStream(Entrypoint.MutexName))
             {
