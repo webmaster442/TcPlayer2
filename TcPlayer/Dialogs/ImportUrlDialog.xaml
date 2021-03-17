@@ -1,6 +1,6 @@
 ﻿<!--
- Copyright (c) 2021 Ruzsinszki Gábor
- This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+    Copyright (c) 2021 Ruzsinszki Gábor
+    This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 -->
 
 <Window
@@ -8,8 +8,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:infrastructure="clr-namespace:TcPlayer.Infrastructure"
-    xmlns:local="clr-namespace:TcPlayer.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Add Url"
     Width="740"
@@ -27,7 +25,7 @@
         <Border
             Grid.Row="1"
             Height="80"
-            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            Background="{StaticResource Gray}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />

@@ -1,6 +1,6 @@
 ﻿<!--
- Copyright (c) 2021 Ruzsinszki Gábor
- This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+    Copyright (c) 2021 Ruzsinszki Gábor
+    This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 -->
 
 <Window
@@ -70,7 +70,7 @@
         <Border
             Grid.Row="2"
             Height="60"
-            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            Background="{StaticResource Gray}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -85,7 +85,7 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Width="86"
-                    Height="24"
+                    Height="25"
                     Margin="3"
                     Background="{StaticResource Buttons}"
                     Click="ImportClick"
@@ -95,7 +95,7 @@
                     Grid.Row="0"
                     Grid.Column="2"
                     Width="86"
-                    Height="24"
+                    Height="25"
                     Margin="3"
                     Background="{StaticResource Buttons}"
                     Click="CancelClick"

@@ -1,6 +1,6 @@
 ﻿<!--
- Copyright (c) 2021 Ruzsinszki Gábor
- This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+    Copyright (c) 2021 Ruzsinszki Gábor
+    This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 -->
 
 <Window
@@ -21,33 +21,38 @@
         </Grid.RowDefinitions>
         <TextBlock
             x:Name="DialogText"
+            MinHeight="40"
             Margin="5"
             FontSize="14"
-            MinHeight="40"
             Text=""
             TextWrapping="Wrap" />
-        <Border Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+        <Border
+            Grid.Row="1"
+            Background="{StaticResource Gray}">
             <StackPanel
                 HorizontalAlignment="Right"
-            Orientation="Horizontal">
+                Orientation="Horizontal">
                 <Button
-                Height="24"
-                Width="86"
-                Margin="3"
-                Click="OnDownload"
-                Content="Download" />
+                    Width="86"
+                    Height="24"
+                    Margin="3"
+                    Background="{StaticResource Buttons}"
+                    Click="OnDownload"
+                    Content="Download" />
                 <Button
-                Height="24"
-                Width="150"
-                Margin="3"
-                Click="OnWebsite"
-                Content="Visit Youtube-dl website" />
+                    Width="150"
+                    Height="24"
+                    Margin="3"
+                    Background="{StaticResource Buttons}"
+                    Click="OnWebsite"
+                    Content="Visit Youtube-dl website" />
                 <Button
-                Height="24"
-                Width="86"
-                Margin="3"
-                Click="OnCancel"
-                Content="Cancel" />
+                    Width="86"
+                    Height="24"
+                    Margin="3"
+                    Background="{StaticResource Buttons}"
+                    Click="OnCancel"
+                    Content="Cancel" />
             </StackPanel>
         </Border>
 

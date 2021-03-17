@@ -20,6 +20,11 @@
     WindowStyle="SingleBorderWindow"
     Topmost="True"
     mc:Ignorable="d">
+    <Window.Resources>
+        <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+            <Setter Property="Background" Value="{StaticResource Buttons}"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -33,7 +38,7 @@
         <Border
             Grid.Row="1"
             Height="80"
-            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            Background="{StaticResource Gray}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -53,36 +58,31 @@
                         Height="24"
                         Margin="3,0"
                         Content="Artists"
-                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Artists}}"
-                        Style="{StaticResource {x:Type ToggleButton}}" />
+                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Artists}}" />
                     <RadioButton
                         Width="86"
                         Height="24"
                         Margin="3,0"
                         Content="Albums"
-                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Artists}}"
-                        Style="{StaticResource {x:Type ToggleButton}}" />
+                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Artists}}" />
                     <RadioButton
                         Width="86"
                         Height="24"
                         Margin="3,0"
                         Content="Years"
-                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Years}}"
-                        Style="{StaticResource {x:Type ToggleButton}}" />
+                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Years}}" />
                     <RadioButton
                         Width="86"
                         Height="24"
                         Margin="3,0"
                         Content="Genres"
-                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Genres}}"
-                        Style="{StaticResource {x:Type ToggleButton}}" />
+                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Genres}}" />
                     <RadioButton
                         Width="86"
                         Height="24"
                         Margin="3,0"
                         Content="Playlists"
-                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Playlists}}"
-                        Style="{StaticResource {x:Type ToggleButton}}" />
+                        IsChecked="{Binding Filter, Converter={infrastructure:CompareConverter}, ConverterParameter={x:Static local:ItunesTab.Playlists}}" />
                 </StackPanel>
                 <TextBox
                     Grid.Row="1"

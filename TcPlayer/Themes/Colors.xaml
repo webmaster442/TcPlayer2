@@ -1,6 +1,6 @@
 ﻿<!--
- Copyright (c) 2021 Ruzsinszki Gábor
- This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+    Copyright (c) 2021 Ruzsinszki Gábor
+    This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 -->
 
 <ResourceDictionary
@@ -9,31 +9,46 @@
 
     <SolidColorBrush
         x:Key="BaseColor"
-        Color="#81808E" />
+        Color="#8d6e63" />
+
     <SolidColorBrush
         x:Key="Buttons"
-        Color="#DBD7CE" />
+        Color="#b0bec5" />
+    <SolidColorBrush
+        x:Key="ButtonsLight"
+        Color="#e2f1f8" />
+    <SolidColorBrush
+        x:Key="ButtonsDark"
+        Color="#808e95" />
+
+    <SolidColorBrush
+        x:Key="Gray"
+        Color="#E1E2E1" />
+
     <SolidColorBrush
         x:Key="TitleBar"
-        Color="#444442" />
+        Color="#5f4339" />
     <SolidColorBrush
         x:Key="TitleBarButton"
-        Color="#726E6B" />
+        Color="#be9c91" />
     <SolidColorBrush
         x:Key="TitleBarButtonForeground"
-        Color="#17140F" />
+        Color="Black" />
+
     <SolidColorBrush
         x:Key="TitleBarText"
-        Color="#A5A6AB" />
+        Color="#fafafa" />
+
     <SolidColorBrush
         x:Key="Slider"
-        Color="#FA9257" />
+        Color="#ffa726" />
     <SolidColorBrush
-        x:Key="Color"
-        Color="#BF18ED" />
+        x:Key="SliderLight"
+        Color="#ffd95b" />
     <SolidColorBrush
-        x:Key="Color2"
-        Color="#66C3FA" />
+        x:Key="SliderDark"
+        Color="#c77800" />
+
 
 
     <SolidColorBrush
