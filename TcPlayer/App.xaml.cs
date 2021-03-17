@@ -8,6 +8,7 @@ using ManagedBass.Fx;
 using System;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using TcPlayer.Engine;
@@ -93,7 +94,7 @@ namespace TcPlayer
                     //1st argument allways is program location
                     _messenger.SendMessage(new AppArgumentsMessage
                     {
-                        Arguments = args
+                        Arguments = args.Skip(1).ToArray()
                     });
                 }
 
