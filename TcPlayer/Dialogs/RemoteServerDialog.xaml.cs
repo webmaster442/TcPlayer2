@@ -3,13 +3,13 @@
 // This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 // ------------------------------------------------------------------------------------------------
 
-using QRCoder;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using QRCoder;
 using TcPlayer.Engine;
 using TcPlayer.Network.Http;
 using TcPlayer.Network.Remote;
@@ -19,7 +19,7 @@ namespace TcPlayer.Dialogs
     /// <summary>
     /// Interaction logic for RemoteServerDialog.xaml
     /// </summary>
-    public partial class RemoteServerDialog : Window, ILog
+    public partial class RemoteServerDialog : ILog
     {
         private RemoteServer _server;
         private readonly IMessenger _messenger;

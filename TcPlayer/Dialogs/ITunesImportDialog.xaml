@@ -1,12 +1,13 @@
 ﻿<!--
- Copyright (c) 2021 Ruzsinszki Gábor
- This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+    Copyright (c) 2021 Ruzsinszki Gábor
+    This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 -->
 
-<Window
+<controls:DialogWindow
     x:Class="TcPlayer.Dialogs.ITunesImportDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TcPlayer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:infrastructure="clr-namespace:TcPlayer.Infrastructure"
     xmlns:local="clr-namespace:TcPlayer.ViewModels"
@@ -16,13 +17,15 @@
     Height="493"
     ResizeMode="CanResizeWithGrip"
     ShowInTaskbar="False"
+    Topmost="True"
     WindowStartupLocation="CenterScreen"
     WindowStyle="SingleBorderWindow"
-    Topmost="True"
     mc:Ignorable="d">
     <Window.Resources>
-        <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
-            <Setter Property="Background" Value="{StaticResource Buttons}"/>
+        <Style
+            BasedOn="{StaticResource {x:Type ToggleButton}}"
+            TargetType="RadioButton">
+            <Setter Property="Background" Value="{StaticResource Buttons}" />
         </Style>
     </Window.Resources>
     <Grid>
@@ -110,4 +113,4 @@
             </Grid>
         </Border>
     </Grid>
-</Window>
+</controls:DialogWindow>

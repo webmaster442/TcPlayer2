@@ -6,9 +6,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace TcPlayer.Infrastructure
+namespace TcPlayer.Infrastructure.Native
 {
-    internal static class Native
+    internal static class User32
     {
         public const int GWL_STYLE = -16;
         public const int WS_MAXIMIZEBOX = 0x10000;

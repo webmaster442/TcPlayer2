@@ -11,7 +11,7 @@ namespace TcPlayer.Dialogs
     /// <summary>
     /// Interaction logic for DlnaImport.xaml
     /// </summary>
-    public partial class DlnaImportDialog : Window
+    public partial class DlnaImportDialog
     {
         public DlnaImportDialog()
         {

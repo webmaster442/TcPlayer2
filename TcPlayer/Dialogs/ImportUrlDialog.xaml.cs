@@ -10,7 +10,7 @@ namespace TcPlayer.Dialogs
     /// <summary>
     /// Interaction logic for OpenUrlDialog.xaml
     /// </summary>
-    public partial class ImportUrlDialog : Window
+    public partial class ImportUrlDialog
     {
         public ImportUrlDialog()
         {

@@ -3,31 +3,21 @@
 // This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 // ------------------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using TcPlayer.Engine.Models;
-using TcPlayer.Infrastructure;
 using TcPlayer.ViewModels;
 
 namespace TcPlayer.Dialogs
 {
-    public partial class ITunesImportDialog : Window
+    public partial class ITunesImportDialog
     {
         public ITunesImportDialog()
         {
             InitializeComponent();
-            SourceInitialized += ITunesImportDialog_SourceInitialized;
             DataContext = new ItunesViewModel();
             
-        }
-
-        private void ITunesImportDialog_SourceInitialized(object sender, EventArgs e)
-        {
-            IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
-            var currentStyle = Native.GetWindowLong(hwnd, Native.GWL_STYLE);
-            Native.SetWindowLong(hwnd, Native.GWL_STYLE, (currentStyle & ~Native.WS_MAXIMIZEBOX & ~Native.WS_MINIMIZEBOX));
         }
 
         private void ImportClick(object sender, RoutedEventArgs e)

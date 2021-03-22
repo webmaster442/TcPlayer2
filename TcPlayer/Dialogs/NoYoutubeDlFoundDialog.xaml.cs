@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace TcPlayer.Dialogs
 {
-    public partial class NoYoutubeDlFoundDialog : Window
+    public partial class NoYoutubeDlFoundDialog
     {
         public NoYoutubeDlFoundDialog(Infrastructure.YoutubeDlState state)
         {
