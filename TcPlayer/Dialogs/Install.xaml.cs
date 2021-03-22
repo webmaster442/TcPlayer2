@@ -1,27 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// ------------------------------------------------------------------------------------------------
+// Copyright (c) 2021 Ruzsinszki Gábor
+// This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
+// ------------------------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using TcPlayer.Infrastructure.Native;
 
 namespace TcPlayer.Dialogs
 {
     /// <summary>
     /// Interaction logic for Install.xaml
     /// </summary>
-    public partial class Install : Window
+    public partial class Install
     {
+        private const string _name = "Tc Player";
+        private readonly string _programPath;
+        private const string _website = "https://github.com/webmaster442/TcPlayer2";
+
         public Install()
         {
             InitializeComponent();
+            using (var process = Process.GetCurrentProcess())
+            {
+                _programPath = process.MainModule.FileName;
+            }
+        }
+
+        private void OnPlaceShortcutsAndStart(object sender, RoutedEventArgs e)
+        {
+            if (ShortcutDesktop.IsChecked == true)
+            {
+                ShellLinkManager.CreateLink(_programPath, _name, Environment.SpecialFolder.Desktop);
+            }
+            if (ShortcutStartMenu.IsChecked == true)
+            {
+                ShellLinkManager.CreateLink(_programPath, _name, Environment.SpecialFolder.StartMenu);
+            }
+        }
+
+        private void OnViewWebsite(object sender, RoutedEventArgs e)
+        {
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = _website;
+                process.StartInfo.UseShellExecute = true;
+                process.Start();
+            }
         }
     }
 }
