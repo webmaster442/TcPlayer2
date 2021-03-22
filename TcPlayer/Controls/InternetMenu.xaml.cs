@@ -40,10 +40,12 @@ namespace TcPlayer.Controls
 
         private static void SearchTheWeb(string provider, string term)
         {
-            Process p = new Process();
-            p.StartInfo.UseShellExecute = true;
-            p.StartInfo.FileName = string.Format(provider, HttpUtility.UrlEncode(term));
-            p.Start();
+            using (var p = new Process())
+            {
+                p.StartInfo.UseShellExecute = true;
+                p.StartInfo.FileName = string.Format(provider, HttpUtility.UrlEncode(term));
+                p.Start();
+            }
         }
 
         private void SearchTheWebs(object sender, System.Windows.RoutedEventArgs e)
