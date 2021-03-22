@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -78,20 +79,31 @@ namespace TcPlayer.Network
                             continue;
                         }
 
-                        var xmlResponse = xs.Deserialize(reader) as Root;
-                        var dlna = xmlResponse?.Device.ServiceList?.Service.FirstOrDefault(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1");
-                        if (dlna != null)
+                        try
                         {
-                            var serverUrl = new Uri(server);
-                            var ctrl = $"http://{serverUrl.Host}:{serverUrl.Port}{dlna.ControlURL}";
-
-                            dlnaServers.Add(new DlnaItem
+                            var xmlResponse = xs.Deserialize(reader) as Root;
+                            var dlna = xmlResponse?.Device.ServiceList?.Service.FirstOrDefault(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1");
+                            if (dlna != null)
                             {
-                                IsBrowsable = true,
-                                IsServer = true,
-                                Name = xmlResponse?.Device?.FriendlyName ?? string.Empty,
-                                Locaction = ctrl,
-                            });
+                                var serverUrl = new Uri(server);
+                                var ctrl = $"http://{serverUrl.Host}:{serverUrl.Port}{dlna.ControlURL}";
+
+                                dlnaServers.Add(new DlnaItem
+                                {
+                                    IsBrowsable = true,
+                                    IsServer = true,
+                                    Name = xmlResponse?.Device?.FriendlyName ?? string.Empty,
+                                    Locaction = ctrl,
+                                });
+                            }
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            //catch xml deserialize errors
+#if DEBUG
+                            Debug.WriteLine(ex);
+                            Debug.WriteLine(content);
+#endif
                         }
                     }
                 }
