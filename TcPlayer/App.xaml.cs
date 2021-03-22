@@ -43,6 +43,23 @@ namespace TcPlayer
             _ipcThread = new Thread(IpcListener);
         }
 
+        internal bool IsInstalled
+        {
+            get
+            {
+                if (_settings.Settings.IsExisting(SettingConst.AppSettings, SettingConst.Installed))
+                {
+                    _settings.Settings.GetBool(SettingConst.AppSettings, SettingConst.Installed);
+                }
+                return false;
+            }
+            set
+            {
+                _settings.Settings.WriteBool(SettingConst.AppSettings, SettingConst.Installed, value);
+                _settings.Save();
+            }
+        }
+
         internal void SetupDependencies()
         {
             _messenger = new Messenger();
@@ -85,7 +102,6 @@ namespace TcPlayer
                 Current.MainWindow = window;
                 Current.MainWindow.DataContext = new MainViewModel(_engine, _dialogProvider, window, _messenger, _settings);
                 _shellIntegration = new ShellIntegration(_messenger, window);
-                Current.MainWindow.Show();
 
                 string[] args = Environment.GetCommandLineArgs();
 

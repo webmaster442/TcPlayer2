@@ -13,13 +13,13 @@ namespace TcPlayer.Dialogs
     /// <summary>
     /// Interaction logic for Install.xaml
     /// </summary>
-    public partial class Install
+    public partial class InstallDialog
     {
         private const string _name = "Tc Player";
         private readonly string _programPath;
         private const string _website = "https://github.com/webmaster442/TcPlayer2";
 
-        public Install()
+        public InstallDialog()
         {
             InitializeComponent();
             using (var process = Process.GetCurrentProcess())

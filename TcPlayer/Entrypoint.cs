@@ -6,6 +6,7 @@
 using System;
 using System.IO;
 using System.Windows.Threading;
+using TcPlayer.Dialogs;
 
 namespace TcPlayer
 {
@@ -19,9 +20,21 @@ namespace TcPlayer
             var application = new App();
             application.SetupEngineDependencies();
             application.SetupDependencies();
-            application.InitializeComponent();
             application.DispatcherUnhandledException += OnUnhandledException;
-            application.Run();
+            application.InitializeComponent();
+            if (!application.IsInstalled)
+            {
+                var dialog = new InstallDialog();
+                dialog.ShowDialog();
+                application.IsInstalled = true;
+                application.MainWindow.Show();
+                application.Run();
+            }
+            else
+            {
+                application.MainWindow.Show();
+                application.Run();
+            }
         }
 
         private static void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
