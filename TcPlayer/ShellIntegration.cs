@@ -39,6 +39,12 @@ namespace TcPlayer
             _systemControl.IsPreviousEnabled = true;
             _systemControl.ButtonPressed += OnSystemControlButtonPress;
             _messenger = messenger;
+
+
+            //var notificationManager = Windows.UI.Notifications.ToastNotificationManager.GetDefault();
+
+            //_notifier = notificationManager.CreateToastNotifier("deqwg");
+
             _messenger.SubScribe(this);
 #pragma warning disable S5445 // Insecure temporary file creation methods should not be used
             _tempFile = Path.GetTempFileName();
@@ -74,13 +80,26 @@ namespace TcPlayer
                 SetTaskbarProgress(message);
 
                 if (message.State != _previousState
-                || message?.Metadata?.Title != _previousTitle)
+                || message.Metadata.Title != _previousTitle)
                 {
                     UpdateSystemMediaControls(message);
+                    UpdateNotification(message);
                     _previousState = message.State;
                     _previousTitle = message.Metadata.Title;
                 }
             });
+        }
+
+        private void UpdateNotification(ShellNotificationMessage message)
+        {
+
+            if (message.Metadata.Title != _previousTitle)
+            {
+                var builder = new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder();
+                builder.AddText(message.Metadata.Title);
+                builder.AddText(message.Metadata.Artist);
+                builder.Show();
+            }
         }
 
         public void HandleMessage(CoverImageChangeMessage message)
