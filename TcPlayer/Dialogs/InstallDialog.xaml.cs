@@ -38,6 +38,7 @@ namespace TcPlayer.Dialogs
             {
                 ShellLinkManager.CreateLink(_programPath, _name, Environment.SpecialFolder.StartMenu);
             }
+            DialogResult = true;
         }
 
         private void OnViewWebsite(object sender, RoutedEventArgs e)

@@ -7,12 +7,23 @@ using System;
 using System.IO;
 using System.Windows.Threading;
 using TcPlayer.Dialogs;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace TcPlayer
 {
     public static class Entrypoint
     {
         internal const string MutexName = @"Local/5C45E867-A91C-442D-A8D6-10753C6FDF55/TcPlayer2";
+
+        internal static IEnumerable<string> KnownArguments 
+        {
+            get
+            {
+                yield return "/install";
+            }
+        }
 
         [STAThread]
         public static void Main(string[] arguments)
@@ -21,18 +32,20 @@ namespace TcPlayer
             application.SetupEngineDependencies();
             application.SetupDependencies();
             application.DispatcherUnhandledException += OnUnhandledException;
-            application.InitializeComponent();
-            if (!application.IsInstalled)
+            if (!application.IsInstalled || arguments.Contains("/install"))
             {
+                application.ShouldShowMainWindow = false;
+                application.InitializeComponent();
                 var dialog = new InstallDialog();
                 dialog.ShowDialog();
-                application.IsInstalled = true;
                 application.MainWindow.Show();
+                application.IsInstalled = true;
                 application.Run();
             }
             else
             {
-                application.MainWindow.Show();
+                application.ShouldShowMainWindow = true;
+                application.InitializeComponent();
                 application.Run();
             }
         }

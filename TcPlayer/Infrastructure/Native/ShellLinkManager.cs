@@ -37,7 +37,7 @@ namespace TcPlayer.Infrastructure.Native
         public static void CreateLink(string file, string name, Environment.SpecialFolder folder)
         {
             string dir = Environment.GetFolderPath(folder);
-            string linkFileName = Path.Combine(dir, name);
+            string linkFileName = Path.Combine(dir, name + ".lnk");
             CreateLink(file, linkFileName, string.Empty, string.Empty);
         }
     }

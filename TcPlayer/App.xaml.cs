@@ -49,7 +49,7 @@ namespace TcPlayer
             {
                 if (_settings.Settings.IsExisting(SettingConst.AppSettings, SettingConst.Installed))
                 {
-                    _settings.Settings.GetBool(SettingConst.AppSettings, SettingConst.Installed);
+                   return _settings.Settings.GetBool(SettingConst.AppSettings, SettingConst.Installed);
                 }
                 return false;
             }
@@ -90,6 +90,8 @@ namespace TcPlayer
 #pragma warning restore S1481
         }
 
+        public bool ShouldShowMainWindow { get; set; }
+
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -103,17 +105,24 @@ namespace TcPlayer
                 Current.MainWindow.DataContext = new MainViewModel(_engine, _dialogProvider, window, _messenger, _settings);
                 _shellIntegration = new ShellIntegration(_messenger, window);
 
-                string[] args = Environment.GetCommandLineArgs();
+                string[] args = Environment.GetCommandLineArgs()
+                    .Skip(1)
+                    .Where(x => !Entrypoint.KnownArguments.Contains(x))
+                    .ToArray();
 
                 if (args.Length > 1)
                 {
                     //1st argument allways is program location
                     _messenger.SendMessage(new AppArgumentsMessage
                     {
-                        Arguments = args.Skip(1).ToArray()
+                        Arguments = args
                     });
                 }
 
+                if (ShouldShowMainWindow)
+                {
+                    MainWindow.Show();
+                }
             }
             else
             {
