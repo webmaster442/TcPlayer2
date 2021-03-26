@@ -3,11 +3,16 @@
 // This is free software under the terms of the MIT License. https://opensource.org/licenses/MIT
 // ------------------------------------------------------------------------------------------------
 
-namespace TcPlayer.Engine.Settings
+namespace TcPlayer.Dialogs
 {
-    public interface ISettingsFile
+    /// <summary>
+    /// Interaction logic for SettingsDialog.xaml
+    /// </summary>
+    public partial class SettingsDialog
     {
-        ISettingProvider Settings { get; }
-        void Save();
+        public SettingsDialog()
+        {
+            InitializeComponent();
+        }
     }
 }
