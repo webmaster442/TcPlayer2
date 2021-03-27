@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -23,12 +24,14 @@ namespace TcPlayer.Network.Http
         private const int _maxRequestSize = 1024 * 1024 * 4; //4MiB
         private const int _timeout = 2000;
         private readonly ILog _log;
+        private (IPAddress addr, IPAddress mask)[] _listenAdresses;
 
         public Routertable Routes { get; }
 
         public HttpServer(ILog log, int port)
         {
             _listner = new TcpListener(IPAddress.Any, port);
+            _listenAdresses = IPAddressExtensions.GetLocalIpadresses().ToArray();
             _canRun = true;
             Routes = new Routertable();
             _log = log;
@@ -78,6 +81,7 @@ namespace TcPlayer.Network.Http
                     var response = new HttpResponse(stream);
                     try
                     {
+                        ThrowIfNotOnSameSubnet(client);
                         int readed = 0;
                         var buffer = new byte[_buffersize];
                         int delay = 0;
@@ -139,6 +143,24 @@ namespace TcPlayer.Network.Http
                 }
             }
 
+        }
+
+        private void ThrowIfNotOnSameSubnet(TcpClient client)
+        {
+            var ip = client.GetClientAdress();
+            bool allow = false;
+            foreach (var listenAdress in _listenAdresses)
+            {
+                if (listenAdress.addr.IsInSameSubnet(ip, listenAdress.mask))
+                {
+                    allow = true;
+                    break;
+                }
+            }
+            if (!allow)
+            {
+                throw new InvalidOperationException("Not allowed");
+            }
         }
 
         private static async Task HandleServerError(HttpResponse response, Exception ex)
