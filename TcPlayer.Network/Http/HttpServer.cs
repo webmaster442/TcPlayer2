@@ -24,7 +24,7 @@ namespace TcPlayer.Network.Http
         private const int _maxRequestSize = 1024 * 1024 * 4; //4MiB
         private const int _timeout = 2000;
         private readonly ILog _log;
-        private (IPAddress addr, IPAddress mask)[] _listenAdresses;
+        private readonly (IPAddress addr, IPAddress mask)[] _listenAdresses;
 
         public Routertable Routes { get; }
 
@@ -81,7 +81,6 @@ namespace TcPlayer.Network.Http
                     var response = new HttpResponse(stream);
                     try
                     {
-                        ThrowIfNotOnSameSubnet(client);
                         int readed = 0;
                         var buffer = new byte[_buffersize];
                         int delay = 0;
@@ -111,6 +110,12 @@ namespace TcPlayer.Network.Http
 
                             request = RequestParser.ParseRequest(requestContent);
                         }
+
+                        if (!AreOnSameSubnet(client))
+                        {
+                            await HandleUnauthorized(response);
+                        }
+
                         if (request != null)
                         {
                             var hadndler = Routes.GetHandlerForUrl(request);
@@ -145,22 +150,24 @@ namespace TcPlayer.Network.Http
 
         }
 
-        private void ThrowIfNotOnSameSubnet(TcpClient client)
+        private async Task HandleUnauthorized(HttpResponse response)
+        {
+            response.StatusCode = 401;
+            response.ContentType = "text/plain";
+            await response.Write("Unauthorized: Not on same subnet as server");
+        }
+
+        private bool AreOnSameSubnet(TcpClient client)
         {
             var ip = client.GetClientAdress();
-            bool allow = false;
             foreach (var listenAdress in _listenAdresses)
             {
                 if (listenAdress.addr.IsInSameSubnet(ip, listenAdress.mask))
                 {
-                    allow = true;
-                    break;
+                    return true;
                 }
             }
-            if (!allow)
-            {
-                throw new InvalidOperationException("Not allowed");
-            }
+            return false;
         }
 
         private static async Task HandleServerError(HttpResponse response, Exception ex)
