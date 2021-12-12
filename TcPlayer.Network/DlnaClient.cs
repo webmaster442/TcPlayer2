@@ -164,7 +164,7 @@ namespace TcPlayer.Network
         {
             List<DlnaItem> items = new List<DlnaItem>();
 
-            if (envelope?.Body?.BrowseResponse?.Result?.DIDLLite?.Items.Any() == true)
+            if (envelope?.Body?.BrowseResponse?.Result?.DIDLLite?.Items?.Any() == true)
             {
                 foreach (var objItem in envelope.Body.BrowseResponse.Result.DIDLLite.Items)
                 {

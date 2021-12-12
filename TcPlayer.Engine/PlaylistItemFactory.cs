@@ -20,14 +20,15 @@ namespace TcPlayer.Engine
 {
     public static class PlaylistItemFactory
     {
-        private static TextReader? LoadFile(string file)
+        private static async Task<TextReader?> LoadFile(string file)
         {
             if (file.StartsWith("http://") || file.StartsWith("https://"))
             {
                 try
                 {
-                    using var client = new System.Net.WebClient();
-                    var response = client.DownloadString(new Uri(file));
+
+                    using var client = new System.Net.Http.HttpClient();
+                    string? response = await client.GetStringAsync(new Uri(file));
                     return new StringReader(response);
                 }
                 catch (WebException)
@@ -75,7 +76,7 @@ namespace TcPlayer.Engine
 
         public async static Task<IEnumerable<PlaylistItem>> CreateFromUrl(string url, CancellationToken cancellationToken)
         {
-            var extension = Path.GetExtension(url);
+            string? extension = Path.GetExtension(url);
             string[] playlists = new[] { ".m3u", ".pls", ".asx", ".wpl", ".tpls" };
             if (playlists.Contains(extension))
             {
@@ -129,7 +130,7 @@ namespace TcPlayer.Engine
             List<string> ret = new List<string>();
             string filedir = Path.GetDirectoryName(file) ?? "";
             string? line;
-            using (var content = LoadFile(file))
+            using (var content = await LoadFile(file))
             {
                 do
                 {
@@ -164,7 +165,7 @@ namespace TcPlayer.Engine
             string filedir = Path.GetDirectoryName(file) ?? "";
             string? line;
             string pattern = @"^(File)([0-9])+(=)";
-            using (var content = LoadFile(file))
+            using (var content = await LoadFile(file))
             {
                 do
                 {
@@ -198,7 +199,7 @@ namespace TcPlayer.Engine
         private async static Task<IEnumerable<PlaylistItem>> CreateFromAsxFile(string file, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using var content = LoadFile(file);
+            using var content = await LoadFile(file);
             List<string> ret = new List<string>();
             if (content != null)
             {
@@ -218,7 +219,7 @@ namespace TcPlayer.Engine
 
         private async static Task<IEnumerable<PlaylistItem>> CreateFromWplFile(string file, CancellationToken cancellationToken)
         {
-            using var content = LoadFile(file);
+            using var content = await LoadFile(file);
             if (content != null)
             {
                 var doc = XDocument.Load(content).Descendants("body").Elements("seq").Elements("media").ToList();

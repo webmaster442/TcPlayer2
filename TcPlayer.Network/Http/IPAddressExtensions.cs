@@ -10,15 +10,22 @@ namespace TcPlayer.Network.Http
     {
         public static IEnumerable<(IPAddress addr, IPAddress mask)> GetLocalIpadresses()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName(), AddressFamily.InterNetwork);
+            bool yielded = false;
+            foreach (IPAddress ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
+                    yielded = true;
                     yield return new(ip, GetSubnetMask(ip));
                 }
             }
-            throw new ArgumentException("No network adapters with an IPv4 address in the system!");
+            if (!yielded)
+            {
+                yield return
+                    (new IPAddress(new byte[] { 127, 0, 0, 1 }),
+                     new IPAddress(new byte[] { 255, 0, 0, 0 }));
+            }
         }
 
         private static IPAddress GetSubnetMask(IPAddress address)
